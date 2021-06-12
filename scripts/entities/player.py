@@ -2,14 +2,16 @@ import pygame
 from pygame.constants import K_a, K_d, K_s, K_w
 import math
 from entities.weapon import Weapon
+from gameworld import GameWorld
+from pygame import Rect
 
 SPEED = 2
 IMAGE_FILE = "./res/player_gun.png"
 PLAYER_SIZE = [32, 32]
 
 class Player:
-    def __init__(self, background):
-        self.background = background
+    def __init__(self, gameworld):
+        self.gameworld = gameworld
         self.screenSize = pygame.display.get_window_size()
         self.image = pygame.transform.scale(pygame.image.load(IMAGE_FILE), (30, 30))
         self.rotatedImage = self.image
@@ -21,7 +23,7 @@ class Player:
     def Move(self, pressedKeys):
         if pressedKeys[K_w]:
             if (self.posY < self.screenSize[1] / 2):
-                self.background.IncreaseOffsetY(SPEED)
+                self.gameworld.IncreaseOffsetY(SPEED)
             else:
                 self.posY -= SPEED
         if pressedKeys[K_a]:
@@ -55,3 +57,9 @@ class Player:
     def Draw(self, screen):
         self.weapon.Draw(screen)
         screen.blit(self.rotatedImage, (self.posX, self.posY))
+
+    def CheckCollisionWithObstacles(self):
+        for ob in self.gameworld.obstacles:
+            if Rect(self.posX, self.posY, 32, 32).colliderect(Rect(ob.GetY(), ob.GetX(), 32, 32)):
+                return True
+        return False

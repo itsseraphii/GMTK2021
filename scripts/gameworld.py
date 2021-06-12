@@ -1,4 +1,6 @@
 import pygame
+from entities.obstacle import Obstacle
+from pygame import Rect
 
 TILE_SIZE = 32
 TILE_SHEET_WIDTH = 15
@@ -9,12 +11,15 @@ TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles_greyscale.png"
 CSV_PATH_BG = "./res/tiled/testmap_background_layer.csv"
 CSV_PATH_OB = "./res/tiled/testmap_obstacle_layer.csv"
 
-class Background():
+OBSTACLES = []
+
+class GameWorld():
     def __init__(self):
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2))
         self.LoadTileCSV()
+        self.obstacles = []
 
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
@@ -66,7 +71,7 @@ class Background():
                     self.tileImagesOB.update({intTileNum: self.GetTileImage(tilePosX, tilePosY)})
 
             self.tileLayoutOB.append(currentRow)
-
+        
         self.backgroundSize = (len(self.tileLayoutBG[0]) * TILE_SIZE, len(self.tileLayoutBG) * TILE_SIZE)
 
     def SetPlayer(self, player):
@@ -81,6 +86,7 @@ class Background():
 
     def Draw(self, screen):
         middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
+        self.obstacles = []
 
         for y in range(int(max(0, middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayoutBG), middleY + (self.screenNbTilesY / 2)))):
             for x in range(len(self.tileLayoutBG[y])):
@@ -89,4 +95,6 @@ class Background():
                 screen.blit(self.tileImagesBG[self.tileLayoutBG[y][x]], (posX, posY))
 
                 if(self.tileLayoutOB[y][x] != -1):
-                     screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
+                    screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
+                    self.obstacles.append(Obstacle(True,False,False,posX,posY))
+                    pygame.draw.rect(screen, (255,0,0), Rect(posX, posY, 32, 32,))

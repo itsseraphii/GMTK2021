@@ -1,6 +1,6 @@
 import pygame
 from pygame.constants import QUIT
-from background import Background
+from gameworld import GameWorld
 from entities.player import Player
 
 FPS = 100
@@ -8,7 +8,7 @@ FPS = 100
 class Game:
     def __init__(self, screen):
         self.screen = screen
-        self.background = Background()
+        self.background = GameWorld()
         self.player = Player(self.background)
         self.background.SetPlayer(self.player)
 
