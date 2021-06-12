@@ -27,6 +27,7 @@ class GameWorld():
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
         self.offsetY = self.startOffsetY
+        self.middleY = 0
 
     def GetTileImage(self, posX, posY):
         rect = pygame.Rect(posX * TILE_SIZE, posY * TILE_SIZE, TILE_SIZE, TILE_SIZE)
@@ -97,10 +98,10 @@ class GameWorld():
         return self.offsetY
 
     def Draw(self, screen):
-        middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
+        self.middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
         self.obstacles = []
 
-        for y in range(int(max(0, middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayoutBG), middleY + (self.screenNbTilesY / 2)))):
+        for y in range(int(max(0, self.middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayoutBG), self.middleY + (self.screenNbTilesY / 2)))):
             for x in range(len(self.tileLayoutBG[y])):
                 posX = (x * TILE_SIZE) + (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2)
                 posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
