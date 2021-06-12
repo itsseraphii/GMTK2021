@@ -1,9 +1,11 @@
 import pygame
 from pygame.constants import K_a, K_d, K_s, K_w
+from spriteUtils import loadFrames
 import math
 
 SPEED = 2
 IMAGE_FILE = "./res/arrow.png"
+WALKING_ANIMATION = "player_unarmed.png"
 PLAYER_SIZE = [30, 30]
 
 class Player:
@@ -13,6 +15,7 @@ class Player:
         self.image = pygame.transform.scale(pygame.image.load(IMAGE_FILE), (30, 30))
         self.rotatedImage = self.image
         self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
+        loadFrames(WALKING_ANIMATION, 32)
 
     def Move(self, pressedKeys):
         if pressedKeys[K_w]:
