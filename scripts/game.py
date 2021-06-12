@@ -1,5 +1,6 @@
 import pygame
 from pygame.constants import QUIT
+from background import Background
 from player import Player
 
 FPS = 100
@@ -7,6 +8,7 @@ FPS = 100
 class Game:
     def __init__(self, screen):
         self.screen = screen
+        self.background = Background()
         self.player = Player()
 
     def CheckInputs(self):
@@ -23,6 +25,7 @@ class Game:
     def Draw(self):
         self.screen.fill((31, 31, 31))
         self.player.Draw(self.screen)
+        self.background.Draw(self.screen)
         pygame.display.update()
 
     def Run(self):
