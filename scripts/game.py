@@ -31,10 +31,17 @@ class Game:
     def Run(self):
         self.running = True
         clock = pygame.time.Clock()
+        tick = 0
 
         while (self.running):
             self.CheckInputs()
 
             self.Draw()
+            
+            tick += 1
+
+            if tick == 4 :
+                self.player.NextFrame()
+                tick = 0
 
             clock.tick(FPS)
