@@ -33,7 +33,6 @@ class Background():
         self.tileImagesOB = {}
         csvFile = open(CSV_PATH_BG, 'r')
 
-
         for line in csvFile:
             currentRow = []
             
@@ -49,7 +48,6 @@ class Background():
 
             self.tileLayoutBG.append(currentRow)
 
-        i = 0
         csvFile = open(CSV_PATH_OB, 'r')
         for line in csvFile:
             currentRow = []
@@ -88,7 +86,5 @@ class Background():
                 posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
                 screen.blit(self.tileImagesBG[self.tileLayoutBG[y][x]], (posX, posY))
 
-                if(self.tileLayoutOB[y][x] != -1):
-                     posX = (x * TILE_SIZE) + (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2)
-                     posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
+                if (self.tileLayoutOB[y][x] != -1):
                      screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
