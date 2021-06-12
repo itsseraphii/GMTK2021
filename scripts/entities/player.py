@@ -25,13 +25,13 @@ class Player:
             else:
                 self.posY -= SPEED
         if pressedKeys[K_a]:
-           if (self.posX - SPEED > self.screenSize[0] / 2 - 200):
+           if (self.posX - SPEED > self.screenSize[0] / 2 - 260):
                 self.posX -= SPEED
         if pressedKeys[K_s]:
             if (self.posY + SPEED  < self.screenSize[1] - PLAYER_SIZE[1]):
                 self.posY += SPEED
         if pressedKeys[K_d]:
-            if (self.posX + SPEED < self.screenSize[0] / 2 + 200):
+            if (self.posX + SPEED < self.screenSize[0] / 2 + 260):
                 self.posX += SPEED
 
     def LookAtMouse(self, mouseX, mouseY):
