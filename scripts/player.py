@@ -12,8 +12,7 @@ class Player:
         self.screenSize = pygame.display.get_window_size()
         self.image = pygame.transform.scale(pygame.image.load(IMAGE_FILE), (30, 30))
         self.rotatedImage = self.image
-        self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] - PLAYER_SIZE[1]
-        self.background.SetPlayerSize(PLAYER_SIZE)
+        self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
 
     def Move(self, pressedKeys):
         if pressedKeys[K_w]:
@@ -22,19 +21,25 @@ class Player:
             else:
                 self.posY -= SPEED
         if pressedKeys[K_a]:
-           if (self.background.InWidthBounds(self.posX - SPEED)):
+           if (self.posX - SPEED > self.screenSize[0] / 2 - 200):
                 self.posX -= SPEED
         if pressedKeys[K_s]:
             if (self.posY + SPEED  < self.screenSize[1] - PLAYER_SIZE[1]):
                 self.posY += SPEED
         if pressedKeys[K_d]:
-            if (self.background.InWidthBounds(self.posX + SPEED)):
+            if (self.posX + SPEED < self.screenSize[0] / 2 + 200):
                 self.posX += SPEED
 
     def LookAtMouse(self, mouseX, mouseY):
         relativeX, relativeY = mouseX - self.posX, mouseY - self.posY
         angle = (180 / math.pi) * -math.atan2(relativeY, relativeX)
         self.rotatedImage = pygame.transform.rotate(self.image, int(angle))
+
+    def GetSize(self):
+        return PLAYER_SIZE
+
+    def GetPos(self):
+        return [self.posX, self.posY]
     
     def Draw(self, screen):
         screen.blit(self.rotatedImage, (self.posX, self.posY))

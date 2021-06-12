@@ -10,11 +10,14 @@ CSV_PATH = "./res/tiled/testmap.csv"
 
 class Background():
     def __init__(self):
-        self.offset = 0
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH)
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2))
         self.LoadTileCSV()
+
+        self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
+        self.startOffsetY = -self.backgroundSize[1] / 2 + 895
+        self.offsetY = self.startOffsetY
 
     def GetTileImage(self, posX, posY):
         rect = pygame.Rect(posX * TILE_SIZE, posY * TILE_SIZE, TILE_SIZE, TILE_SIZE)
@@ -44,21 +47,21 @@ class Background():
 
         self.backgroundSize = (len(self.tileLayout[0]) * TILE_SIZE, len(self.tileLayout) * TILE_SIZE)
 
-    def SetPlayerSize(self, size):
-        self.playerSize = size
+    def SetPlayer(self, player):
+        self.player = player
+        self.playerSize = player.GetSize()
 
-    def IncreaseOffsetY(self, offset):
-        self.offset += offset
+    def IncreaseOffsetY(self, offsetY):
+        self.offsetY += offsetY
 
     def GetOffsetY(self):
-        return self.offset
-
-    def InWidthBounds(self, posX):
-        return posX > (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2) and posX < (self.screenSize[0] / 2) + (self.backgroundSize[0] / 2) - self.playerSize[0]
+        return self.offsetY
 
     def Draw(self, screen):
-        for y in range(len(self.tileLayout)):
+        middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - self.screenSize[1]) / TILE_SIZE
+
+        for y in range(int(max(0, middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayout), middleY + (self.screenNbTilesY / 2)))):
             for x in range(len(self.tileLayout[y])):
                 posX = (x * TILE_SIZE) + (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2)
-                posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offset
+                posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
                 screen.blit(self.tileImages[self.tileLayout[y][x]], (posX, posY))

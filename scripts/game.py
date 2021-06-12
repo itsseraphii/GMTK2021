@@ -10,6 +10,7 @@ class Game:
         self.screen = screen
         self.background = Background()
         self.player = Player(self.background)
+        self.background.SetPlayer(self.player)
 
     def CheckInputs(self):
         for event in pygame.event.get():
