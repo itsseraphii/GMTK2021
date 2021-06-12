@@ -23,9 +23,8 @@ class Game:
         self.player.LookAtMouse(mouseX, mouseY)
 
     def Draw(self):
-        self.screen.fill((31, 31, 31))
-        self.player.Draw(self.screen)
         self.background.Draw(self.screen)
+        self.player.Draw(self.screen)
         pygame.display.update()
 
     def Run(self):
