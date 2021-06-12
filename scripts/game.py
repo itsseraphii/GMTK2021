@@ -1,7 +1,7 @@
 import pygame
 from pygame.constants import QUIT
 from background import Background
-from player import Player
+from entities.player import Player
 
 FPS = 100
 
@@ -22,6 +22,9 @@ class Game:
 
         mouseX, mouseY = pygame.mouse.get_pos()
         self.player.LookAtMouse(mouseX, mouseY)
+
+        if (pygame.mouse.get_pressed()[0]):
+            self.player.Attack()
 
     def Draw(self):
         self.background.Draw(self.screen)
