@@ -9,7 +9,7 @@ class Game:
     def __init__(self, screen):
         self.screen = screen
         self.background = Background()
-        self.player = Player()
+        self.player = Player(self.background)
 
     def CheckInputs(self):
         for event in pygame.event.get():

@@ -8,6 +8,8 @@ CSV_PATH = "./res/tiled/testmap..csv"
 
 class Background():
     def __init__(self):
+        self.offset = 0
+        self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH)
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2))
         self.LoadTileCSV()
@@ -38,7 +40,23 @@ class Background():
 
             self.tileLayout.append(currentRow)
 
+        self.backgroundSize = (len(self.tileLayout[0]) * TILE_SIZE, len(self.tileLayout) * TILE_SIZE)
+
+    def SetPlayerSize(self, size):
+        self.playerSize = size
+
+    def IncreaseOffsetY(self, offset):
+        self.offset += offset
+
+    def GetOffsetY(self):
+        return self.offset
+
+    def InWidthBounds(self, posX):
+        return posX > (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2) and posX < (self.screenSize[0] / 2) + (self.backgroundSize[0] / 2) - self.playerSize[0]
+
     def Draw(self, screen):
         for y in range(len(self.tileLayout)):
             for x in range(len(self.tileLayout[y])):
-                screen.blit(self.tileImages[self.tileLayout[y][x]], (x * TILE_SIZE, y * TILE_SIZE))
+                posX = (x * TILE_SIZE) + (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2)
+                posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offset
+                screen.blit(self.tileImages[self.tileLayout[y][x]], (posX, posY))
