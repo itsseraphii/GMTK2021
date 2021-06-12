@@ -17,7 +17,7 @@ class Background():
         self.LoadTileCSV()
 
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
-        self.startOffsetY = -self.backgroundSize[1] / 2 + self.screenSize[1]
+        self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
         self.offsetY = self.startOffsetY
 
     def GetTileImage(self, posX, posY):
@@ -80,7 +80,7 @@ class Background():
         return self.offsetY
 
     def Draw(self, screen):
-        middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - self.screenSize[1]) / TILE_SIZE
+        middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
 
         for y in range(int(max(0, middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayoutBG), middleY + (self.screenNbTilesY / 2)))):
             for x in range(len(self.tileLayoutBG[y])):
