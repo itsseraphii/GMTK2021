@@ -23,6 +23,9 @@ class Game:
         mouseX, mouseY = pygame.mouse.get_pos()
         self.player.LookAtMouse(mouseX, mouseY)
 
+        if (pygame.mouse.get_pressed()[0]):
+            self.player.Attack()
+
     def Draw(self):
         self.background.Draw(self.screen)
         self.player.Draw(self.screen)
