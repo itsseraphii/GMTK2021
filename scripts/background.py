@@ -86,9 +86,5 @@ class Background():
                 posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
                 screen.blit(self.tileImagesBG[self.tileLayoutBG[y][x]], (posX, posY))
 
-<<<<<<< HEAD
                 if (self.tileLayoutOB[y][x] != -1):
-=======
-                if(self.tileLayoutOB[y][x] != -1):
->>>>>>> 18051e9f10dbcec045f1d3c865e08f2ac1f50092
                      screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))

@@ -3,28 +3,43 @@ import math
 
 BULLET_IMAGE = "./res/bullet.png"
 BULLET_SPEED = 20
-WEAPON_COOLDOWN = 600 # MS
 
 class Weapon:
     def __init__(self, player):
         self.player = player
         self.playerSize = self.player.GetSize()
         self.screenSize = pygame.display.get_window_size()
-        self.damage = 1
-        self.name = "Revolver"
         self.bulletImage = pygame.image.load(BULLET_IMAGE)
         self.bullets = []
 
+        self.CreateWeapons()
         self.lastShotTime = 0
 
-    def Fire(self):
-        currentTime = pygame.time.get_ticks()
+    def CreateWeapons(self):
+        self.weapons = {}
+        # key: name   value: [isRanged, damage, weaponCooldown]
+        self.weapons.update({"Crowbar": [False, 2, 1200]})
+        self.weapons.update({"Revolver": [True, 3, 800]})
+        self.weapons.update({"Assault Rifle": [True, 1, 115]})
+        self.weapons.update({"Sniper": [True, 10, 2000]})
 
-        if (currentTime >= self.lastShotTime + WEAPON_COOLDOWN):
-            self.lastShotTime = currentTime
-            pos = self.player.GetPos()
-            angle = -math.radians(self.player.GetAngle())
-            self.bullets.append([self.playerSize[0] / 2 + pos[0], self.playerSize[1] + pos[1], angle])
+    def Attack(self, equippedWeapon):
+        if (self.weapons[equippedWeapon][0]): # Ranged weapon
+            currentTime = pygame.time.get_ticks()
+
+            if (currentTime >= self.lastShotTime + self.weapons[equippedWeapon][2]):
+                self.lastShotTime = currentTime
+                pos = self.player.GetPos()
+                angle = -math.radians(self.player.GetAngle())
+
+                # [posX, posY, angle, damage]
+                self.bullets.append([self.playerSize[0] / 2 + pos[0], self.playerSize[1] + pos[1], angle, self.weapons[equippedWeapon][1]])
+
+                return True
+        else:
+            pass # Melee Weapon
+
+        return False
 
     def ComputeNewBulletPos(self, oldX, oldY, angle):
         newX = oldX + (BULLET_SPEED * math.cos(angle))

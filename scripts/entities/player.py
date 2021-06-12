@@ -15,7 +15,8 @@ class Player:
         self.rotatedImage = self.image
         self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
 
-        self.hasRangedWeapon = True
+        self.equippedWeapon = "Revolver"
+        self.ammo = 13
         self.weapon = Weapon(self)
 
     def Move(self, pressedKeys):
@@ -25,14 +26,12 @@ class Player:
             else:
                 self.posY -= SPEED
         if pressedKeys[K_a]:
-           if (self.posX - SPEED > self.screenSize[0] / 2 - 260):
-                self.posX -= SPEED
+            self.posX -= SPEED
         if pressedKeys[K_s]:
             if (self.posY + SPEED  < self.screenSize[1] - PLAYER_SIZE[1]):
                 self.posY += SPEED
         if pressedKeys[K_d]:
-            if (self.posX + SPEED < self.screenSize[0] / 2 + 260):
-                self.posX += SPEED
+            self.posX += SPEED
 
     def LookAtMouse(self, mouseX, mouseY):
         relativeX, relativeY = mouseX - self.posX, mouseY - self.posY
@@ -40,8 +39,9 @@ class Player:
         self.rotatedImage = pygame.transform.rotate(self.image, int(self.angle))
 
     def Attack(self):
-        if (self.hasRangedWeapon):
-            self.weapon.Fire()
+        if (self.ammo > 0):
+            if (self.weapon.Attack(self.equippedWeapon)):
+                self.ammo -= 1
 
     def GetSize(self):
         return PLAYER_SIZE
