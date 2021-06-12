@@ -1,5 +1,6 @@
 import pygame
 
+
 # Returns an array of all frames from requested file
 def getFrames(filename, tile_size):
     try:
@@ -12,13 +13,22 @@ def getFrames(filename, tile_size):
     i = 0
     frameArray = []
     while i < nbOfFrames:
-        spriteXOffset = i * tile_size
-
-        rect = pygame.Rect(spriteXOffset * tile_size, 0, tile_size, tile_size)
-        frame = pygame.Surface(rect.size).convert()
-        frame.blit(spriteSheet, (0,0), rect)
+        frame = getSingleFrame(spriteSheet, tile_size, i)
         frameArray.append(frame)
         i += 1
 
     return frameArray
+
+def getSingleFrame(sprite_sheet, tile_size, frame_number):
+    # Create a new blank image
+    frame = pygame.Surface([tile_size, tile_size]).convert()
+
+    # Copy the sprite from the large sheet onto the smaller image
+    frame.blit(sprite_sheet, (0, 0), (frame_number*tile_size, 0, tile_size, tile_size))
+
+    # Assuming black works as the transparent color
+    frame.set_colorkey((0, 0, 0))
+
+    # Return the image
+    return frame
 

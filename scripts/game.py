@@ -40,11 +40,5 @@ class Game:
             self.CheckInputs()
 
             self.Draw()
-            
-            tick += 1
-
-            if tick == 4 :
-                self.player.NextFrame()
-                tick = 0
 
             clock.tick(FPS)
