@@ -19,11 +19,13 @@ class Game:
     def StartMenuMusic(self):
         pygame.mixer.music.fadeout # Fade out last music
         pygame.mixer.music.load("./music/Main_theme_v2_loopable.mp3") # Start menu music
+        pygame.mixer.music.set_volume(1)
         pygame.mixer.music.play(-1) # Loop forever
 
     def StartLevelMusic(self):
         pygame.mixer.music.fadeout  # Fade out last music
         pygame.mixer.music.load("./music/level_theme_v2.mp3") # Start level music
+        pygame.mixer.music.set_volume(0.2)
         pygame.mixer.music.play() # play once
 
     def CheckInputs(self):
@@ -55,7 +57,7 @@ class Game:
 
     def DrawTimeLeft(self):
         if (self.playing):
-            msLeft = int(61000 - pygame.time.get_ticks() + self.startTime)
+            msLeft = int(60000 - pygame.time.get_ticks() + self.startTime)
             self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 2)), True, (0, 0, 0)), (10, 10))
         elif (self.gameOver):
             self.screen.blit(self.fontLarge.render("Game over", True, (0, 0, 0)), (10, 10))
@@ -92,7 +94,7 @@ class Game:
             self.CheckInputs()
             self.Draw()
 
-            if (self.playing and not self.gameOver and pygame.time.get_ticks() - self.startTime > 61000):
+            if (self.playing and not self.gameOver and pygame.time.get_ticks() - self.startTime > 60000):
                 self.playing = False
                 self.gameOver = True
                 self.StartMenuMusic()
