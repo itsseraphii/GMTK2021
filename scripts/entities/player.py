@@ -25,9 +25,10 @@ class Player:
         self.image = pygame.transform.scale(pygame.image.load(IMAGE_FILE), (30, 30))
         self.rotatedImage = self.image
 
-        self.equippedWeapon = "Revolver"
-        self.ammo = 13
         self.weapon = Weapon(self)
+        self.weaponInventory = ["Revolver", "Assault Rifle", "Sniper"] # TODO remove start weapons
+        self.equippedWeaponIndex = 0
+        self.ammo = 13
 
     def Move(self, pressedKeys):
         moving = False
@@ -67,9 +68,18 @@ class Player:
         self.angle = (180 / math.pi) * -math.atan2(relativeY, relativeX)
         self.rotatedImage = pygame.transform.rotate(self.image, int(self.angle))
 
+    def PickupWeapon(self, weaponName):
+        self.weaponInventory.append(weaponName)
+    
+    def SwitchWeapon(self, nextWeapon):
+        if (nextWeapon): # Switch to next weapon
+            self.equippedWeaponIndex = (self.equippedWeaponIndex + 1) % len(self.weaponInventory)
+        else: # Switch to previous weapon
+            self.equippedWeaponIndex = self.equippedWeaponIndex - 1 if (self.equippedWeaponIndex > 0) else len(self.weaponInventory) - 1
+
     def Attack(self):
         if (self.ammo > 0):
-            if (self.weapon.Attack(self.equippedWeapon)):
+            if (self.weapon.Attack(self.weaponInventory[self.equippedWeaponIndex])):
                 self.ammo -= 1
 
     def GetSize(self):
@@ -89,4 +99,5 @@ class Player:
         for ob in self.gameworld.obstacles:
             if Rect(self.posX, self.posY, 32, 32).colliderect(Rect(ob.GetY(), ob.GetX(), 32, 32)):
                 return True
+
         return False
