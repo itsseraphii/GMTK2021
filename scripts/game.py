@@ -36,7 +36,8 @@ class Game:
 
     def DrawTimeLeft(self):
         if (self.playing):
-            self.screen.blit(self.fontH1.render("Time left: " + str(int((61000 - pygame.time.get_ticks() + self.startTime) / 1000)), True, (0, 0, 0)), (10, 10))
+            msLeft = int(61000 - pygame.time.get_ticks() + self.startTime)
+            self.screen.blit(self.fontH1.render("Time left: " + str(round(msLeft / 1000, 2)), True, (0, 0, 0)), (10, 10))
         elif (self.gameOver):
             self.screen.blit(self.fontH1.render("Game over", True, (0, 0, 0)), (10, 10))
         else:
