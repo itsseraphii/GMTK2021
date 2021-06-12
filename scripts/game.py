@@ -56,6 +56,7 @@ class Game:
         self.gameOver = False
         
         clock = pygame.time.Clock()
+        tick = 0
 
         while (self.running):
             self.CheckInputs()
