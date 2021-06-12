@@ -1,7 +1,7 @@
 import pygame
 from pygame.constants import QUIT
 from background import Background
-from player import Player
+from entities.player import Player
 
 FPS = 100
 
