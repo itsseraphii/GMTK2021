@@ -38,7 +38,6 @@ class GameWorld():
         self.tileImagesOB = {}
         csvFile = open(CSV_PATH_BG, 'r')
 
-
         for line in csvFile:
             currentRow = []
             
@@ -54,7 +53,6 @@ class GameWorld():
 
             self.tileLayoutBG.append(currentRow)
 
-        i = 0
         csvFile = open(CSV_PATH_OB, 'r')
         for line in csvFile:
             currentRow = []
@@ -97,4 +95,3 @@ class GameWorld():
                 if(self.tileLayoutOB[y][x] != -1):
                     screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
                     self.obstacles.append(Obstacle(True,False,False,posX,posY))
-                    pygame.draw.rect(screen, (255,0,0), Rect(posX, posY, 32, 32,))
