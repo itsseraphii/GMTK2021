@@ -2,7 +2,7 @@ import pygame
 
 TILE_SIZE = 32
 TILESHEET_SIZE = (13, 8)
-TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles.png"
+TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles_greyscale.png"
 CSV_PATH = "./res/tiled/testmap..csv"
 
 class Background():
