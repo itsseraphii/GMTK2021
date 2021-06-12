@@ -2,6 +2,8 @@ import pygame
 from entities.obstacle import Obstacle
 from pygame import Rect
 
+from entities.monster import Monster
+
 TILE_SIZE = 32
 TILE_SHEET_WIDTH = 15
 TILE_SHEET_HEIGHT = 9
@@ -10,6 +12,7 @@ TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
 TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles_greyscale.png"
 CSV_PATH_BG = "./res/tiled/testmap_background_layer.csv"
 CSV_PATH_OB = "./res/tiled/testmap_obstacle_layer.csv"
+CSV_PATH_EN = "./res/tiled/testmap_entity_layer.csv"
 
 OBSTACLES = []
 
@@ -35,8 +38,10 @@ class GameWorld():
     def LoadTileCSV(self):
         self.tileLayoutBG = []
         self.tileLayoutOB = []
+        self.tileLayoutEN = []
         self.tileImagesBG = {}
         self.tileImagesOB = {}
+        self.monsters = {}
         csvFile = open(CSV_PATH_BG, 'r')
 
         for line in csvFile:
@@ -70,7 +75,16 @@ class GameWorld():
                     self.tileImagesOB.update({intTileNum: self.GetTileImage(tilePosX, tilePosY)})
 
             self.tileLayoutOB.append(currentRow)
-        
+
+        csvFile = open(CSV_PATH_EN, 'r')
+        for line in csvFile:
+            currentRow = []
+            
+            for tileNum in line.split(','):
+                currentRow.append(int(tileNum))
+
+            self.tileLayoutEN.append(currentRow)
+            
         self.backgroundSize = (len(self.tileLayoutBG[0]) * TILE_SIZE, len(self.tileLayoutBG) * TILE_SIZE)
 
     def SetPlayer(self, player):
@@ -96,3 +110,8 @@ class GameWorld():
                 if(self.tileLayoutOB[y][x] != -1):
                     screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
                     self.obstacles.append(Obstacle(True,False,False,posX,posY))
+
+                tileId = y*self.screenNbTilesY + x
+
+                if(self.tileLayoutEN[y][x] != -1 and not tileId in self.monsters):
+                    self.monsters[tileId] = Monster(tileId, (self.tileLayoutEN[y][x]), [posX, posY], self)

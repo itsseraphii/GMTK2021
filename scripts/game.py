@@ -78,6 +78,11 @@ class Game:
         self.background.Draw(self.screen)
         self.player.Draw(self.screen)
         self.DrawUI()
+
+        for monsterId in self.background.monsters:
+            self.background.monsters[monsterId].Draw(self.screen)
+        
+        self.DrawTimeLeft()
         pygame.display.update()
 
     def Run(self):
@@ -86,7 +91,6 @@ class Game:
         self.gameOver = False
         
         clock = pygame.time.Clock()
-        tick = 0
 
         self.StartMenuMusic()
 
