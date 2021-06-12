@@ -1,16 +1,20 @@
 import pygame
 
 TILE_SIZE = 32
-TILESHEET_SIZE = (13, 8)
+TILE_SHEET_WIDTH = 15
+TILE_SHEET_HEIGHT = 9
+TILESHEET_SIZE = (TILE_SHEET_WIDTH, TILE_SHEET_HEIGHT)
+TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
 TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles_greyscale.png"
-CSV_PATH = "./res/tiled/testmap..csv"
+CSV_PATH = "./res/tiled/testmap.csv"
 
 class Background():
     def __init__(self):
-        self.tileSheet = pygame.transform.scale(pygame.image.load(TILESHEET_PATH), (416, 256))
+        self.tileSheet = pygame.image.load(TILESHEET_PATH)
+        self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2))
         self.LoadTileCSV()
 
-    def GetTile(self, posX, posY):
+    def GetTileImage(self, posX, posY):
         rect = pygame.Rect(posX * TILE_SIZE, posY * TILE_SIZE, TILE_SIZE, TILE_SIZE)
         image = pygame.Surface(rect.size).convert()
         image.blit(self.tileSheet, (0, 0), rect)
@@ -28,10 +32,11 @@ class Background():
                 intTileNum = int(tileNum)
                 currentRow.append(intTileNum)
 
+                # Load tile image in memory if it's not already loaded
                 if (intTileNum not in self.tileImages):
                     tilePosY = int(intTileNum / TILESHEET_SIZE[0])
                     tilePosX = intTileNum - (tilePosY * TILESHEET_SIZE[0])
-                    self.tileImages.update({intTileNum: self.GetTile(tilePosX, tilePosY)})
+                    self.tileImages.update({intTileNum: self.GetTileImage(tilePosX, tilePosY)})
 
             self.tileLayout.append(currentRow)
 
