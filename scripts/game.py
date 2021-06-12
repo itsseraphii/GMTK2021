@@ -45,6 +45,10 @@ class Game:
     def Draw(self):
         self.background.Draw(self.screen)
         self.player.Draw(self.screen)
+
+        for monsterId in self.background.monsters:
+            self.background.monsters[monsterId].Draw(self.screen)
+        
         self.DrawTimeLeft()
         pygame.display.update()
 
@@ -54,7 +58,6 @@ class Game:
         self.gameOver = False
         
         clock = pygame.time.Clock()
-        tick = 0
 
         while (self.running):
             self.CheckInputs()

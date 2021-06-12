@@ -3,7 +3,6 @@ from pygame.constants import K_a, K_d, K_s, K_w
 from spriteUtils import getFrames
 import math
 from entities.weapon import Weapon
-from gameworld import GameWorld
 from pygame import Rect
 
 SPEED = 2
@@ -18,7 +17,7 @@ class Player:
         self.screenSize = pygame.display.get_window_size()
         self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
 
-        self.walking_frames = getFrames(WALKING_ANIMATION, 32)
+        self.walking_frames = getFrames(WALKING_ANIMATION, PLAYER_SIZE)
         self.frame_counter = 0
         self.lastFrameTime = 0
 
