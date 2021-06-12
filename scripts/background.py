@@ -1,10 +1,12 @@
 import pygame
 
 TILE_SIZE = 32
-TILESHEET_SIZE = (13, 8)
-TILESHEET_PIXEL_SIZE = (208, 128)
-TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles.png"
-CSV_PATH = "./res/tiled/testmap..csv"
+TILE_SHEET_WIDTH = 15
+TILE_SHEET_HEIGHT = 9
+TILESHEET_SIZE = (TILE_SHEET_WIDTH, TILE_SHEET_HEIGHT)
+TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
+TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles_greyscale.png"
+CSV_PATH = "./res/tiled/testmap.csv"
 
 class Background():
     def __init__(self):
