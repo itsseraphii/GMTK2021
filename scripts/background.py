@@ -17,7 +17,7 @@ class Background():
         self.LoadTileCSV()
 
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
-        self.startOffsetY = -self.backgroundSize[1] / 2 + 895
+        self.startOffsetY = -self.backgroundSize[1] / 2 + self.screenSize[1]
         self.offsetY = self.startOffsetY
 
     def GetTileImage(self, posX, posY):
