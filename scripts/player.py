@@ -14,6 +14,8 @@ class Player:
         self.rotatedImage = self.image
         self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
 
+        #self.weapon = Weapon()
+
     def Move(self, pressedKeys):
         if pressedKeys[K_w]:
             if (self.posY < self.screenSize[1] / 2):
@@ -34,6 +36,9 @@ class Player:
         relativeX, relativeY = mouseX - self.posX, mouseY - self.posY
         angle = (180 / math.pi) * -math.atan2(relativeY, relativeX)
         self.rotatedImage = pygame.transform.rotate(self.image, int(angle))
+
+    def Shoot(self):
+        pass
 
     def GetSize(self):
         return PLAYER_SIZE
