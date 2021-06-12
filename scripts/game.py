@@ -8,13 +8,13 @@ FPS = 100
 class Game:
     def __init__(self, screen):
         self.screen = screen
-        self.background = GameWorld()
+        self.gameworld = GameWorld()
         self.screenSize = pygame.display.get_window_size()
         self.fontLarge = pygame.font.Font("./fonts/FreeSansBold.ttf", 45)
         self.fontMedium = pygame.font.Font("./fonts/FreeSansBold.ttf", 25)
         self.fontSmall = pygame.font.Font("./fonts/FreeSansBold.ttf", 15)
-        self.player = Player(self.background)
-        self.background.SetPlayer(self.player)
+        self.player = Player(self.gameworld)
+        self.gameworld.SetPlayer(self.player)
 
     def StartMenuMusic(self):
         pygame.mixer.music.fadeout # Fade out last music
@@ -65,7 +65,7 @@ class Game:
             self.screen.blit(self.fontLarge.render("Press Enter to start", True, (0, 0, 0)), (10, 10))
 
     def DrawProgress(self):
-        percentComplete = min(100, round((self.background.backgroundSize[1] - (self.background.middleY * TILE_SIZE)) / self.background.backgroundSize[1] * 100, 1))
+        percentComplete = min(100, round((self.gameworld.backgroundSize[1] - (self.gameworld.middleY * TILE_SIZE)) / self.gameworld.backgroundSize[1] * 100, 1))
         self.screen.blit(self.fontLarge.render("Progress: " + str(percentComplete) + "%", True, (0, 0, 0)), (self.screenSize[0] - 360, 10))
 
     def DrawUI(self):
@@ -75,15 +75,19 @@ class Game:
         self.screen.blit(self.fontMedium.render("Ammo: " + str(self.player.ammo), True, (0, 0, 0)), (10, self.screenSize[1] - 40))
 
     def Draw(self):
-        self.background.Draw(self.screen)
+        self.gameworld.Draw(self.screen)
         self.player.Draw(self.screen)
         self.DrawUI()
 
-        for monsterId in self.background.monsters:
-            self.background.monsters[monsterId].Draw(self.screen)
+        for monsterId in self.gameworld.monsters:
+            self.gameworld.monsters[monsterId].Draw(self.screen)
         
         self.DrawTimeLeft()
         pygame.display.update()
+
+    def UpdateAI(self):
+        for monsterId in self.gameworld.monsters:
+            self.gameworld.monsters[monsterId].MoveTowardsPlayer()
 
     def Run(self):
         self.running = True
@@ -97,6 +101,9 @@ class Game:
         while (self.running):
             self.CheckInputs()
             self.Draw()
+
+            if (self.playing) :
+                self.UpdateAI()
 
             if (self.playing and not self.gameOver and pygame.time.get_ticks() - self.startTime > 60000):
                 self.playing = False

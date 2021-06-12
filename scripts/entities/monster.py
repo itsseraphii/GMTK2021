@@ -38,7 +38,7 @@ class Monster:
         screen.blit(self.image, (self.posX, self.posY))
 
     def MoveTowardsPlayer(self):
-        playerLocation = self.gameworld.player.GetPos
+        playerLocation = self.gameworld.player.GetPos()
 
         if playerLocation[0] > self.posX :
             self.posX += self.speed
