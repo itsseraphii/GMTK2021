@@ -30,6 +30,11 @@ class Collectable:
         self.posY = spawn_location[1]
         self.collected = False
 
+        try:
+            CollectableType(collectable_type)
+        except:
+            collectable_type = CollectableType.AMMO
+
         if (CollectableType(collectable_type) == CollectableType.PISTOL):
             self.image_source = "pistol.png"
             self.size = [32, 15]
