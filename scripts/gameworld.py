@@ -15,13 +15,13 @@ CSV_PATH_OB = "./res/tiled/testmap_obstacle_layer.csv"
 CSV_PATH_EN = "./res/tiled/testmap_entity_layer.csv"
 
 DICT_HITBOX_SIZES = {
-    10 : [32, 32, 0, 0],
-    14 : [32, 32, 0, 0],
-    29 : [32, 32, 0, 0],
-    43 : [20, 14, 0, 0],
-    44 : [20, 14, 0, 0],
-    58 : [20, 14, 0, 0],
-    59 : [20, 14, 0, 0]
+    10 : [32, 32, 0, 0, True],
+    14 : [32, 32, 0, 0, False],
+    29 : [32, 32, 0, 0, False],
+    43 : [20, 14, 0, 0, False],
+    44 : [20, 14, 0, 0, False],
+    58 : [20, 14, 0, 0, False],
+    59 : [20, 14, 0, 0, False]
 }
 
 OBSTACLES = []
@@ -140,13 +140,14 @@ class GameWorld():
                                 DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
                                 DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1],
                                 DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
-                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3]
+                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3], 
+                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[4]
                         ))
                     else:
                          self.obstacles.append(
                             Obstacle(
                                 True, False, False, posX, posY, 
-                                32, 32, 0, 0
+                                32, 32, 0, 0, False
                         ))
 
                 tileId = y*self.screenNbTilesY + x

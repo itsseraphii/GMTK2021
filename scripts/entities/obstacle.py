@@ -1,7 +1,7 @@
 import pygame
 
 class Obstacle:
-    def __init__(self, BLOCKS_BODIES, BLOCKS_BULLETS, KILLS, x, y, width, length, offX, offY):
+    def __init__(self, BLOCKS_BODIES, BLOCKS_BULLETS, KILLS, x, y, width, length, offX, offY, isGoal):
         self.BLOCKS_BODIES = BLOCKS_BODIES
         self.BLOCKS_BULLETS = BLOCKS_BULLETS
         self.KILLS = KILLS
@@ -11,6 +11,7 @@ class Obstacle:
         self.length = length
         self.offX = offX
         self.offY = offY
+        self.isGoal = isGoal
     
     def BlocksBodies(self):
         return self.BLOCKS_BODIES    
@@ -38,3 +39,6 @@ class Obstacle:
 
     def GetHitBoxOffsetY(self):
         return self.offY
+    
+    def IsGoal(self):
+        return self.isGoal
