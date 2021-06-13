@@ -13,6 +13,9 @@ except:
 
 IMAGE_FILE = BASE_PATH + "/res/player_gun.png"
 WALKING_ANIMATION = "player_unarmed.png"
+PISTOL_ANIMATION = "player_pistol.png"
+RIFLE_ANIMATION = "player_rifle.png"
+SNIPER_ANIMATION = "player_sniper.png"
 
 SPEED = 2
 ANIMATION_SPEED = 84 # ms
@@ -27,10 +30,13 @@ class Player:
         self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
 
         self.walking_frames = getFrames(WALKING_ANIMATION, PLAYER_SIZE)
+        self.pistol_frames = getFrames(PISTOL_ANIMATION, PLAYER_SIZE)
+        self.rifle_frames = getFrames(RIFLE_ANIMATION, [48, 32])
+        self.sniper_frames = getFrames(SNIPER_ANIMATION, [48, 32])
         self.frame_counter = 0
         self.lastFrameTime = 0
 
-        self.image = pygame.transform.scale(pygame.image.load(IMAGE_FILE), (30, 30))
+        self.image = self.walking_frames[0]
         self.rotatedImage = self.image
 
         self.weapon = Weapon(self, gameworld)
@@ -84,12 +90,24 @@ class Player:
     
 
     def NextFrame(self):
+        # Change image based on weapon held
+        # TODO change all weapon pointers to an ENUM
+        if self.weaponInventory[self.equippedWeaponIndex] == "Revolver":
+            current_animation = self.pistol_frames
+        elif self.weaponInventory[self.equippedWeaponIndex] == "Assault Rifle":
+            current_animation = self.rifle_frames
+        elif self.weaponInventory[self.equippedWeaponIndex] == "Sniper":
+            current_animation = self.sniper_frames
+        else :
+            current_animation = self.walking_frames
+
+
         self.frame_counter += 1
 
-        if (self.frame_counter >= len(self.walking_frames)) :
+        if (self.frame_counter >= len(current_animation)) :
             self.frame_counter = 0
 
-        self.image = self.walking_frames[self.frame_counter]
+        self.image = current_animation[self.frame_counter]
 
     def LookAtMouse(self, mouseX, mouseY):
         relativeX, relativeY = mouseX - self.posX, mouseY - self.posY
