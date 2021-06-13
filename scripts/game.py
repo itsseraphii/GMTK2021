@@ -8,13 +8,18 @@ FPS = 100
 class Game:
     def __init__(self, screen):
         self.screen = screen
-        self.gameworld = GameWorld()
         self.screenSize = pygame.display.get_window_size()
+
+        self.gameworld = GameWorld()
+        self.player = Player(self.gameworld)
+        self.gameworld.SetPlayer(self.player)
+
+        self.fontGiant = pygame.font.Font("./fonts/FreeSansBold.ttf", 60)
         self.fontLarge = pygame.font.Font("./fonts/FreeSansBold.ttf", 45)
         self.fontMedium = pygame.font.Font("./fonts/FreeSansBold.ttf", 25)
         self.fontSmall = pygame.font.Font("./fonts/FreeSansBold.ttf", 15)
-        self.player = Player(self.gameworld)
-        self.gameworld.SetPlayer(self.player)
+
+        self.menuPage = 0
 
     def StartMenuMusic(self):
         pygame.mixer.music.fadeout # Fade out last music
@@ -35,9 +40,12 @@ class Game:
 
             elif (event.type == KEYDOWN):
                 if (event.key == K_RETURN and not self.playing):
-                    self.startTime = pygame.time.get_ticks()
-                    self.playing = True
-                    self.StartLevelMusic()
+                    if (self.menuPage < 1):
+                        self.menuPage += 1
+                    else:
+                        self.startTime = pygame.time.get_ticks()
+                        self.playing = True
+                        self.StartLevelMusic()
 
             elif (self.playing and event.type == MOUSEBUTTONDOWN):
                 if (event.button == 4): # Mouse wheel up
@@ -73,17 +81,23 @@ class Game:
         self.screen.blit(self.fontMedium.render("Ammo: " + str(self.player.ammo), True, (0, 0, 0)), (10, self.screenSize[1] - 40))
 
     def DrawMenu(self):
-        text = self.fontLarge.render("Game Name", True, (200, 200, 200))
-        textRect = text.get_rect(center = (self.screenSize[0] / 2, 50))
-        self.screen.blit(text, textRect)
+        if (self.menuPage == 0):
+            text = self.fontMedium.render("TODO put story here", True, (200, 200, 200))
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 3 + 30))
+            self.screen.blit(text, textRect)
 
-        text = self.fontMedium.render("TODO put story here", True, (200, 200, 200))
-        textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 3 + 30))
-        self.screen.blit(text, textRect)
+            text = self.fontMedium.render("Press Enter to continue", True, (200, 200, 200))
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
+            self.screen.blit(text, textRect)
 
-        text = self.fontMedium.render("Press Enter to start", True, (200, 200, 200))
-        textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
-        self.screen.blit(text, textRect)
+        else:
+            text = self.fontGiant.render("Beeg Game Name", True, (200, 200, 200))
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2))
+            self.screen.blit(text, textRect)
+
+            text = self.fontMedium.render("Press Enter to start", True, (200, 200, 200))
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
+            self.screen.blit(text, textRect)
 
     def Draw(self):
         if (self.playing):
