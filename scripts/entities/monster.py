@@ -45,6 +45,16 @@ class Monster:
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))
 
+    def Damage(self, damage):
+        self.health -= damage
+
+        if (self.health <= 0):
+            # TODO death anim (currently just deleting)
+            self.gameworld.monsters.pop(self.id)
+
+    def Stun(self, timeMS):
+        self.lastHitTime = pygame.time.get_ticks() + timeMS
+
     def Move(self):
         currentTime = pygame.time.get_ticks()
 
@@ -61,22 +71,20 @@ class Monster:
             else: # straight to the player
                 self.target = playerLocation
 
-        if (currentTime >= self.lastFrameTime + self.animation_speed ):
-            self.lastFrameTime = currentTime
-            self.NextFrame()
+        if (self.lastHitTime < pygame.time.get_ticks()):
+            if (currentTime >= self.lastFrameTime + self.animation_speed ):
+                self.lastFrameTime = currentTime
+                self.NextFrame()
 
-    def MoveTowardsPlayer(self):
-        playerLocation = self.gameworld.player.GetPos()
-
-        if playerLocation[0] > self.posX :
-            self.posX += self.speed
-        elif playerLocation[0] < self.posX :
-            self.posX -= self.speed
-        
-        if playerLocation[1] > self.posY :
-            self.posY += self.speed
-        elif playerLocation[1] < self.posY :
-            self.posY -= self.speed
+            if self.target[0] > self.posX :
+                self.posX += self.speed
+            elif self.target[0] < self.posX :
+                self.posX -= self.speed
+            
+            if self.target[1] > self.posY :
+                self.posY += self.speed
+            elif self.target[1] < self.posY :
+                self.posY -= self.speed
 
     def NextFrame(self):
         self.frame_counter += 1
