@@ -50,6 +50,7 @@ class Monster:
 
         if (self.health <= 0):
             # TODO death anim (currently just deleting)
+            self.gameworld.deadMonsters.append(self.id) # Prevents respawn
             self.gameworld.monsters.pop(self.id)
 
     def Stun(self, timeMS):
@@ -93,5 +94,3 @@ class Monster:
             self.frame_counter = 0
 
         self.image = self.animation[self.frame_counter]
-
-

@@ -130,7 +130,7 @@ class Player:
 
     def CheckCollisionWithMonsters(self, playerRect):
         for monster in self.gameworld.monsters.values():
-            if playerRect.colliderect(Rect(monster.posX, monster.posY, monster.monster_size[0], monster.monster_size[1])):
+            if playerRect.colliderect(Rect(monster.posX + 2, monster.posY + 2, monster.monster_size[0] - 4, monster.monster_size[1] - 4)):
                 return True
 
         return False
