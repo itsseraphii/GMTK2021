@@ -29,22 +29,23 @@ class Weapon:
         self.weapons.update({"Assault Rifle": [True, 1, 115]})
         self.weapons.update({"Sniper": [True, 8, 2000]})
 
-    def Attack(self, equippedWeapon, playerPos=None): # playerPos required for melee
+    def Attack(self, equippedWeapon, ammo): # playerPos required for melee
         currentTime = pygame.time.get_ticks()
 
         if (currentTime >= self.lastAttackTime + self.weapons[equippedWeapon][2]): # Attack if cooldown has passed
             self.lastAttackTime = currentTime
 
-            if (self.weapons[equippedWeapon][0]): # Ranged weapon
-                pos = self.player.GetPos()
+            if (self.weapons[equippedWeapon][0] and ammo > 0): # Ranged weapon with ammo
+                playerPos = self.player.GetPos()
                 angle = -math.radians(self.player.GetAngle())
 
                 # [posX, posY, angle, damage]
-                self.bullets.append([self.playerSize[0] / 2 + pos[0], self.playerSize[1] + pos[1], angle, self.weapons[equippedWeapon][1]])
+                self.bullets.append([self.playerSize[0] / 2 + playerPos[0], self.playerSize[1] + playerPos[1], angle, self.weapons[equippedWeapon][1]])
 
                 return True # Decrement ammo
 
-            else: # Melee Weapon
+            elif (not self.weapons[equippedWeapon][0]): # Melee Weapon
+                playerPos = self.player.GetPos()
                 meleeRect = pygame.Rect((playerPos[0] + MELEE_OFFSET_XY, playerPos[1] + MELEE_OFFSET_XY), MELEE_SIZE)
 
                 for key in list(self.gameworld.monsters): # Check collisions with multiple monsters
