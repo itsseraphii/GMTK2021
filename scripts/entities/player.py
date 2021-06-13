@@ -34,9 +34,9 @@ class Player:
         self.rotatedImage = self.image
 
         self.weapon = Weapon(self, gameworld)
-        self.weaponInventory = ["Revolver", "Crowbar", "Assault Rifle", "Sniper"] # TODO remove start weapons
+        self.weaponInventory = ["Crowbar"]
         self.equippedWeaponIndex = 0
-        self.ammo = 13
+        self.ammo = 0
 
     def setIsMoving(self, pressedKeys):
         if pressedKeys[K_w] or pressedKeys[K_a] or pressedKeys[K_s] or pressedKeys[K_d]:
@@ -48,7 +48,7 @@ class Player:
         self.setIsMoving(pressedKeys)
 
         if pressedKeys[K_w]:
-            if(not self.CheckCollisionWithObstacles(Rect(self.posX, self.posY - SPEED, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            if(not self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2 - SPEED, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 if (self.posY < self.screenSize[1] / 2):
                     self.gameworld.IncreaseOffsetY(SPEED)
                 else:
@@ -56,19 +56,19 @@ class Player:
                 
         if pressedKeys[K_a]:
             self.posX -= SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            if(self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posX += SPEED
                 
         if pressedKeys[K_s]:
             if (self.posY + SPEED  < self.screenSize[1] - PLAYER_SIZE[1]):
                 self.posY += SPEED
-
-                if(self.CheckCollisionWithObstacles(Rect(self.posX , self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+                if(self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                     self.posY -= SPEED
 
         if pressedKeys[K_d]:
             self.posX += SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            if(self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, 
+            PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posX -= SPEED
 
         currentTime = pygame.time.get_ticks()
@@ -79,6 +79,9 @@ class Player:
 
         if (self.CheckCollisionWithMonsters(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
             self.game.TriggerGameOver(False)
+
+        self.CheckCollisionWithCollectables(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))
+    
 
     def NextFrame(self):
         self.frame_counter += 1
@@ -118,14 +121,13 @@ class Player:
     def Draw(self, screen):
         self.weapon.Draw(screen)
         screen.blit(self.rotatedImage, (self.posX, self.posY))
-        # pygame.draw.rect(screen, (255,0,0), Rect(self.posX + SPEED, self.posY, PLAYER_SIZE[0], PLAYER_SIZE[1]))
+        # pygame.draw.rect(screen, (255,0,0), Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]), 2)
         # pygame.draw.circle(screen, (255,0,0), (self.posX + PLAYER_SIZE[0]/2, self.posY + PLAYER_SIZE[0]/2), PLAYER_SIZE[0]/2, 4)
 
     def CheckCollisionWithObstacles(self, rect):
         for ob in self.gameworld.obstacles:
-            if rect.colliderect(Rect(ob.GetX(), ob.GetY(), ob.GetHitboxWidth() + ob.GetHitBoxOffsetX(), ob.GetHitboxLength()  + ob.GetHitBoxOffsetY())):
+            if rect.colliderect(Rect(ob.GetX() + ob.GetHitBoxOffsetX(), ob.GetY() + ob.GetHitBoxOffsetY(), ob.GetHitboxWidth(), ob.GetHitboxLength())):
                 return True
-
         return False
 
     def CheckCollisionWithMonsters(self, playerRect):
@@ -134,3 +136,9 @@ class Player:
                 return True
 
         return False
+
+    def CheckCollisionWithCollectables(self, playerRect):
+        for collectable in self.gameworld.collectables.values():
+            if not collectable.collected :
+                if playerRect.colliderect(Rect(collectable.posX, collectable.posY, collectable.size[0], collectable.size[1])):
+                    collectable.Pickup()
