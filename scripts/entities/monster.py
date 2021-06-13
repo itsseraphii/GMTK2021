@@ -40,8 +40,8 @@ class Monster:
             # Hitbox Info
             self.hitBoxOffestX = 15
             self.hitBoxOffestY = 15
-            self.hitBoxWidth = 40
-            self.hitBoxLength = 40
+            self.hitBoxWidth = 30
+            self.hitBoxLength = 30
         else:
             self.monster_type = MonsterType.ZOMBIE
             self.speed = 1.5
@@ -54,8 +54,8 @@ class Monster:
             self.health = 6
 
             # Hitbox Info
-            self.hitBoxWidth = 20
-            self.hitBoxLength = 20
+            self.hitBoxWidth = 15
+            self.hitBoxLength = 15
             self.hitBoxOffestX = self.hitBoxWidth/2
             self.hitBoxOffestY = self.hitBoxLength/2
 
@@ -74,7 +74,7 @@ class Monster:
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))
         # Hitboxes
-        # pygame.draw.rect(screen, (255,0,0), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxLength), 2)
+        #pygame.draw.rect(screen, (255,0,0), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxLength), 2)
 
     def Damage(self, damage):
         self.health -= damage
