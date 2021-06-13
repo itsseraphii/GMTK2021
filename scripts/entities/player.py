@@ -29,28 +29,30 @@ class Player:
         self.equippedWeaponIndex = 0
         self.ammo = 13
 
+    def setIsMoving(self, pressedKeys):
+        if pressedKeys[K_w] or pressedKeys[K_a] or pressedKeys[K_s] or pressedKeys[K_d]:
+            self.isMoving = True
+        else :
+            self.isMoving = False
+
     def Move(self, pressedKeys):
-        moving = False
+        self.setIsMoving(pressedKeys)
         if pressedKeys[K_w]:
-            moving = True
             if (self.posY < self.screenSize[1] / 2):
                 self.gameworld.IncreaseOffsetY(SPEED)
             else:
                 self.posY -= SPEED
         if pressedKeys[K_a]:
-            moving = True
             self.posX -= SPEED
         if pressedKeys[K_s]:
-            moving = True
             if (self.posY + SPEED  < self.screenSize[1] - PLAYER_SIZE[1]):
                 self.posY += SPEED
         if pressedKeys[K_d]:
-            moving = True
             self.posX += SPEED
 
         currentTime = pygame.time.get_ticks()
 
-        if (currentTime >= self.lastFrameTime + ANIMATION_SPEED and moving ):
+        if (currentTime >= self.lastFrameTime + ANIMATION_SPEED and self.isMoving ):
             self.lastFrameTime = currentTime
             self.NextFrame()
 

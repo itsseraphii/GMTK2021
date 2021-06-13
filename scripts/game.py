@@ -87,7 +87,7 @@ class Game:
 
     def UpdateAI(self):
         for monsterId in self.gameworld.monsters:
-            self.gameworld.monsters[monsterId].MoveTowardsPlayer()
+            self.gameworld.monsters[monsterId].Move()
 
     def Run(self):
         self.running = True

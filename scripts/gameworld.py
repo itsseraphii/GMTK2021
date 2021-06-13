@@ -18,6 +18,7 @@ OBSTACLES = []
 
 class GameWorld():
     def __init__(self):
+        self.tile_size = TILE_SIZE
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2))
