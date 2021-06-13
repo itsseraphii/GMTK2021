@@ -91,9 +91,8 @@ class Player:
             self.equippedWeaponIndex = self.equippedWeaponIndex - 1 if (self.equippedWeaponIndex > 0) else len(self.weaponInventory) - 1
 
     def Attack(self):
-        if (self.ammo > 0):
-            if (self.weapon.Attack(self.weaponInventory[self.equippedWeaponIndex], [self.posX, self.posY])):
-                self.ammo -= 1
+        if (self.weapon.Attack(self.weaponInventory[self.equippedWeaponIndex], self.ammo)):
+            self.ammo -= 1
 
     def GetSize(self):
         return PLAYER_SIZE
