@@ -47,7 +47,7 @@ class Player:
         self.setIsMoving(pressedKeys)
         if pressedKeys[K_w]:
             moving = True
-            if(not self.CheckCollisionWithObstacles(Rect(self.posX, self.posY - SPEED, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            if(not self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2 - SPEED, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 if (self.posY < self.screenSize[1] / 2):
                     self.gameworld.IncreaseOffsetY(SPEED)
                 else:
@@ -55,18 +55,19 @@ class Player:
                 
         if pressedKeys[K_a]:
             self.posX -= SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            if(self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posX += SPEED
                 
         if pressedKeys[K_s]:
             moving = True
             self.posY += SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX , self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            if(self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posY -= SPEED
 
         if pressedKeys[K_d]:
             self.posX += SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            if(self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, 
+            PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posX -= SPEED
 
         currentTime = pygame.time.get_ticks()
@@ -113,13 +114,17 @@ class Player:
     def Draw(self, screen):
         self.weapon.Draw(screen)
         screen.blit(self.rotatedImage, (self.posX, self.posY))
-        # pygame.draw.rect(screen, (255,0,0), Rect(self.posX + SPEED, self.posY, PLAYER_SIZE[0], PLAYER_SIZE[1]))
+        # pygame.draw.rect(screen, (255,0,0), Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]), 2)
         # pygame.draw.circle(screen, (255,0,0), (self.posX + PLAYER_SIZE[0]/2, self.posY + PLAYER_SIZE[0]/2), PLAYER_SIZE[0]/2, 4)
 
 
     def CheckCollisionWithObstacles(self, rect):
         for ob in self.gameworld.obstacles:
-            if rect.colliderect(Rect(ob.GetX(), ob.GetY(), ob.GetHitboxWidth() + ob.GetHitBoxOffsetX(), ob.GetHitboxLength()  + ob.GetHitBoxOffsetY())):
+            if rect.colliderect(Rect(ob.GetX() + ob.GetHitBoxOffsetX(), ob.GetY() + ob.GetHitBoxOffsetY(), ob.GetHitboxWidth(), ob.GetHitboxLength())):
+                print("width: " + str(ob.GetHitboxWidth()))
+                print("length: " + str(ob.GetHitboxLength()))
+                print("offsetx: " + str(ob.GetHitBoxOffsetX()))
+                print("offsety: " + str(ob.GetHitBoxOffsetY()))
                 return True
 
         return False
