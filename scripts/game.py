@@ -61,8 +61,6 @@ class Game:
             self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 2)), True, (0, 0, 0)), (10, 10))
         elif (self.gameOver):
             self.screen.blit(self.fontLarge.render("Game over", True, (0, 0, 0)), (10, 10))
-        else:
-            self.screen.blit(self.fontLarge.render("Press Enter to start", True, (0, 0, 0)), (10, 10))
 
     def DrawProgress(self):
         percentComplete = min(100, round((self.gameworld.backgroundSize[1] - (self.gameworld.middleY * TILE_SIZE)) / self.gameworld.backgroundSize[1] * 100, 1))
@@ -74,15 +72,34 @@ class Game:
         self.screen.blit(self.fontMedium.render("Equipped: " + str(self.player.weaponInventory[self.player.equippedWeaponIndex]), True, (0, 0, 0)), (10, self.screenSize[1] - 70))
         self.screen.blit(self.fontMedium.render("Ammo: " + str(self.player.ammo), True, (0, 0, 0)), (10, self.screenSize[1] - 40))
 
-    def Draw(self):
-        self.gameworld.Draw(self.screen)
-        self.player.Draw(self.screen)
-        self.DrawUI()
+    def DrawMenu(self):
+        text = self.fontLarge.render("Game Name", True, (200, 200, 200))
+        textRect = text.get_rect(center = (self.screenSize[0] / 2, 50))
+        self.screen.blit(text, textRect)
 
-        for monsterId in self.gameworld.monsters:
-            self.gameworld.monsters[monsterId].Draw(self.screen)
+        text = self.fontMedium.render("TODO put story here", True, (200, 200, 200))
+        textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 3 + 30))
+        self.screen.blit(text, textRect)
+
+        text = self.fontMedium.render("Press Enter to start", True, (200, 200, 200))
+        textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
+        self.screen.blit(text, textRect)
+
+    def Draw(self):
+        if (self.playing):
+            self.gameworld.Draw(self.screen)
+            self.player.Draw(self.screen)
+            self.DrawUI()
+
+            for monsterId in self.gameworld.monsters:
+                self.gameworld.monsters[monsterId].Draw(self.screen)
         
-        self.DrawTimeLeft()
+            self.DrawTimeLeft()
+
+        else:
+            self.screen.fill((0, 0, 0))
+            self.DrawMenu()
+
         pygame.display.update()
 
     def UpdateAI(self):

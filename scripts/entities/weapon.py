@@ -45,7 +45,6 @@ class Weapon:
                 return True # Decrement ammo
 
             else: # Melee Weapon
-                print("swing " + str(playerPos[0]))
                 meleeRect = pygame.Rect((playerPos[0] + MELEE_OFFSET_XY, playerPos[1] + MELEE_OFFSET_XY), MELEE_SIZE)
 
                 for key in list(self.gameworld.monsters): # Check collisions with multiple monsters
