@@ -24,13 +24,16 @@ CSV_PATHS_EN = [BASE_PATH + "/res/tiled/testmap_entity_layer.csv", BASE_PATH + "
 CSV_PATHS_CO = [BASE_PATH + "/res/tiled/testmap_collectable_layer.csv", BASE_PATH + "/res/tiled/testmap_collectable_layer.csv"]
 
 DICT_HITBOX_SIZES = {
-    10 : [32, 32, 0, 0, True],
-    14 : [32, 32, 0, 0, False],
-    29 : [32, 32, 0, 0, False],
-    43 : [20, 14, 0, 0, False],
-    44 : [20, 14, 0, 0, False],
-    58 : [20, 14, 0, 0, False],
-    59 : [20, 14, 0, 0, False]
+    10 : [32, 32, 0, 0],
+    14 : [32, 32, 0, 0],
+    29 : [32, 32, 0, 0],
+    43 : [32, 28, 0, 0],
+    44 : [32, 28, 0, 0],
+    58 : [32, 28, 0, 0],
+    59 : [32, 28, 0, 0],
+    73 : [32, 16, 0, 7],
+    74 : [16, 32, 7, 0],
+    88 : [16, 16, 7, 7]
 }
 
 OBSTACLES = []
@@ -166,15 +169,28 @@ class GameWorld():
                                 DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
                                 DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1],
                                 DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
-                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3], 
-                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[4]
+                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3]
                         ))
+                        # Uncomment to show hitboxes : 
+                        ''' 
+                        pygame.draw.rect(screen, (255,0,0), Rect(
+                            posX + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
+                            posY + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3],
+                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
+                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1]), 2
+                            )
+                        '''
+
                     else:
-                         self.obstacles.append(
+                        self.obstacles.append(
                             Obstacle(
                                 True, False, False, posX, posY, 
-                                32, 32, 0, 0, False
+                                32, 32, 0, 0
                         ))
+                        # Uncomment to show hitboxes : 
+                        ''' 
+                        pygame.draw.rect(screen, (255,0,0), Rect(posX,posY,32, 32), 2)
+                        '''
 
                 tileId = y*self.screenNbTilesY + x
 
