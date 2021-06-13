@@ -3,14 +3,14 @@ from pygame.constants import K_a, K_d, K_s, K_w
 from spriteUtils import getFrames
 import math
 from entities.weapon import Weapon
-from gameworld import GameWorld
 from pygame import Rect
 
 SPEED = 2
 IMAGE_FILE = "./res/player_gun.png"
 WALKING_ANIMATION = "player_unarmed.png"
 ANIMATION_SPEED = 84 # ms
-PLAYER_SIZE = [20, 20]
+PLAYER_SIZE = [32, 32]
+PLAYER_HITBOX_SIZE = [20,20]
 
 class Player:
     def __init__(self, gameworld):
@@ -18,48 +18,53 @@ class Player:
         self.screenSize = pygame.display.get_window_size()
         self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
 
-        self.walking_frames = getFrames(WALKING_ANIMATION, 32)
+        self.walking_frames = getFrames(WALKING_ANIMATION, PLAYER_SIZE)
         self.frame_counter = 0
         self.lastFrameTime = 0
 
         self.image = pygame.transform.scale(pygame.image.load(IMAGE_FILE), (30, 30))
         self.rotatedImage = self.image
 
-        self.equippedWeapon = "Revolver"
+        self.weapon = Weapon(self, gameworld)
+        self.weaponInventory = ["Revolver", "Crowbar", "Assault Rifle", "Sniper"] # TODO remove start weapons
+        self.equippedWeaponIndex = 0
         self.ammo = 13
-        self.weapon = Weapon(self)
+
+    def setIsMoving(self, pressedKeys):
+        if pressedKeys[K_w] or pressedKeys[K_a] or pressedKeys[K_s] or pressedKeys[K_d]:
+            self.isMoving = True
+        else :
+            self.isMoving = False
 
     def Move(self, pressedKeys):
-        moving = False
+        self.setIsMoving(pressedKeys)
         if pressedKeys[K_w]:
             moving = True
-            if(not self.CheckCollisionWithObstacles(Rect(self.posX, self.posY - SPEED, PLAYER_SIZE[0], PLAYER_SIZE[1]))):
+            if(not self.CheckCollisionWithObstacles(Rect(self.posX, self.posY - SPEED, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 if (self.posY < self.screenSize[1] / 2):
                     self.gameworld.IncreaseOffsetY(SPEED)
                 else:
                     self.posY -= SPEED
                 
         if pressedKeys[K_a]:
-            moving = True
             self.posX -= SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX, self.posY, PLAYER_SIZE[0], PLAYER_SIZE[1]))):
+            if(self.CheckCollisionWithObstacles(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posX += SPEED
                 
         if pressedKeys[K_s]:
             moving = True
             self.posY += SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX , self.posY, PLAYER_SIZE[0], PLAYER_SIZE[1]))):
+            if(self.CheckCollisionWithObstacles(Rect(self.posX , self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posY -= SPEED
 
         if pressedKeys[K_d]:
-            moving = True
             self.posX += SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX, self.posY, PLAYER_SIZE[0], PLAYER_SIZE[1]))):
+            if(self.CheckCollisionWithObstacles(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posX -= SPEED
 
         currentTime = pygame.time.get_ticks()
 
-        if (currentTime >= self.lastFrameTime + ANIMATION_SPEED and moving ):
+        if (currentTime >= self.lastFrameTime + ANIMATION_SPEED and self.isMoving ):
             self.lastFrameTime = currentTime
             self.NextFrame()
 
@@ -76,9 +81,18 @@ class Player:
         self.angle = (180 / math.pi) * -math.atan2(relativeY, relativeX)
         self.rotatedImage = pygame.transform.rotate(self.image, int(self.angle))
 
+    def PickupWeapon(self, weaponName):
+        self.weaponInventory.append(weaponName)
+    
+    def SwitchWeapon(self, nextWeapon):
+        if (nextWeapon): # Switch to next weapon
+            self.equippedWeaponIndex = (self.equippedWeaponIndex + 1) % len(self.weaponInventory)
+        else: # Switch to previous weapon
+            self.equippedWeaponIndex = self.equippedWeaponIndex - 1 if (self.equippedWeaponIndex > 0) else len(self.weaponInventory) - 1
+
     def Attack(self):
         if (self.ammo > 0):
-            if (self.weapon.Attack(self.equippedWeapon)):
+            if (self.weapon.Attack(self.weaponInventory[self.equippedWeaponIndex], [self.posX, self.posY])):
                 self.ammo -= 1
 
     def GetSize(self):
@@ -101,4 +115,5 @@ class Player:
         for ob in self.gameworld.obstacles:
             if rect.colliderect(Rect(ob.GetX(), ob.GetY(), ob.GetHitboxWidth() + ob.GetHitBoxOffsetX(), ob.GetHitboxLength()  + ob.GetHitBoxOffsetY())):
                 return True
+
         return False

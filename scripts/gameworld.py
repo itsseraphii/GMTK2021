@@ -2,6 +2,8 @@ import pygame
 from entities.obstacle import Obstacle
 from pygame import Rect
 
+from entities.monster import Monster
+
 TILE_SIZE = 32
 TILE_SHEET_WIDTH = 15
 TILE_SHEET_HEIGHT = 9
@@ -10,29 +12,34 @@ TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
 TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles_greyscale.png"
 CSV_PATH_BG = "./res/tiled/testmap_background_layer.csv"
 CSV_PATH_OB = "./res/tiled/testmap_obstacle_layer.csv"
+CSV_PATH_EN = "./res/tiled/testmap_entity_layer.csv"
 
 DICT_HITBOX_SIZES = {
+    10 : [32, 32, 0, 0],
     14 : [32, 32, 0, 0],
     29 : [32, 32, 0, 0],
-    43 : [20, 14, 0, 5],
-    44 : [20, 14, 0, 5],
-    58 : [20, 14, 0, 5],
-    59 : [20, 14, 0, 5]
+    43 : [20, 14, 0, 0],
+    44 : [20, 14, 0, 0],
+    58 : [20, 14, 0, 0],
+    59 : [20, 14, 0, 0]
 }
 
 OBSTACLES = []
 
 class GameWorld():
     def __init__(self):
+        self.tile_size = TILE_SIZE
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2))
+        self.monsters = {}
         self.LoadTileCSV()
         self.obstacles = []
 
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
         self.offsetY = self.startOffsetY
+        self.middleY = 0
 
     def GetTileImage(self, posX, posY):
         rect = pygame.Rect(posX * TILE_SIZE, posY * TILE_SIZE, TILE_SIZE, TILE_SIZE)
@@ -43,8 +50,10 @@ class GameWorld():
     def LoadTileCSV(self):
         self.tileLayoutBG = []
         self.tileLayoutOB = []
+        self.tileLayoutEN = []
         self.tileImagesBG = {}
         self.tileImagesOB = {}
+        self.monsters = {}
         csvFile = open(CSV_PATH_BG, 'r')
 
         for line in csvFile:
@@ -78,7 +87,16 @@ class GameWorld():
                     self.tileImagesOB.update({intTileNum: self.GetTileImage(tilePosX, tilePosY)})
 
             self.tileLayoutOB.append(currentRow)
-        
+
+        csvFile = open(CSV_PATH_EN, 'r')
+        for line in csvFile:
+            currentRow = []
+            
+            for tileNum in line.split(','):
+                currentRow.append(int(tileNum))
+
+            self.tileLayoutEN.append(currentRow)
+            
         self.backgroundSize = (len(self.tileLayoutBG[0]) * TILE_SIZE, len(self.tileLayoutBG) * TILE_SIZE)
 
     def SetPlayer(self, player):
@@ -87,15 +105,17 @@ class GameWorld():
 
     def IncreaseOffsetY(self, offsetY):
         self.offsetY += offsetY
+        for monster in self.monsters:
+            self.monsters[monster].posY += offsetY
 
     def GetOffsetY(self):
         return self.offsetY
 
     def Draw(self, screen):
-        middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
+        self.middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
         self.obstacles = []
 
-        for y in range(int(max(0, middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayoutBG), middleY + (self.screenNbTilesY / 2)))):
+        for y in range(int(max(0, self.middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayoutBG), self.middleY + (self.screenNbTilesY / 2)))):
             for x in range(len(self.tileLayoutBG[y])):
                 posX = (x * TILE_SIZE) + (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2)
                 posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
@@ -103,12 +123,33 @@ class GameWorld():
 
                 if(self.tileLayoutOB[y][x] != -1):
                     screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
-                    self.obstacles.append(
-                        Obstacle(
-                            True, False, False,
-                            posX, posY, 
-                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
-                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1],
-                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
-                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3]
+                    
+                    # Est-ce que la key est gérée par le dictionary de tiles?
+                    found = False
+                    try:
+                        DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0]
+                        found = True
+                    except:
+                        found = False
+
+                    if found:
+                        self.obstacles.append(
+                            Obstacle(
+                                True, False, False,
+                                posX, posY, 
+                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
+                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1],
+                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
+                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3]
                         ))
+                    else:
+                         self.obstacles.append(
+                            Obstacle(
+                                True, False, False, posX, posY, 
+                                32, 32, 0, 0
+                        ))
+
+                tileId = y*self.screenNbTilesY + x
+
+                if(self.tileLayoutEN[y][x] != -1 and not tileId in self.monsters):
+                    self.monsters[tileId] = Monster(tileId, (self.tileLayoutEN[y][x]), [posX, posY], self)
