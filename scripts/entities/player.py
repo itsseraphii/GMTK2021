@@ -20,7 +20,8 @@ PLAYER_SIZE = [32, 32]
 PLAYER_HITBOX_SIZE = [20,20]
 
 class Player:
-    def __init__(self, gameworld):
+    def __init__(self, game, gameworld):
+        self.game = game
         self.gameworld = gameworld
         self.screenSize = pygame.display.get_window_size()
         self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
@@ -40,13 +41,13 @@ class Player:
     def setIsMoving(self, pressedKeys):
         if pressedKeys[K_w] or pressedKeys[K_a] or pressedKeys[K_s] or pressedKeys[K_d]:
             self.isMoving = True
-        else :
+        else:
             self.isMoving = False
 
     def Move(self, pressedKeys):
         self.setIsMoving(pressedKeys)
+
         if pressedKeys[K_w]:
-            moving = True
             if(not self.CheckCollisionWithObstacles(Rect(self.posX, self.posY - SPEED, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 if (self.posY < self.screenSize[1] / 2):
                     self.gameworld.IncreaseOffsetY(SPEED)
@@ -59,10 +60,11 @@ class Player:
                 self.posX += SPEED
                 
         if pressedKeys[K_s]:
-            moving = True
-            self.posY += SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX , self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
-                self.posY -= SPEED
+            if (self.posY + SPEED  < self.screenSize[1] - PLAYER_SIZE[1]):
+                self.posY += SPEED
+
+                if(self.CheckCollisionWithObstacles(Rect(self.posX , self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+                    self.posY -= SPEED
 
         if pressedKeys[K_d]:
             self.posX += SPEED
@@ -74,6 +76,9 @@ class Player:
         if (currentTime >= self.lastFrameTime + ANIMATION_SPEED and self.isMoving ):
             self.lastFrameTime = currentTime
             self.NextFrame()
+
+        if (self.CheckCollisionWithMonsters(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            self.game.TriggerGameOver(False)
 
     def NextFrame(self):
         self.frame_counter += 1
@@ -116,10 +121,16 @@ class Player:
         # pygame.draw.rect(screen, (255,0,0), Rect(self.posX + SPEED, self.posY, PLAYER_SIZE[0], PLAYER_SIZE[1]))
         # pygame.draw.circle(screen, (255,0,0), (self.posX + PLAYER_SIZE[0]/2, self.posY + PLAYER_SIZE[0]/2), PLAYER_SIZE[0]/2, 4)
 
-
     def CheckCollisionWithObstacles(self, rect):
         for ob in self.gameworld.obstacles:
             if rect.colliderect(Rect(ob.GetX(), ob.GetY(), ob.GetHitboxWidth() + ob.GetHitBoxOffsetX(), ob.GetHitboxLength()  + ob.GetHitBoxOffsetY())):
+                return True
+
+        return False
+
+    def CheckCollisionWithMonsters(self, playerRect):
+        for monster in self.gameworld.monsters.values():
+            if playerRect.colliderect(Rect(monster.posX, monster.posY, monster.monster_size[0], monster.monster_size[1])):
                 return True
 
         return False

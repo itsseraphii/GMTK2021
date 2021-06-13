@@ -3,12 +3,6 @@ from spriteUtils import getFrames
 import random
 import math
 import pygame
-import sys
-
-try: # Path for files when app is built by PyInstaller
-    BASE_PATH = sys._MEIPASS
-except:
-    BASE_PATH = "."
 
 class MonsterType(Enum):
     FATBOI = 105
@@ -31,7 +25,7 @@ class Monster:
             self.target_cooldown = 1750 #ms
             self.monster_size = [64, 64]
             self.health = 9
-        else :
+        else:
             self.monster_type = MonsterType.ZOMBIE
             self.speed = 1.5
             self.image_source = "zombie1.png"
