@@ -11,6 +11,15 @@ TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles_greyscale.png"
 CSV_PATH_BG = "./res/tiled/testmap_background_layer.csv"
 CSV_PATH_OB = "./res/tiled/testmap_obstacle_layer.csv"
 
+DICT_HITBOX_SIZES = {
+    14 : [32, 32, 0, 0],
+    29 : [32, 32, 0, 0],
+    43 : [20, 14, 0, 5],
+    44 : [20, 14, 0, 5],
+    58 : [20, 14, 0, 5],
+    59 : [20, 14, 0, 5]
+}
+
 OBSTACLES = []
 
 class GameWorld():
@@ -94,4 +103,12 @@ class GameWorld():
 
                 if(self.tileLayoutOB[y][x] != -1):
                     screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
-                    self.obstacles.append(Obstacle(True,False,False,posX,posY))
+                    self.obstacles.append(
+                        Obstacle(
+                            True, False, False,
+                            posX, posY, 
+                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
+                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1],
+                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
+                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3]
+                        ))
