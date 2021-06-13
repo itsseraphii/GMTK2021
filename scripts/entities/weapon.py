@@ -1,8 +1,16 @@
 import pygame
 import math
 from gameworld import TILE_SIZE
+import sys
 
-BULLET_IMAGE = "./res/bullet.png"
+try: # Path for files when app is built by PyInstaller
+    BASE_PATH = sys._MEIPASS
+except:
+    BASE_PATH = "."
+
+SWING_SOUND_FILE = BASE_PATH + "/sounds/swing.mp3"
+GUNSHOT_SOUND_FILE = BASE_PATH + "/sounds/gunshot.mp3"
+BULLET_IMAGE = BASE_PATH + "/res/bullet.png"
 BULLET_SPEED = 20
 BULLET_SIZE = 3
 
@@ -17,6 +25,9 @@ class Weapon:
         self.screenSize = pygame.display.get_window_size()
         self.bulletImage = pygame.image.load(BULLET_IMAGE)
         self.bullets = []
+
+        self.swingSound = pygame.mixer.Sound(SWING_SOUND_FILE)
+        self.gunshotSound = pygame.mixer.Sound(GUNSHOT_SOUND_FILE)
 
         self.CreateWeapons()
         self.lastAttackTime = 0
@@ -42,11 +53,15 @@ class Weapon:
                 # [posX, posY, angle, damage]
                 self.bullets.append([self.playerSize[0] / 2 + playerPos[0], self.playerSize[1] + playerPos[1], angle, self.weapons[equippedWeapon][1]])
 
+                self.gunshotSound.play()
+
                 return True # Decrement ammo
 
             elif (not self.weapons[equippedWeapon][0]): # Melee Weapon
                 playerPos = self.player.GetPos()
                 meleeRect = pygame.Rect((playerPos[0] + MELEE_OFFSET_XY, playerPos[1] + MELEE_OFFSET_XY), MELEE_SIZE)
+
+                self.swingSound.play()
 
                 for key in list(self.gameworld.monsters): # Check collisions with multiple monsters
                     if (pygame.Rect(self.gameworld.monsters[key].posX, self.gameworld.monsters[key].posY, self.gameworld.monsters[key].monster_size[0], self.gameworld.monsters[key].monster_size[1]).colliderect(meleeRect)):

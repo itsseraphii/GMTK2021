@@ -1,10 +1,15 @@
 import pygame
+import sys
 
+try: # Path for files when app is built by PyInstaller
+    BASE_PATH = sys._MEIPASS
+except:
+    BASE_PATH = "."
 
 # Returns an array of all frames from requested file
 def getFrames(filename, frame_size):
     try:
-        spriteSheet = pygame.image.load("./res/" + filename).convert()
+        spriteSheet = pygame.image.load(BASE_PATH + "/res/" + filename).convert()
     except pygame.error as e:
         print("error while fetching " + filename)
 

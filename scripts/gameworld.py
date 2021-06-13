@@ -1,18 +1,23 @@
 import pygame
 from entities.obstacle import Obstacle
 from pygame import Rect
-
+import sys
 from entities.monster import Monster
+
+try: # Path for files when app is built by PyInstaller
+    BASE_PATH = sys._MEIPASS
+except:
+    BASE_PATH = "."
 
 TILE_SIZE = 32
 TILE_SHEET_WIDTH = 15
 TILE_SHEET_HEIGHT = 9
 TILESHEET_SIZE = (TILE_SHEET_WIDTH, TILE_SHEET_HEIGHT)
 TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
-TILESHEET_PATH = "./res/tiled/CosmicLilac_Tiles_greyscale.png"
-CSV_PATH_BG = "./res/tiled/testmap_background_layer.csv"
-CSV_PATH_OB = "./res/tiled/testmap_obstacle_layer.csv"
-CSV_PATH_EN = "./res/tiled/testmap_entity_layer.csv"
+TILESHEET_PATH = BASE_PATH + "/res/tiled/CosmicLilac_Tiles_greyscale.png"
+CSV_PATH_BG = BASE_PATH + "/res/tiled/testmap_background_layer.csv"
+CSV_PATH_OB = BASE_PATH + "/res/tiled/testmap_obstacle_layer.csv"
+CSV_PATH_EN = BASE_PATH + "/res/tiled/testmap_entity_layer.csv"
 
 DICT_HITBOX_SIZES = {
     10 : [32, 32, 0, 0, True],

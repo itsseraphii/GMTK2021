@@ -4,10 +4,17 @@ from spriteUtils import getFrames
 import math
 from entities.weapon import Weapon
 from pygame import Rect
+import sys
+
+try: # Path for files when app is built by PyInstaller
+    BASE_PATH = sys._MEIPASS
+except:
+    BASE_PATH = "."
+
+IMAGE_FILE = BASE_PATH + "/res/player_gun.png"
+WALKING_ANIMATION = "player_unarmed.png"
 
 SPEED = 2
-IMAGE_FILE = "./res/player_gun.png"
-WALKING_ANIMATION = "player_unarmed.png"
 ANIMATION_SPEED = 84 # ms
 PLAYER_SIZE = [32, 32]
 PLAYER_HITBOX_SIZE = [20,20]

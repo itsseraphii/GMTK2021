@@ -3,6 +3,12 @@ from spriteUtils import getFrames
 import random
 import math
 import pygame
+import sys
+
+try: # Path for files when app is built by PyInstaller
+    BASE_PATH = sys._MEIPASS
+except:
+    BASE_PATH = "."
 
 class MonsterType(Enum):
     FATBOI = 105

@@ -1,7 +1,13 @@
 import pygame
 from game import Game
+import sys
 
 SIZE = (1600, 900)
+
+try: # Path for files when app is built by PyInstaller
+    BASE_PATH = sys._MEIPASS
+except:
+    BASE_PATH = "."
 
 if (__name__ == "__main__"):
     pygame.init()
