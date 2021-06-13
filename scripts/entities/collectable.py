@@ -10,6 +10,10 @@ try: # Path for files when app is built by PyInstaller
 except:
     BASE_PATH = "."
 
+AMMO_PICKUP_SOUND = "ammo_pickup.ogg"
+GUN_PICKUP_SOUND = "gun_pickup.wav"
+DASH_SOUND = "dash.wav"
+
 class CollectableType(Enum):
     AMMO = 125
     PISTOL = 129
@@ -30,31 +34,40 @@ class Collectable:
             self.image_source = "pistol.png"
             self.size = [32, 15]
             self.type = CollectableType.PISTOL
+            self.soundSource = GUN_PICKUP_SOUND
         elif (CollectableType(collectable_type) == CollectableType.RIFLE):
             self.image_source = "rifle.png"
             self.size = [32, 15]
             self.type = CollectableType.RIFLE
+            self.soundSource = GUN_PICKUP_SOUND
         elif (CollectableType(collectable_type) == CollectableType.SNIPER):
             self.image_source = "sniper.png"
             self.size = [32, 15]
             self.type = CollectableType.SNIPER
+            self.soundSource = GUN_PICKUP_SOUND
         elif (CollectableType(collectable_type) == CollectableType.BIG_AMMO):
             self.image_source = "ammo_big.png"
             self.size = [32, 32]
             self.type = CollectableType.BIG_AMMO
+            self.soundSource = AMMO_PICKUP_SOUND
         elif (CollectableType(collectable_type) == CollectableType.GOAL):
             self.image_source = "goal.png"
             self.size = [32, 32]
             self.type = CollectableType.GOAL
+            self.soundSource = DASH_SOUND
         else:
             self.image_source = "ammo.png"
             self.size = [32, 32]
             self.type = CollectableType.AMMO
+            self.soundSource = AMMO_PICKUP_SOUND
+
+        self.pickupSound = pygame.mixer.Sound(BASE_PATH + "/sounds/" + self.soundSource)
 
         self.image = pygame.image.load(BASE_PATH + "/res/" + self.image_source)
 
     def Pickup(self):
         self.collected = True
+        self.pickupSound.play()
 
         if self.type == CollectableType.PISTOL:
             weapon = "Revolver"
@@ -88,13 +101,10 @@ class Collectable:
 
         elif self.type == CollectableType.GOAL:
             self.gameworld.player.game.TriggerGameOver(True)
-            
+
         else :
             # Ammo pickup
             self.gameworld.player.ammo += 4
-
-
-
 
     def Draw(self, screen):
         if not self.collected :
