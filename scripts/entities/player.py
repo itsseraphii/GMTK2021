@@ -118,6 +118,7 @@ class Player:
     def Draw(self, screen):
         self.weapon.Draw(screen)
         screen.blit(self.rotatedImage, (self.posX, self.posY))
+        # Hitboxes
         # pygame.draw.rect(screen, (255,0,0), Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]), 2)
         # pygame.draw.circle(screen, (255,0,0), (self.posX + PLAYER_SIZE[0]/2, self.posY + PLAYER_SIZE[0]/2), PLAYER_SIZE[0]/2, 4)
 
@@ -129,7 +130,6 @@ class Player:
 
     def CheckCollisionWithMonsters(self, playerRect):
         for monster in self.gameworld.monsters.values():
-            if playerRect.colliderect(Rect(monster.posX, monster.posY, monster.monster_size[0], monster.monster_size[1])):
+            if playerRect.colliderect(Rect(monster.posX + monster.hitBoxOffestX, monster.posY + monster.hitBoxOffestY, monster.hitBoxWidth, monster.hitBoxLength)):
                 return True
-
         return False

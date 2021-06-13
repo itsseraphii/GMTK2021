@@ -1,8 +1,12 @@
 from enum import Enum
+
+from pygame.rect import Rect
 from spriteUtils import getFrames
 import random
 import math
 import pygame
+
+TURN_ANGLE = 2
 
 class MonsterType(Enum):
     FATBOI = 105
@@ -15,6 +19,7 @@ class Monster:
         self.posX = spawn_location[0]
         self.posY = spawn_location[1]
         self.lastHitTime = 0
+        self.angle = 0
 
         if (MonsterType(monster_type) == MonsterType.FATBOI) :
             self.monster_type = MonsterType.FATBOI
@@ -25,6 +30,12 @@ class Monster:
             self.target_cooldown = 1750 #ms
             self.monster_size = [64, 64]
             self.health = 9
+
+            # Hitbox Info
+            self.hitBoxOffestX = 15
+            self.hitBoxOffestY = 15
+            self.hitBoxWidth = 40
+            self.hitBoxLength = 40
         else:
             self.monster_type = MonsterType.ZOMBIE
             self.speed = 1.5
@@ -35,6 +46,12 @@ class Monster:
             self.monster_size = [32, 32]
             self.health = 6
 
+            # Hitbox Info
+            self.hitBoxWidth = 20
+            self.hitBoxLength = 20
+            self.hitBoxOffestX = self.hitBoxWidth/2
+            self.hitBoxOffestY = self.hitBoxLength/2
+
         self.animation = getFrames(self.image_source, self.monster_size)
         self.lastFrameTime = 0
         self.lastTargetUpdate = 0
@@ -44,6 +61,8 @@ class Monster:
 
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))
+        # Hitboxes
+        # pygame.draw.rect(screen, (255,0,0), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxLength), 2)
 
     def Damage(self, damage):
         self.health -= damage
@@ -78,13 +97,58 @@ class Monster:
 
             if self.target[0] > self.posX :
                 self.posX += self.speed
+                if (self.angle > 90 and self.angle <= 270): 
+                    self.angle -= TURN_ANGLE
+                elif (self.angle < 90 or self.angle > 270): 
+                    self.angle += TURN_ANGLE
+                if(self.gameworld.player.CheckCollisionWithObstacles( 
+                Rect(
+                    self.posX + self.hitBoxOffestX, 
+                    self.posY + self.hitBoxOffestY,
+                    self.hitBoxWidth, self.hitBoxLength
+                    ))):
+                    self.posX -= self.speed
             elif self.target[0] < self.posX :
                 self.posX -= self.speed
+                if (self.angle > 270 or self.angle <= 90): 
+                    self.angle -= TURN_ANGLE
+
+                elif (self.angle < 270 and self.angle > 90): 
+                    self.angle += TURN_ANGLE
+                if(self.gameworld.player.CheckCollisionWithObstacles( 
+                Rect(
+                    self.posX + self.hitBoxOffestX, 
+                    self.posY + self.hitBoxOffestY,
+                    self.hitBoxWidth, self.hitBoxLength
+                    ))):
+                    self.posX += self.speed
             
             if self.target[1] > self.posY :
                 self.posY += self.speed
+                if (self.angle > 180): 
+                    self.angle += TURN_ANGLE
+                elif (self.angle <= 180): 
+                    self.angle -= TURN_ANGLE
+                if(self.gameworld.player.CheckCollisionWithObstacles( 
+                Rect(
+                    self.posX + self.hitBoxOffestX, 
+                    self.posY + self.hitBoxOffestY,
+                    self.hitBoxWidth, self.hitBoxLength
+                    ))):
+                    self.posY -= self.speed
             elif self.target[1] < self.posY :
                 self.posY -= self.speed
+                if (self.angle < 180): 
+                    self.angle += TURN_ANGLE
+                elif (self.angle >= 180): 
+                    self.angle -= TURN_ANGLE
+                if(self.gameworld.player.CheckCollisionWithObstacles( 
+                Rect(
+                    self.posX + self.hitBoxOffestX, 
+                    self.posY + self.hitBoxOffestY,
+                    self.hitBoxWidth, self.hitBoxLength
+                    ))):
+                    self.posY += self.speed
 
     def NextFrame(self):
         self.frame_counter += 1
@@ -92,6 +156,9 @@ class Monster:
         if (self.frame_counter >= len(self.animation)) :
             self.frame_counter = 0
 
-        self.image = self.animation[self.frame_counter]
+        # update l'angle s'il va plus que 360 ou moins que 0 après calculs
+        if self.angle < 0: self.angle = 360 + self.angle
+        else: self.angle %= 360
+        self.image = pygame.transform.rotate(self.animation[self.frame_counter], int(self.angle))
 
 
