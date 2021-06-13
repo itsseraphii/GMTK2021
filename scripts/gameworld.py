@@ -18,10 +18,10 @@ TILESHEET_SIZE = (TILE_SHEET_WIDTH, TILE_SHEET_HEIGHT)
 TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
 TILESHEET_PATH = BASE_PATH + "/res/tiled/CosmicLilac_Tiles_greyscale.png"
 
-CSV_PATH_BG = [BASE_PATH + "/levels/level_", "_background_layer.csv"]
-CSV_PATH_OB = [BASE_PATH + "/levels/level_", "_obstacle_layer.csv"]
-CSV_PATH_EN = [BASE_PATH + "/levels/level_", "_entity_layer.csv"]
-CSV_PATH_CO = [BASE_PATH + "/levels/level_", "_collectable_layer.csv"]
+CSV_PATH_BG = [BASE_PATH + "/levels/level", "_background_layer.csv"]
+CSV_PATH_OB = [BASE_PATH + "/levels/level", "_obstacle_layer.csv"]
+CSV_PATH_EN = [BASE_PATH + "/levels/level", "_entity_layer.csv"]
+CSV_PATH_CO = [BASE_PATH + "/levels/level", "_collectable_layer.csv"]
 
 DICT_HITBOX_SIZES = {
     10 : [32, 32, 0, 0],

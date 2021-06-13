@@ -77,8 +77,8 @@ class Player:
             self.lastFrameTime = currentTime
             self.NextFrame()
 
-        if (self.CheckCollisionWithMonsters(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
-            self.game.TriggerGameOver(False)
+        #if (self.CheckCollisionWithMonsters(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+        #    self.game.TriggerGameOver(False)
 
         self.CheckCollisionWithCollectables(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))
     
