@@ -6,6 +6,7 @@ import sys
 
 FPS = 100
 TEXT_COLOR = (200, 200, 200)
+LEVEL_TIME = 60000 # 60 seconds
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS
@@ -27,8 +28,9 @@ class Game:
         self.player = Player(self, self.gameworld)
         self.gameworld.SetPlayer(self.player)
         
-        self.fontGiant = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 60)
+        self.fontGiant = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 150)
         self.fontLarge = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 45)
+        self.fontLargeMelted = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 50)
         self.fontMedium = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 25)
         self.fontSmall = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 15)
 
@@ -93,9 +95,9 @@ class Game:
     def DrawTimeLeft(self):
         if (self.playing):
             if (self.timeOver):
-                self.screen.blit(self.fontLarge.render("They're coming", True, TEXT_COLOR), (10, 10))
+                self.screen.blit(self.fontLargeMelted.render("They're coming", True, TEXT_COLOR), (10, 10))
             else:
-                msLeft = int(max(0, 60000 - pygame.time.get_ticks() + self.startTime))
+                msLeft = int(max(0, LEVEL_TIME - pygame.time.get_ticks() + self.startTime))
                 self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 2)), True, TEXT_COLOR), (10, 10))            
 
     def DrawProgress(self):
@@ -119,7 +121,7 @@ class Game:
             self.screen.blit(text, textRect)
         else:
             if (self.menuPage == 0): # Title screen (also level 1 screen)
-                text = self.fontGiant.render("Beeg Game Name", True, TEXT_COLOR)
+                text = self.fontGiant.render("Transgenesis", True, TEXT_COLOR)
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2))
                 self.screen.blit(text, textRect)
 
@@ -140,9 +142,11 @@ class Game:
 
             for monsterId in self.gameworld.monsters:
                 self.gameworld.monsters[monsterId].Draw(self.screen)
+
+            for collectableId in self.gameworld.collectables:
+                self.gameworld.collectables[collectableId].Draw(self.screen)
         
             self.DrawTimeLeft()
-
         else:
             self.screen.fill((10, 10, 10))
             self.DrawMenu()
@@ -185,8 +189,9 @@ class Game:
             if (self.playing) :
                 self.UpdateAI()
 
-            if (self.playing and not self.timeOver and pygame.time.get_ticks() - self.startTime > 60000):
+            if (self.playing and not self.timeOver and pygame.time.get_ticks() - self.startTime > LEVEL_TIME):
                 self.timeOver = True
+                self.gameworld.SpawnTimeOverEnemies()
                 self.StartTimeOverMusic()
 
             clock.tick(FPS)

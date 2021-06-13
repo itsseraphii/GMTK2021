@@ -1,16 +1,21 @@
 from enum import Enum
-
-from pygame.rect import Rect
-from spriteUtils import getFrames
+from spriteUtils import BASE_PATH, getFrames
 import random
 import math
 import pygame
+from pygame import Rect
 
 TURN_ANGLE = 2
 
 class MonsterType(Enum):
     FATBOI = 105
     ZOMBIE = 110
+
+HITSOUND_1 = "meat_slap1.wav"
+HITSOUND_2 = "meat_slap2.wav"
+HITSOUND_3 = "meat_slap3.wav"
+DEATHSOUND_1 = "meatDeath.wav"
+DEATHSOUND_2 = "meatDeath2.wav"
 
 class Monster:
     def __init__(self, id, monster_type, spawn_location, gameworld):
@@ -29,6 +34,7 @@ class Monster:
             self.accuracy = 2
             self.target_cooldown = 1750 #ms
             self.monster_size = [64, 64]
+            deathsound = BASE_PATH + "/sounds/" + DEATHSOUND_2
             self.health = 9
 
             # Hitbox Info
@@ -44,6 +50,7 @@ class Monster:
             self.accuracy = 3 # Range of target, lower is better
             self.target_cooldown = 1250 #ms
             self.monster_size = [32, 32]
+            deathsound = BASE_PATH + "/sounds/" + DEATHSOUND_1
             self.health = 6
 
             # Hitbox Info
@@ -51,6 +58,11 @@ class Monster:
             self.hitBoxLength = 20
             self.hitBoxOffestX = self.hitBoxWidth/2
             self.hitBoxOffestY = self.hitBoxLength/2
+
+        self.hit_1 = pygame.mixer.Sound(BASE_PATH + "/sounds/" + HITSOUND_1)
+        self.hit_2 = pygame.mixer.Sound(BASE_PATH + "/sounds/" + HITSOUND_2)
+        self.hit_3 = pygame.mixer.Sound(BASE_PATH + "/sounds/" + HITSOUND_3)
+        self.death_sound = pygame.mixer.Sound(deathsound)
 
         self.animation = getFrames(self.image_source, self.monster_size)
         self.lastFrameTime = 0
@@ -68,8 +80,17 @@ class Monster:
         self.health -= damage
 
         if (self.health <= 0):
-            # TODO death anim (currently just deleting)
+            self.gameworld.deadMonsters.append(self.id) # Prevents respawn
             self.gameworld.monsters.pop(self.id)
+            self.death_sound.play()
+        else:
+            hitsound = random.randint(1, 3)
+            if hitsound == 1 :
+                self.hit_1.play()
+            elif hitsound == 2:
+                self.hit_2.play()
+            else :
+                self.hit_3.play()
 
     def Stun(self, timeMS):
         self.lastHitTime = pygame.time.get_ticks() + timeMS
@@ -160,5 +181,3 @@ class Monster:
         if self.angle < 0: self.angle = 360 + self.angle
         else: self.angle %= 360
         self.image = pygame.transform.rotate(self.animation[self.frame_counter], int(self.angle))
-
-
