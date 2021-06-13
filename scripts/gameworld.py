@@ -15,9 +15,11 @@ TILE_SHEET_HEIGHT = 9
 TILESHEET_SIZE = (TILE_SHEET_WIDTH, TILE_SHEET_HEIGHT)
 TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
 TILESHEET_PATH = BASE_PATH + "/res/tiled/CosmicLilac_Tiles_greyscale.png"
-CSV_PATH_BG = BASE_PATH + "/res/tiled/testmap_background_layer.csv"
-CSV_PATH_OB = BASE_PATH + "/res/tiled/testmap_obstacle_layer.csv"
-CSV_PATH_EN = BASE_PATH + "/res/tiled/testmap_entity_layer.csv"
+
+# [level1, level2, ...]
+CSV_PATHS_BG = [BASE_PATH + "/res/tiled/testmap_background_layer.csv", BASE_PATH + "/res/tiled/testmap_background_layer.csv"]
+CSV_PATHS_OB = [BASE_PATH + "/res/tiled/testmap_obstacle_layer.csv", BASE_PATH + "/res/tiled/testmap_obstacle_layer.csv"]
+CSV_PATHS_EN = [BASE_PATH + "/res/tiled/testmap_entity_layer.csv", BASE_PATH + "/res/tiled/testmap_entity_layer.csv"]
 
 DICT_HITBOX_SIZES = {
     10 : [32, 32, 0, 0],
@@ -35,11 +37,14 @@ DICT_HITBOX_SIZES = {
 OBSTACLES = []
 
 class GameWorld():
-    def __init__(self):
+    def __init__(self, currentLevel):
         self.tile_size = TILE_SIZE
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2))
+
+        self.currentLevel = currentLevel
+
         self.monsters = {}
         self.LoadTileCSV()
         self.obstacles = []
@@ -62,7 +67,7 @@ class GameWorld():
         self.tileImagesBG = {}
         self.tileImagesOB = {}
         self.monsters = {}
-        csvFile = open(CSV_PATH_BG, 'r')
+        csvFile = open(CSV_PATHS_BG[self.currentLevel], 'r')
 
         for line in csvFile:
             currentRow = []
@@ -79,7 +84,7 @@ class GameWorld():
 
             self.tileLayoutBG.append(currentRow)
 
-        csvFile = open(CSV_PATH_OB, 'r')
+        csvFile = open(CSV_PATHS_OB[self.currentLevel], 'r')
         for line in csvFile:
             currentRow = []
             
@@ -96,7 +101,7 @@ class GameWorld():
 
             self.tileLayoutOB.append(currentRow)
 
-        csvFile = open(CSV_PATH_EN, 'r')
+        csvFile = open(CSV_PATHS_EN[self.currentLevel], 'r')
         for line in csvFile:
             currentRow = []
             

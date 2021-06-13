@@ -1,5 +1,5 @@
 import pygame
-from pygame.constants import KEYDOWN, K_RETURN, MOUSEBUTTONDOWN, QUIT
+from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
 from gameworld import GameWorld, TILE_SIZE
 from entities.player import Player
 import sys
@@ -7,36 +7,50 @@ import sys
 FPS = 100
 TEXT_COLOR = (200, 200, 200)
 
-try: # Can't just import BASE_PATH from main (circular import)
+try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS
 except:
     BASE_PATH = "."
 
+MAIN_MUSIC = BASE_PATH + "/music/Main_theme_v2_loopable.mp3"
+# Path for each level 
+LEVELS_MUSIC = [BASE_PATH + "/music/level_theme_v2.mp3", BASE_PATH + "/music/level_theme_v2.mp3"]
+TIME_OVER_MUSIC = BASE_PATH + "/music/everything_goes_to_shit_v1.mp3"
+
 class Game:
-    def __init__(self, screen):
+    def __init__(self, screen, currentLevel, menuPage = -1):
         self.screen = screen
         self.screenSize = pygame.display.get_window_size()
 
-        self.gameworld = GameWorld()
-        self.player = Player(self.gameworld)
+        self.currentLevel = currentLevel
+        self.gameworld = GameWorld(currentLevel)
+        self.player = Player(self, self.gameworld)
         self.gameworld.SetPlayer(self.player)
-
+        
         self.fontGiant = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 60)
         self.fontLarge = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 45)
         self.fontMedium = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 25)
         self.fontSmall = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 15)
 
-        self.menuPage = 0
+        self.menuPage = menuPage
+
+        self.Run()
 
     def StartMenuMusic(self):
         pygame.mixer.music.fadeout # Fade out last music
-        pygame.mixer.music.load(BASE_PATH + "/music/Main_theme_v2_loopable.mp3") # Start menu music
+        pygame.mixer.music.load(MAIN_MUSIC) # Start menu music
         pygame.mixer.music.set_volume(1)
         pygame.mixer.music.play(-1) # Loop forever
 
     def StartLevelMusic(self):
         pygame.mixer.music.fadeout  # Fade out last music
-        pygame.mixer.music.load(BASE_PATH + "/music/level_theme_v2.mp3") # Start level music
+        pygame.mixer.music.load(LEVELS_MUSIC[self.currentLevel]) # Start level music
+        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.play() # play once
+
+    def StartTimeOverMusic(self):
+        pygame.mixer.music.fadeout  # Fade out last music
+        pygame.mixer.music.load(TIME_OVER_MUSIC) # Start level music
         pygame.mixer.music.set_volume(0.2)
         pygame.mixer.music.play() # play once
 
@@ -47,12 +61,18 @@ class Game:
 
             elif (event.type == KEYDOWN):
                 if (event.key == K_RETURN and not self.playing):
-                    if (self.menuPage < 1):
+                    if (self.menuPage != self.currentLevel):
                         self.menuPage += 1
                     else:
                         self.startTime = pygame.time.get_ticks()
                         self.playing = True
                         self.StartLevelMusic()
+
+                elif (event.key == K_r and self.playing):
+                    self.RestartCurrentLevel()
+
+                elif (event.key == K_n and self.playing): # TODO remove
+                    self.NextLevel()
 
             elif (self.playing and event.type == MOUSEBUTTONDOWN):
                 if (event.button == 4): # Mouse wheel up
@@ -72,10 +92,11 @@ class Game:
 
     def DrawTimeLeft(self):
         if (self.playing):
-            msLeft = int(60000 - pygame.time.get_ticks() + self.startTime)
-            self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 2)), True, TEXT_COLOR), (10, 10))
-        elif (self.gameOver):
-            self.screen.blit(self.fontLarge.render("Game over", True, TEXT_COLOR), (10, 10))
+            if (self.timeOver):
+                self.screen.blit(self.fontLarge.render("They're coming", True, TEXT_COLOR), (10, 10))
+            else:
+                msLeft = int(max(0, 60000 - pygame.time.get_ticks() + self.startTime))
+                self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 2)), True, TEXT_COLOR), (10, 10))            
 
     def DrawProgress(self):
         percentComplete = min(100, round((self.gameworld.backgroundSize[1] - (self.gameworld.middleY * TILE_SIZE)) / self.gameworld.backgroundSize[1] * 100, 1))
@@ -88,7 +109,7 @@ class Game:
         self.screen.blit(self.fontMedium.render("Ammo: " + str(self.player.ammo), True, TEXT_COLOR), (10, self.screenSize[1] - 40))
 
     def DrawMenu(self):
-        if (self.menuPage == 0):
+        if (self.menuPage == -1): # Start lore
             text = self.fontMedium.render("TODO put story here", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 3 + 30))
             self.screen.blit(text, textRect)
@@ -96,13 +117,18 @@ class Game:
             text = self.fontMedium.render("Press Enter to continue", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
-
         else:
-            text = self.fontGiant.render("Beeg Game Name", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2))
-            self.screen.blit(text, textRect)
+            if (self.menuPage == 0): # Title screen (also level 1 screen)
+                text = self.fontGiant.render("Beeg Game Name", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2))
+                self.screen.blit(text, textRect)
 
-            text = self.fontMedium.render("Press Enter to start", True, TEXT_COLOR)
+            elif (self.menuPage == 1): # Level 2 screen
+                text = self.fontMedium.render("Level 2, TODO add some story here", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 3 + 30))
+                self.screen.blit(text, textRect)
+
+            text = self.fontMedium.render("Press Enter to start level " + str(self.currentLevel + 1), True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
 
@@ -118,7 +144,7 @@ class Game:
             self.DrawTimeLeft()
 
         else:
-            self.screen.fill((0, 0, 0))
+            self.screen.fill((10, 10, 10))
             self.DrawMenu()
 
         pygame.display.update()
@@ -127,10 +153,26 @@ class Game:
         for monsterId in self.gameworld.monsters:
             self.gameworld.monsters[monsterId].Move()
 
+    def RestartCurrentLevel(self):
+        self.__init__(self.screen, self.currentLevel, self.currentLevel)
+
+    def NextLevel(self):
+        nextLevel = self.currentLevel + 1
+        self.__init__(self.screen, nextLevel, nextLevel)
+
+    def TriggerGameOver(self, victory):
+        self.gameOver = True
+
+        if (victory):
+            self.NextLevel()
+        else:
+            self.RestartCurrentLevel()
+
     def Run(self):
-        self.running = True
-        self.playing = False
-        self.gameOver = False
+        self.running = True # True while game is not exited
+        self.playing = False # True while a level is beeing played
+        self.timeOver = False # True while a level is beeing played and the 60 seconds are over
+        self.gameOver = False # True when the level is over
         
         clock = pygame.time.Clock()
 
@@ -143,9 +185,8 @@ class Game:
             if (self.playing) :
                 self.UpdateAI()
 
-            if (self.playing and not self.gameOver and pygame.time.get_ticks() - self.startTime > 60000):
-                self.playing = False
-                self.gameOver = True
-                self.StartMenuMusic()
+            if (self.playing and not self.timeOver and pygame.time.get_ticks() - self.startTime > 60000):
+                self.timeOver = True
+                self.StartTimeOverMusic()
 
             clock.tick(FPS)
