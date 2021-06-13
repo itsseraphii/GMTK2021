@@ -1,4 +1,5 @@
 import pygame
+from entities.collectable import Collectable
 from entities.obstacle import Obstacle
 from pygame import Rect
 import sys
@@ -20,6 +21,7 @@ TILESHEET_PATH = BASE_PATH + "/res/tiled/CosmicLilac_Tiles_greyscale.png"
 CSV_PATHS_BG = [BASE_PATH + "/res/tiled/testmap_background_layer.csv", BASE_PATH + "/res/tiled/testmap_background_layer.csv"]
 CSV_PATHS_OB = [BASE_PATH + "/res/tiled/testmap_obstacle_layer.csv", BASE_PATH + "/res/tiled/testmap_obstacle_layer.csv"]
 CSV_PATHS_EN = [BASE_PATH + "/res/tiled/testmap_entity_layer.csv", BASE_PATH + "/res/tiled/testmap_entity_layer.csv"]
+CSV_PATHS_CO = [BASE_PATH + "/res/tiled/testmap_collectable_layer.csv", BASE_PATH + "/res/tiled/testmap_collectable_layer.csv"]
 
 DICT_HITBOX_SIZES = {
     10 : [32, 32, 0, 0, True],
@@ -43,6 +45,7 @@ class GameWorld():
         self.currentLevel = currentLevel
 
         self.monsters = {}
+        self.collectables = {}
         self.LoadTileCSV()
         self.obstacles = []
 
@@ -61,6 +64,7 @@ class GameWorld():
         self.tileLayoutBG = []
         self.tileLayoutOB = []
         self.tileLayoutEN = []
+        self.tileLayoutCO = []
         self.tileImagesBG = {}
         self.tileImagesOB = {}
         self.monsters = {}
@@ -106,6 +110,15 @@ class GameWorld():
                 currentRow.append(int(tileNum))
 
             self.tileLayoutEN.append(currentRow)
+
+        csvFile = open(CSV_PATHS_CO[self.currentLevel], 'r')
+        for line in csvFile:
+            currentRow = []
+            
+            for tileNum in line.split(','):
+                currentRow.append(int(tileNum))
+
+            self.tileLayoutCO.append(currentRow)
             
         self.backgroundSize = (len(self.tileLayoutBG[0]) * TILE_SIZE, len(self.tileLayoutBG) * TILE_SIZE)
 
@@ -115,8 +128,11 @@ class GameWorld():
 
     def IncreaseOffsetY(self, offsetY):
         self.offsetY += offsetY
-        for monster in self.monsters:
-            self.monsters[monster].posY += offsetY
+        for monsterId in self.monsters:
+            self.monsters[monsterId].posY += offsetY
+
+        for collectableId in self.collectables:
+            self.collectables[collectableId].posY += offsetY
 
     def GetOffsetY(self):
         return self.offsetY
@@ -164,3 +180,6 @@ class GameWorld():
 
                 if(self.tileLayoutEN[y][x] != -1 and not tileId in self.monsters):
                     self.monsters[tileId] = Monster(tileId, (self.tileLayoutEN[y][x]), [posX, posY], self)
+
+                if(self.tileLayoutCO[y][x] != -1 and not tileId in self.collectables):
+                    self.collectables[tileId] = Collectable(tileId, (self.tileLayoutCO[y][x]), [posX, posY], self)

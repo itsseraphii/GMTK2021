@@ -1,7 +1,7 @@
 import pygame
 from game import Game
 
-SIZE = (1600, 900)
+SIZE = (1280, 720)
 
 if (__name__ == "__main__"):
     pygame.init()

@@ -140,9 +140,11 @@ class Game:
 
             for monsterId in self.gameworld.monsters:
                 self.gameworld.monsters[monsterId].Draw(self.screen)
+
+            for collectableId in self.gameworld.collectables:
+                self.gameworld.collectables[collectableId].Draw(self.screen)
         
             self.DrawTimeLeft()
-
         else:
             self.screen.fill((10, 10, 10))
             self.DrawMenu()
