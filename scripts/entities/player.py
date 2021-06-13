@@ -124,12 +124,7 @@ class Player:
     def CheckCollisionWithObstacles(self, rect):
         for ob in self.gameworld.obstacles:
             if rect.colliderect(Rect(ob.GetX() + ob.GetHitBoxOffsetX(), ob.GetY() + ob.GetHitBoxOffsetY(), ob.GetHitboxWidth(), ob.GetHitboxLength())):
-                print("width: " + str(ob.GetHitboxWidth()))
-                print("length: " + str(ob.GetHitboxLength()))
-                print("offsetx: " + str(ob.GetHitBoxOffsetX()))
-                print("offsety: " + str(ob.GetHitBoxOffsetY()))
                 return True
-
         return False
 
     def CheckCollisionWithMonsters(self, playerRect):
