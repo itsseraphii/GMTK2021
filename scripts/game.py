@@ -1,3 +1,4 @@
+from math import exp
 import pygame
 from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
 from gameworld import GameWorld, TILE_SIZE
@@ -100,9 +101,12 @@ class Game:
                 msLeft = int(max(0, LEVEL_TIME - pygame.time.get_ticks() + self.startTime))
                 self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 2)), True, TEXT_COLOR), (10, 10))            
 
-    def DrawProgress(self):
-        percentComplete = min(100, round((self.gameworld.backgroundSize[1] - (self.gameworld.middleY * TILE_SIZE)) / self.gameworld.backgroundSize[1] * 100, 1))
-        self.screen.blit(self.fontLarge.render("Progress: " + str(percentComplete) + "%", True, TEXT_COLOR), (self.screenSize[0] - 360, 10))
+    def DrawProgress(self): # TODO
+        var1 = self.gameworld.startMiddleY - self.gameworld.middleY
+        var2 = self.gameworld.startMiddleY - self.gameworld.goalPosY
+
+        percentComplete = var1 / var2 * 100
+        #self.screen.blit(self.fontLarge.render("Progress: " + str(percentComplete) + "%", True, TEXT_COLOR), (self.screenSize[0] - 360, 10))
 
     def DrawUI(self):
         self.DrawTimeLeft()
@@ -110,12 +114,16 @@ class Game:
         self.screen.blit(self.fontMedium.render("Equipped: " + str(self.player.weaponInventory[self.player.equippedWeaponIndex]), True, TEXT_COLOR), (10, self.screenSize[1] - 70))
         self.screen.blit(self.fontMedium.render("Ammo: " + str(self.player.ammo), True, TEXT_COLOR), (10, self.screenSize[1] - 40))
 
+    def DrawParagraph(self, allText):
+        for i in range(len(allText)):
+                text = self.fontMedium.render(allText[i], True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, (self.screenSize[1] / 4) + (i * 30)))
+                self.screen.blit(text, textRect)
+
     def DrawMenu(self):
         if (self.menuPage == -1): # Start lore
-            text = self.fontMedium.render("TODO put story here", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 3 + 30))
-            self.screen.blit(text, textRect)
-
+            allText = ["The year is 2082, scientists have found a miracle cure to cancer.", " The treatment modifies DNA, forcing the cancerous cell to regenerate as an healthy cell.", "", "In hindsight, forcing cells to reboot had some... unforeseen consequences.", "", "The treatment forces ANY cell it infects to regenerate and then spread the modified DNA, transforming the", "organism into a melted goo of skin and muscles.", "", "Any physical contact with an amalgamates will turn you into one of those monsters.", "", "Be really careful out there survivor."]
+            self.DrawParagraph(allText)
             text = self.fontMedium.render("Press Enter to continue", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
@@ -126,9 +134,8 @@ class Game:
                 self.screen.blit(text, textRect)
 
             elif (self.menuPage == 1): # Level 2 screen
-                text = self.fontMedium.render("Level 2, TODO add some story here", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 3 + 30))
-                self.screen.blit(text, textRect)
+                allText = ["Well... that was the last can.", "", "I need to go out for supplies.", "", "There has to be other survivors out there.", "There must be."]
+                self.DrawParagraph(allText)
 
             text = self.fontMedium.render("Press Enter to start level " + str(self.currentLevel + 1), True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))

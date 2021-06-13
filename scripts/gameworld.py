@@ -1,5 +1,5 @@
 import pygame
-from entities.collectable import Collectable
+from entities.collectable import Collectable, CollectableType
 from entities.obstacle import Obstacle
 from pygame import Rect
 import sys
@@ -18,11 +18,10 @@ TILESHEET_SIZE = (TILE_SHEET_WIDTH, TILE_SHEET_HEIGHT)
 TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
 TILESHEET_PATH = BASE_PATH + "/res/tiled/CosmicLilac_Tiles_greyscale.png"
 
-# [level1, level2, ...]
-CSV_PATHS_BG = [BASE_PATH + "/res/tiled/testmap_background_layer.csv", BASE_PATH + "/res/tiled/testmap_background_layer.csv"]
-CSV_PATHS_OB = [BASE_PATH + "/res/tiled/testmap_obstacle_layer.csv", BASE_PATH + "/res/tiled/testmap_obstacle_layer.csv"]
-CSV_PATHS_EN = [BASE_PATH + "/res/tiled/testmap_entity_layer.csv", BASE_PATH + "/res/tiled/testmap_entity_layer.csv"]
-CSV_PATHS_CO = [BASE_PATH + "/res/tiled/testmap_collectable_layer.csv", BASE_PATH + "/res/tiled/testmap_collectable_layer.csv"]
+CSV_PATH_BG = [BASE_PATH + "/levels/level", "_background_layer.csv"]
+CSV_PATH_OB = [BASE_PATH + "/levels/level", "_obstacle_layer.csv"]
+CSV_PATH_EN = [BASE_PATH + "/levels/level", "_entity_layer.csv"]
+CSV_PATH_CO = [BASE_PATH + "/levels/level", "_collectable_layer.csv"]
 
 DICT_HITBOX_SIZES = {
     10 : [32, 32, 0, 0],
@@ -46,7 +45,7 @@ class GameWorld():
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2))
 
-        self.currentLevel = currentLevel
+        self.currentLevel = currentLevel if (currentLevel > -1) else 0 
 
         self.monsters = {}
         self.collectables = {}
@@ -56,7 +55,9 @@ class GameWorld():
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
         self.offsetY = self.startOffsetY
-        self.middleY = 0
+        self.startMiddleY = 1
+        self.middleY = 1
+        self.goalPosY = self.FindGoalPosY()
 
         self.deadMonsters = []
 
@@ -74,7 +75,7 @@ class GameWorld():
         self.tileImagesBG = {}
         self.tileImagesOB = {}
         self.monsters = {}
-        csvFile = open(CSV_PATHS_BG[self.currentLevel], 'r')
+        csvFile = open(CSV_PATH_BG[0] + str(self.currentLevel + 1) + CSV_PATH_BG[1], 'r')
 
         for line in csvFile:
             currentRow = []
@@ -91,7 +92,7 @@ class GameWorld():
 
             self.tileLayoutBG.append(currentRow)
 
-        csvFile = open(CSV_PATHS_OB[self.currentLevel], 'r')
+        csvFile = open(CSV_PATH_OB[0] + str(self.currentLevel + 1) + CSV_PATH_OB[1], 'r')
         for line in csvFile:
             currentRow = []
             
@@ -108,7 +109,7 @@ class GameWorld():
 
             self.tileLayoutOB.append(currentRow)
 
-        csvFile = open(CSV_PATHS_EN[self.currentLevel], 'r')
+        csvFile = open(CSV_PATH_EN[0] + str(self.currentLevel + 1) + CSV_PATH_EN[1], 'r')
         for line in csvFile:
             currentRow = []
             
@@ -117,7 +118,7 @@ class GameWorld():
 
             self.tileLayoutEN.append(currentRow)
 
-        csvFile = open(CSV_PATHS_CO[self.currentLevel], 'r')
+        csvFile = open(CSV_PATH_CO[0] + str(self.currentLevel + 1) + CSV_PATH_CO[1], 'r')
         for line in csvFile:
             currentRow = []
             
@@ -164,9 +165,20 @@ class GameWorld():
     def GetOffsetY(self):
         return self.offsetY
 
+    def FindGoalPosY(self):
+        for y in range(min(50, len(self.tileLayoutCO))):
+            for x in range(len(self.tileLayoutCO[y])):
+                if(self.tileLayoutCO[y][x] != -1 and CollectableType(self.tileLayoutCO[y][x]) == CollectableType.GOAL):
+                    return y + 1
+
+        print("ERROR - Goal is too far from the top of the map")
+
     def Draw(self, screen):
         self.middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
         self.obstacles = []
+
+        if (self.startMiddleY == -1):
+            self.startMiddleY = self.middleY
 
         for y in range(int(max(0, self.middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayoutBG), self.middleY + (self.screenNbTilesY / 2)))):
             for x in range(len(self.tileLayoutBG[y])):
@@ -216,7 +228,7 @@ class GameWorld():
                         pygame.draw.rect(screen, (255,0,0), Rect(posX,posY,32, 32), 2)
                         '''
 
-                tileId = y*self.screenNbTilesY + x
+                tileId = y * self.screenNbTilesY + x
 
                 if(self.tileLayoutEN[y][x] != -1 and not tileId in self.monsters and not tileId in self.deadMonsters):
                     self.monsters[tileId] = Monster(tileId, (self.tileLayoutEN[y][x]), [posX, posY], self)

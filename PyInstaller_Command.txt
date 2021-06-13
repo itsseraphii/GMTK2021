@@ -1,0 +1,16 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pyinstaller --add-data "fonts/FreeSansBold.ttf;./fonts" --add-data "fonts/melted.ttf;./fonts" --add-data "levels/level1_background_layer.csv;./levels" --add-data "levels/level1_collectable_layer.csv;./levels" --add-data "levels/level1_entity_layer.csv;./levels" --add-data "levels/level1_obstacle_layer.csv;./levels" --add-data "levels/level2_background_layer.csv;./levels" --add-data "levels/level2_collectable_layer.csv;./levels" --add-data "levels/level2_entity_layer.csv;./levels" --add-data "levels/level2_obstacle_layer.csv;./levels" --add-data "music/everything_goes_to_shit_v1.mp3;./music" --add-data "music/level_theme_v2.mp3;./music" --add-data "music/Main_theme_v2_loopable.mp3;./music" --add-data "res/tiled/CosmicLilac_Tiles_greyscale.png;./res/tiled" --add-data "res/ammo_big.png;./res" --add-data "res/ammo.png;./res" --add-data "res/arrow.png;./res" --add-data "res/bullet.png;./res" --add-data "res/crowbar.png;./res" --add-data "res/goal.png;./res" --add-data "res/monster_n1.png;./res" --add-data "res/monster1.png;./res" --add-data "res/pistol.png;./res" --add-data "res/player_gun.png;./res" --add-data "res/player_unarmed.png;./res" --add-data "res/rifle.png;./res" --add-data "res/sniper.png;./res" --add-data "res/zombie1.png;./res" --add-data "res/player_pistol.png;./res" --add-data "res/player_rifle.png;./res" --add-data "res/player_sniper.png;./res" --add-data "sounds/gunshot.mp3;./sounds" --add-data "sounds/swing.mp3;./sounds" --add-data "sounds/ammo_pickup.ogg;./sounds" --add-data "sounds/dash.wav;./sounds" --add-data "sounds/gun_pickup.wav;./sounds" --add-data "sounds/meatDeath.wav;./sounds" --add-data "sounds/meatDeath2.wav;./sounds" --add-data "sounds/meat_slap1.wav;./sounds" --add-data "sounds/meat_slap2.wav;./sounds" --add-data "sounds/meat_slap3.wav;./sounds" -n Transgenesis --onefile -w scripts/main.py
