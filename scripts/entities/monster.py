@@ -14,6 +14,7 @@ class Monster:
         self.id = id
         self.posX = spawn_location[0]
         self.posY = spawn_location[1]
+        self.lastHitTime = 0
 
         if (MonsterType(monster_type) == MonsterType.FATBOI) :
             self.monster_type = MonsterType.FATBOI
@@ -23,6 +24,7 @@ class Monster:
             self.accuracy = 2
             self.target_cooldown = 1750 #ms
             self.monster_size = [64, 64]
+            self.health = 9
         else :
             self.monster_type = MonsterType.ZOMBIE
             self.speed = 1.5
@@ -31,6 +33,7 @@ class Monster:
             self.accuracy = 3 # Range of target, lower is better
             self.target_cooldown = 1250 #ms
             self.monster_size = [32, 32]
+            self.health = 6
 
         self.animation = getFrames(self.image_source, self.monster_size)
         self.lastFrameTime = 0
@@ -62,14 +65,17 @@ class Monster:
             self.lastFrameTime = currentTime
             self.NextFrame()
 
-        if self.target[0] > self.posX :
+    def MoveTowardsPlayer(self):
+        playerLocation = self.gameworld.player.GetPos()
+
+        if playerLocation[0] > self.posX :
             self.posX += self.speed
-        elif self.target[0] < self.posX :
+        elif playerLocation[0] < self.posX :
             self.posX -= self.speed
         
-        if self.target[1] > self.posY :
+        if playerLocation[1] > self.posY :
             self.posY += self.speed
-        elif self.target[1] < self.posY :
+        elif playerLocation[1] < self.posY :
             self.posY -= self.speed
 
     def NextFrame(self):
