@@ -24,8 +24,8 @@ class Player:
         self.image = pygame.transform.scale(pygame.image.load(IMAGE_FILE), (30, 30))
         self.rotatedImage = self.image
 
-        self.weapon = Weapon(self)
-        self.weaponInventory = ["Revolver", "Assault Rifle", "Sniper"] # TODO remove start weapons
+        self.weapon = Weapon(self, gameworld)
+        self.weaponInventory = ["Revolver", "Crowbar", "Assault Rifle", "Sniper"] # TODO remove start weapons
         self.equippedWeaponIndex = 0
         self.ammo = 13
 
@@ -78,7 +78,7 @@ class Player:
 
     def Attack(self):
         if (self.ammo > 0):
-            if (self.weapon.Attack(self.weaponInventory[self.equippedWeaponIndex])):
+            if (self.weapon.Attack(self.weaponInventory[self.equippedWeaponIndex], [self.posX, self.posY])):
                 self.ammo -= 1
 
     def GetSize(self):
