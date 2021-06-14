@@ -137,6 +137,18 @@ class Game:
                 allText = ["Well... that was the last can.", "", "I need to go out for supplies.", "", "There has to be other survivors out there.", "There must be."]
                 self.DrawParagraph(allText)
 
+            elif (self.menuPage == 2): # Level 3 screen
+                allText = ["--------------------------------ARCHIVE #002184--------------------------------", "July 3rd 2084                                 Agent Marshall", "", "Amalgamated organisms have demonstrated the ability to produce sounds", "that could be described as human speech.", "", "Different voices can be heard, sometimes alternating, sometimes in unison", "", "The experience is deeply disturbing and yet, fascinating.", "", "Further investigation is required.", "-----------------------------------------------------------------------------------------"]
+                self.DrawParagraph(allText)
+
+            elif (self.menuPage == 3): # Level 4 screen
+                allText = [] # TODO
+                self.DrawParagraph(allText)
+
+            elif (self.menuPage == 4): # Level 5 screen
+                allText = [] # TODO
+                self.DrawParagraph(allText)
+
             text = self.fontMedium.render("Press Enter to start level " + str(self.currentLevel + 1), True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
