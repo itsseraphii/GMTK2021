@@ -1,18 +1,22 @@
-# GMTK 2021 Project
+# GMTK 2021 Project - Transgenesis
+Game initially during the GMTK 2021 Game Jam, this is a top-down shooter made with pygame.
+
 ## Project setup
 To set up the project, you must have `Python 3` or higher installed, as well as `pip` if it was not included in your install.
 
-1. Install poetry
+1. Install pygame
 ```cmd
-py -m pip install poetry
+py -m pip install pygame
 ```
-2. Run poetry on the project
+2. Run the project
 ```cmd
-py -m poetry install
+py scripts/main.py
 ```
+All you have to do is run `main.py` using your Python interpreter.
 
-## Adding dependencies
-If you wish to add a dependency, be sure to add them using poetry so this updates the .tomnl and .lock file.
-```cmd
-py -m poetry add (module-name-here)
-```
+## Contributions
+ - Seraphii - Developper, Assets Artist
+ - Hypstersaurus - Developper, Texture artist
+ - Psycho - Developper, Software Architect
+ - Parazyte - Composer, Level designer, Writer
+ - Nemesis - Enemy design, Writer
