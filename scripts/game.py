@@ -3,12 +3,17 @@ import pygame
 from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
 from gameworld import GameWorld, TILE_SIZE
 from entities.player import Player
+from story import STORY
 import sys
 
-FPS = 100
+MENU_FPS = 30
+LEVEL_FPS = 100
+
 LEVEL_TIME = 60000 # 60 seconds
 
 BLACK = (0, 0 ,0)
+MENU_BG_COLOR = (10, 10, 10)
+LEVEL_BG_COLOR = (33, 33, 35)
 TEXT_COLOR = (200, 200, 200)
 
 try: # Path for files when app is built by PyInstaller
@@ -25,6 +30,8 @@ class Game:
     def __init__(self, screen, currentLevel, menuPage = -1):
         self.screen = screen
         self.screenSize = pygame.display.get_window_size()
+        self.SetResizeAllowed(True)
+        self.fps = MENU_FPS
 
         self.menuPage = menuPage
         self.currentLevel = currentLevel
@@ -38,16 +45,16 @@ class Game:
         self.Run()
 
     def InitUI(self):
-        self.goalPosY = self.gameworld.FindGoalPosY()
+        self.goalPosY = self.gameworld.FindGoalPosY() + 1 # +1 to see the end of the progress bar before touching the goal
         self.startMiddleY = (self.gameworld.backgroundSize[1] - (self.gameworld.offsetY - self.gameworld.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
+        self.lastProgressHeight = 1000000 # Forces first progress drawing
         self.progressBarBackground = pygame.Rect(self.screenSize[0] - 25, 10, 15, self.screenSize[1] - 20)
         self.progressRatio = (self.screenSize[1] - 20) / -(self.goalPosY - self.startMiddleY)
 
-        self.fontGiant = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 150)
+        self.fontTitle = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", int(self.screenSize[0] / 8))
         self.fontLarge = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 45)
         self.fontLargeMelted = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 50)
         self.fontMedium = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 25)
-        self.fontSmall = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 15)
 
     def StartMenuMusic(self):
         pygame.mixer.music.fadeout # Fade out last music
@@ -72,17 +79,28 @@ class Game:
             if (event.type == QUIT):
                 self.running =  False
 
+            elif (event.type == pygame.VIDEORESIZE): # Can only resize in menus (between levels)
+                self.screenSize = [max(1280, event.w), max(720, event.h)]
+                self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
+                self.RestartLevel()
+
             elif (event.type == KEYDOWN):
                 if (event.key == K_RETURN and not self.playing):
                     if (self.menuPage != self.currentLevel):
                         self.menuPage += 1
-                    else:
+                        self.fps = MENU_FPS
+
+                    else: # Start of a level
+                        self.SetResizeAllowed(False)
+                        self.fps = LEVEL_FPS
                         self.startTime = pygame.time.get_ticks()
                         self.playing = True
                         self.StartLevelMusic()
+                        self.screen.fill(LEVEL_BG_COLOR)
+                        pygame.draw.rect(self.screen, BLACK, self.progressBarBackground)
 
                 elif (event.key == K_r and self.playing):
-                    self.RestartCurrentLevel()
+                    self.RestartLevel()
 
                 elif (event.key == K_n and self.playing): # TODO remove
                     self.NextLevel()
@@ -103,26 +121,33 @@ class Game:
             if (pygame.mouse.get_pressed()[0]):
                 self.player.Attack()
 
+    def SetResizeAllowed(self, allowed):
+        if (allowed):
+            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
+        else:
+            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]))
+
     def DrawTimeLeft(self):
         if (self.playing):
             if (self.timeOver):
-                self.screen.blit(self.fontLargeMelted.render("They're coming", True, TEXT_COLOR), (10, 10))
+                self.screen.blit(self.fontLargeMelted.render("They're coming", True, TEXT_COLOR, LEVEL_BG_COLOR), (10, 10))
             else:
                 msLeft = int(max(0, LEVEL_TIME - pygame.time.get_ticks() + self.startTime))
-                self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 2)), True, TEXT_COLOR), (10, 10))            
+                self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 1)), True, TEXT_COLOR, LEVEL_BG_COLOR), (10, 10))            
 
     def DrawProgress(self):
         currentPos = self.gameworld.middleY - self.startMiddleY
-        progressHeight = currentPos * self.progressRatio + self.screenSize[1] - 20
+        newProgressHeight = int(max(13, currentPos * self.progressRatio + self.screenSize[1] - 14))
 
-        progressBarForeground = pygame.Rect(self.screenSize[0] - 22, max(13, progressHeight), 9, min(self.screenSize[1] - 26, self.screenSize[1] - progressHeight - 12))
-
-        pygame.draw.rect(self.screen, BLACK, self.progressBarBackground)
-        pygame.draw.rect(self.screen, TEXT_COLOR, progressBarForeground)
+        if (newProgressHeight < self.lastProgressHeight): # Player has progressed
+            self.lastProgressHeight = newProgressHeight
+            progressBarForeground = pygame.Rect(self.screenSize[0] - 22, newProgressHeight, 9, min(self.screenSize[1] - 26, 1))
+            pygame.draw.rect(self.screen, TEXT_COLOR, progressBarForeground)
 
     def DrawUI(self):
         self.DrawTimeLeft()
         self.DrawProgress()
+        pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((10, self.screenSize[1] - 70), (300, 60))) # Cover last frame's text
         self.screen.blit(self.fontMedium.render("Equipped: " + str(self.player.weaponInventory[self.player.equippedWeaponIndex]), True, TEXT_COLOR), (10, self.screenSize[1] - 70))
         self.screen.blit(self.fontMedium.render("Ammo: " + str(self.player.ammo), True, TEXT_COLOR), (10, self.screenSize[1] - 40))
 
@@ -133,53 +158,43 @@ class Game:
                 self.screen.blit(text, textRect)
 
     def DrawMenu(self):
+        self.screen.fill(MENU_BG_COLOR)
+
         if (self.menuPage == -1): # Start lore
-            allText = ["The year is 2082, scientists have found a miracle cure to cancer.", " The treatment modifies DNA, forcing the cancerous cell to regenerate as an healthy cell.", "", "In hindsight, forcing cells to reboot had some... unforeseen consequences.", "", "The treatment forces ANY cell it infects to regenerate and then spread the modified DNA, transforming the", "organism into a melted goo of skin and muscles.", "", "Any physical contact with an amalgamates will turn you into one of those monsters.", "", "Be really careful out there survivor."]
-            self.DrawParagraph(allText)
+            self.DrawParagraph(STORY[self.menuPage])
             text = self.fontMedium.render("Press Enter to continue", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
+        
         else:
-            if (self.menuPage == 0): # Title screen (also level 1 screen)
-                text = self.fontGiant.render("Transgenesis", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2))
-                self.screen.blit(text, textRect)
-
-            elif (self.menuPage == 1): # Level 2 screen
-                allText = ["Well... that was the last can.", "", "I need to go out for supplies.", "", "There has to be other survivors out there.", "There must be."]
-                self.DrawParagraph(allText)
-
-            elif (self.menuPage == 2): # Level 3 screen
-                allText = ["--------------------------------ARCHIVE #002184--------------------------------", "July 3rd 2084                                 Agent Marshall", "", "Amalgamated organisms have demonstrated the ability to produce sounds", "that could be described as human speech.", "", "Different voices can be heard, sometimes alternating, sometimes in unison", "", "The experience is deeply disturbing and yet, fascinating.", "", "Further investigation is required.", "-----------------------------------------------------------------------------------------"]
-                self.DrawParagraph(allText)
-
-            elif (self.menuPage == 3): # Level 4 screen
-                allText = [] # TODO
-                self.DrawParagraph(allText)
-
-            elif (self.menuPage == 4): # Level 5 screen
-                allText = [] # TODO
-                self.DrawParagraph(allText)
-
             text = self.fontMedium.render("Press Enter to start level " + str(self.currentLevel + 1), True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
 
+            if (self.menuPage == 0): # Title page (level 1)
+                text = self.fontTitle.render("Transgenesis", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2))
+                self.screen.blit(text, textRect)
+
+            else: # Story for each other level
+                self.DrawParagraph(STORY[self.menuPage])
+
     def Draw(self):
         if (self.playing):
             self.gameworld.Draw(self.screen)
-            self.player.Draw(self.screen)
-            self.DrawUI()
-
-            for monsterId in self.gameworld.monsters:
-                self.gameworld.monsters[monsterId].Draw(self.screen)
 
             for collectableId in self.gameworld.collectables:
                 self.gameworld.collectables[collectableId].Draw(self.screen)
+
+            self.player.Draw(self.screen)
+
+            for monsterId in self.gameworld.monsters:
+                self.gameworld.monsters[monsterId].Draw(self.screen)
         
             self.DrawTimeLeft()
+            self.DrawUI()
+
         else:
-            self.screen.fill((10, 10, 10))
             self.DrawMenu()
 
         pygame.display.update()
@@ -188,12 +203,11 @@ class Game:
         for monsterId in self.gameworld.monsters:
             self.gameworld.monsters[monsterId].Move()
 
-    def RestartCurrentLevel(self):
-        self.__init__(self.screen, self.currentLevel, self.currentLevel)
+    def RestartLevel(self):
+        self.__init__(self.screen, self.currentLevel, self.menuPage)
 
     def NextLevel(self):
-        nextLevel = self.currentLevel + 1
-        self.__init__(self.screen, nextLevel, nextLevel)
+        self.__init__(self.screen, self.currentLevel + 1, self.menuPage + 1)
 
     def TriggerGameOver(self, victory):
         self.gameOver = True
@@ -201,7 +215,7 @@ class Game:
         if (victory):
             self.NextLevel()
         else:
-            self.RestartCurrentLevel()
+            self.RestartLevel()
 
     def Run(self):
         self.running = True # True while game is not exited
@@ -220,9 +234,9 @@ class Game:
             if (self.playing) :
                 self.UpdateAI()
 
-            if (self.playing and not self.timeOver and pygame.time.get_ticks() - self.startTime > LEVEL_TIME):
+            if (self.playing and not self.timeOver and pygame.time.get_ticks() - self.startTime > LEVEL_TIME): # 60 seconds are over
                 self.timeOver = True
                 self.gameworld.SpawnTimeOverEnemies()
                 self.StartTimeOverMusic()
 
-            clock.tick(FPS)
+            clock.tick(self.fps)

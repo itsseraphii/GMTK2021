@@ -48,7 +48,7 @@ class Weapon:
 
             if (self.weapons[equippedWeapon][0] and ammo > 0): # Ranged weapon with ammo
                 playerPos = self.player.GetPos()
-                angle = -math.radians(self.player.GetAngle())
+                angle = -math.radians(self.player.angle)
 
                 # [posX, posY, angle, damage]
                 self.bullets.append([self.playerSize[0] / 2 + playerPos[0], self.playerSize[1] + playerPos[1], angle, self.weapons[equippedWeapon][1]])

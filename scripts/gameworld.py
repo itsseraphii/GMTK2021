@@ -159,9 +159,6 @@ class GameWorld():
         for collectableId in self.collectables:
             self.collectables[collectableId].posY += offsetY
 
-    def GetOffsetY(self):
-        return self.offsetY
-
     def FindGoalPosY(self):
         for y in range(min(50, len(self.tileLayoutCO))):
             for x in range(len(self.tileLayoutCO[y])):
@@ -180,7 +177,7 @@ class GameWorld():
                 posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
                 screen.blit(self.tileImagesBG[self.tileLayoutBG[y][x]], (posX, posY))
 
-                if(self.tileLayoutOB[y][x] != -1):
+                if (self.tileLayoutOB[y][x] != -1):
                     screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
                     
                     # Est-ce que la key est gérée par le dictionary de tiles?
@@ -224,8 +221,8 @@ class GameWorld():
 
                 tileId = y * self.screenNbTilesY + x
 
-                if(self.tileLayoutEN[y][x] != -1 and not tileId in self.monsters and not tileId in self.deadMonsters):
+                if (self.tileLayoutEN[y][x] != -1 and not tileId in self.monsters and not tileId in self.deadMonsters):
                     self.monsters[tileId] = Monster(tileId, (self.tileLayoutEN[y][x]), [posX, posY], self)
 
-                if(self.tileLayoutCO[y][x] != -1 and not tileId in self.collectables):
+                if (self.tileLayoutCO[y][x] != -1 and not tileId in self.collectables):
                     self.collectables[tileId] = Collectable(tileId, (self.tileLayoutCO[y][x]), [posX, posY], self)
