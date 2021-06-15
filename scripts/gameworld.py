@@ -4,6 +4,7 @@ from entities.obstacle import Obstacle
 import sys
 from entities.monster import Monster, MonsterType
 import random
+from pygame import Rect
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS

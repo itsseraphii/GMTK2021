@@ -65,7 +65,7 @@ class Weapon:
                 # translate l'angle en full 360
                 NB_SEPARATORS = 8
                 MELEE_REACH = 20
-                angle = self.player.GetAngle()
+                angle = self.player.angle
                 if(angle < 0): angle = 360 + angle
                 
                 # Décalage des quadrants
@@ -133,7 +133,7 @@ class Weapon:
     def Draw(self, screen):
         self.UpdateBullets()
         # Hitbox Crowbar
-        #if(self.meleeRect is not None):
-        #    pygame.draw.rect(screen, (255,0,0), self.meleeRect, 2)
+        if(self.meleeRect is not None):
+            pygame.draw.rect(screen, (255,0,0), self.meleeRect, 2)
         for bullet in self.bullets:
             screen.blit(self.bulletImage, (bullet[0], bullet[1]))
