@@ -6,8 +6,10 @@ from entities.player import Player
 import sys
 
 FPS = 100
-TEXT_COLOR = (200, 200, 200)
 LEVEL_TIME = 60000 # 60 seconds
+
+BLACK = (0, 0 ,0)
+TEXT_COLOR = (200, 200, 200)
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS
@@ -16,7 +18,7 @@ except:
 
 MAIN_MUSIC = BASE_PATH + "/music/Main_theme_v2_loopable.mp3"
 # Path for each level 
-LEVELS_MUSIC = [BASE_PATH + "/music/level_theme_v2.mp3", BASE_PATH + "/music/level_theme_v2.mp3"]
+LEVELS_MUSIC = [BASE_PATH + "/music/level_theme_v2.mp3", BASE_PATH + "/music/level_theme_v2.mp3", BASE_PATH + "/music/level_theme_v2.mp3"]
 TIME_OVER_MUSIC = BASE_PATH + "/music/everything_goes_to_shit_v1.mp3"
 
 class Game:
@@ -24,20 +26,28 @@ class Game:
         self.screen = screen
         self.screenSize = pygame.display.get_window_size()
 
+        self.menuPage = menuPage
         self.currentLevel = currentLevel
+        
         self.gameworld = GameWorld(currentLevel)
         self.player = Player(self, self.gameworld)
         self.gameworld.SetPlayer(self.player)
+
+        self.InitUI()
         
+        self.Run()
+
+    def InitUI(self):
+        self.goalPosY = self.gameworld.FindGoalPosY()
+        self.startMiddleY = (self.gameworld.backgroundSize[1] - (self.gameworld.offsetY - self.gameworld.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
+        self.progressBarBackground = pygame.Rect(self.screenSize[0] - 25, 10, 15, self.screenSize[1] - 20)
+        self.progressRatio = (self.screenSize[1] - 20) / -(self.goalPosY - self.startMiddleY)
+
         self.fontGiant = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 150)
         self.fontLarge = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 45)
         self.fontLargeMelted = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 50)
         self.fontMedium = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 25)
         self.fontSmall = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 15)
-
-        self.menuPage = menuPage
-
-        self.Run()
 
     def StartMenuMusic(self):
         pygame.mixer.music.fadeout # Fade out last music
@@ -101,12 +111,14 @@ class Game:
                 msLeft = int(max(0, LEVEL_TIME - pygame.time.get_ticks() + self.startTime))
                 self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 2)), True, TEXT_COLOR), (10, 10))            
 
-    def DrawProgress(self): # TODO
-        var1 = self.gameworld.startMiddleY - self.gameworld.middleY
-        var2 = self.gameworld.startMiddleY - self.gameworld.goalPosY
+    def DrawProgress(self):
+        currentPos = self.gameworld.middleY - self.startMiddleY
+        progressHeight = currentPos * self.progressRatio + self.screenSize[1] - 20
 
-        percentComplete = var1 / var2 * 100
-        #self.screen.blit(self.fontLarge.render("Progress: " + str(percentComplete) + "%", True, TEXT_COLOR), (self.screenSize[0] - 360, 10))
+        progressBarForeground = pygame.Rect(self.screenSize[0] - 22, max(13, progressHeight), 9, min(self.screenSize[1] - 26, self.screenSize[1] - progressHeight - 12))
+
+        pygame.draw.rect(self.screen, BLACK, self.progressBarBackground)
+        pygame.draw.rect(self.screen, TEXT_COLOR, progressBarForeground)
 
     def DrawUI(self):
         self.DrawTimeLeft()
