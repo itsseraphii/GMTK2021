@@ -74,7 +74,7 @@ class Monster:
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))
         # Hitboxes
-        #pygame.draw.rect(screen, (255,0,0), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxLength), 2)
+        pygame.draw.rect(screen, (255,0,0), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxLength), 2)
 
     def Damage(self, damage):
         self.health -= damage

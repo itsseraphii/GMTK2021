@@ -208,14 +208,14 @@ class GameWorld():
                                 DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3]
                         ))
                         # Uncomment to show hitboxes : 
-                        ''' 
+                        
                         pygame.draw.rect(screen, (255,0,0), Rect(
                             posX + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
                             posY + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3],
                             DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
                             DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1]), 2
                             )
-                        '''
+                        
 
                     else:
                         self.obstacles.append(
@@ -224,9 +224,9 @@ class GameWorld():
                                 32, 32, 0, 0
                         ))
                         # Uncomment to show hitboxes : 
-                        ''' 
+                         
                         pygame.draw.rect(screen, (255,0,0), Rect(posX,posY,32, 32), 2)
-                        '''
+                        
 
                 tileId = y * self.screenNbTilesY + x
 
