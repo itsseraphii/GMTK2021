@@ -1,5 +1,5 @@
 # GMTK 2021 Project - Transgenesis
-Game initially during the GMTK 2021 Game Jam, this is a top-down shooter made with pygame.
+The game was initially developped during the GMTK 2021 Game Jam, this is a top-down shooter made with pygame.
 
 ## Project setup
 To set up the project, you must have `Python 3` or higher installed, as well as `pip` if it was not included in your install.
