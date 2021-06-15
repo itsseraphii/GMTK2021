@@ -1,7 +1,6 @@
 import pygame
 from entities.collectable import Collectable, CollectableType
 from entities.obstacle import Obstacle
-from pygame import Rect
 import sys
 from entities.monster import Monster, MonsterType
 import random
@@ -18,10 +17,10 @@ TILESHEET_SIZE = (TILE_SHEET_WIDTH, TILE_SHEET_HEIGHT)
 TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
 TILESHEET_PATH = BASE_PATH + "/res/tiled/CosmicLilac_Tiles_greyscale.png"
 
-CSV_PATH_BG = [BASE_PATH + "/levels/level", "_background_layer.csv"]
-CSV_PATH_OB = [BASE_PATH + "/levels/level", "_obstacle_layer.csv"]
-CSV_PATH_EN = [BASE_PATH + "/levels/level", "_entity_layer.csv"]
-CSV_PATH_CO = [BASE_PATH + "/levels/level", "_collectable_layer.csv"]
+CSV_PATH_BG = [BASE_PATH + "/levels/level", "/background_layer.csv"]
+CSV_PATH_OB = [BASE_PATH + "/levels/level", "/obstacle_layer.csv"]
+CSV_PATH_EN = [BASE_PATH + "/levels/level", "/entity_layer.csv"]
+CSV_PATH_CO = [BASE_PATH + "/levels/level", "/collectable_layer.csv"]
 
 DICT_HITBOX_SIZES = {
     10 : [32, 32, 0, 0],
@@ -55,9 +54,7 @@ class GameWorld():
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
         self.offsetY = self.startOffsetY
-        self.startMiddleY = 1
-        self.middleY = 1
-        self.goalPosY = self.FindGoalPosY()
+        self.middleY = -1
 
         self.deadMonsters = []
 
@@ -162,23 +159,17 @@ class GameWorld():
         for collectableId in self.collectables:
             self.collectables[collectableId].posY += offsetY
 
-    def GetOffsetY(self):
-        return self.offsetY
-
     def FindGoalPosY(self):
         for y in range(min(50, len(self.tileLayoutCO))):
             for x in range(len(self.tileLayoutCO[y])):
                 if(self.tileLayoutCO[y][x] != -1 and CollectableType(self.tileLayoutCO[y][x]) == CollectableType.GOAL):
-                    return y + 1
+                    return y
 
-        print("ERROR - Goal is too far from the top of the map")
+        print("LEVEL ERROR - Goal is too far from the top of the map")
 
     def Draw(self, screen):
         self.middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
         self.obstacles = []
-
-        if (self.startMiddleY == -1):
-            self.startMiddleY = self.middleY
 
         for y in range(int(max(0, self.middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayoutBG), self.middleY + (self.screenNbTilesY / 2)))):
             for x in range(len(self.tileLayoutBG[y])):
@@ -186,7 +177,7 @@ class GameWorld():
                 posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
                 screen.blit(self.tileImagesBG[self.tileLayoutBG[y][x]], (posX, posY))
 
-                if(self.tileLayoutOB[y][x] != -1):
+                if (self.tileLayoutOB[y][x] != -1):
                     screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
                     
                     # Est-ce que la key est gérée par le dictionary de tiles?
@@ -230,8 +221,8 @@ class GameWorld():
 
                 tileId = y * self.screenNbTilesY + x
 
-                if(self.tileLayoutEN[y][x] != -1 and not tileId in self.monsters and not tileId in self.deadMonsters):
+                if (self.tileLayoutEN[y][x] != -1 and not tileId in self.monsters and not tileId in self.deadMonsters):
                     self.monsters[tileId] = Monster(tileId, (self.tileLayoutEN[y][x]), [posX, posY], self)
 
-                if(self.tileLayoutCO[y][x] != -1 and not tileId in self.collectables):
+                if (self.tileLayoutCO[y][x] != -1 and not tileId in self.collectables):
                     self.collectables[tileId] = Collectable(tileId, (self.tileLayoutCO[y][x]), [posX, posY], self)

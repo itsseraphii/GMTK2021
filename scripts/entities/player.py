@@ -44,14 +44,14 @@ class Player:
         self.equippedWeaponIndex = 0
         self.ammo = 0
 
-    def setIsMoving(self, pressedKeys):
+    def SetIsMoving(self, pressedKeys):
         if pressedKeys[K_w] or pressedKeys[K_a] or pressedKeys[K_s] or pressedKeys[K_d]:
             self.isMoving = True
         else:
             self.isMoving = False
 
     def Move(self, pressedKeys):
-        self.setIsMoving(pressedKeys)
+        self.SetIsMoving(pressedKeys)
 
         if pressedKeys[K_w]:
             if(not self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2 - SPEED, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
@@ -88,7 +88,6 @@ class Player:
 
         self.CheckCollisionWithCollectables(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))
     
-
     def NextFrame(self):
         # Change image based on weapon held
         # TODO change all weapon pointers to an ENUM
@@ -100,7 +99,6 @@ class Player:
             current_animation = self.sniper_frames
         else :
             current_animation = self.walking_frames
-
 
         self.frame_counter += 1
 
@@ -132,9 +130,6 @@ class Player:
 
     def GetPos(self):
         return [self.posX, self.posY]
-
-    def GetAngle(self):
-        return self.angle
     
     def Draw(self, screen):
         self.weapon.Draw(screen)
