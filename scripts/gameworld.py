@@ -140,9 +140,11 @@ class GameWorld():
             for x in range(len(self.tileLayoutBG[y])):
                 posX = (x * TILE_SIZE) + (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2)
                 posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
-                screen.blit(self.tileImages[self.tileLayoutBG[y][x]], (posX, posY))
 
-                if (self.tileLayoutFG[y][x] != -1):
+                if (self.tileLayoutBG[y][x] != -1): # Draw background
+                    screen.blit(self.tileImages[self.tileLayoutBG[y][x]], (posX, posY))
+
+                if (self.tileLayoutFG[y][x] != -1): # Draw foreground (obstacles, entities and collectables)
                     if (self.tileLayoutFG[y][x] < OBSTACLES_LAST_ID): # Id is an obstacle
                         screen.blit(self.tileImages[self.tileLayoutFG[y][x]], (posX, posY))
 
