@@ -11,11 +11,9 @@ except:
     BASE_PATH = "."
 
 TILE_SIZE = 32
-TILE_SHEET_WIDTH = 15
-TILE_SHEET_HEIGHT = 9
-TILESHEET_SIZE = (TILE_SHEET_WIDTH, TILE_SHEET_HEIGHT)
-TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
-TILESHEET_PATH = BASE_PATH + "/res/tiled/CosmicLilac_Tiles_greyscale.png"
+TILESHEET_SIZE = (15, 15)
+TILESHEET_PIXEL_SIZE = (TILESHEET_SIZE[0] * 16, TILESHEET_SIZE[1] * 16)
+TILESHEET_PATH = BASE_PATH + "/res/Tilesheet.png"
 
 OBSTACLES_LAST_ID = 165
 ENTITIES_LAST_ID = 195
@@ -24,16 +22,13 @@ CSV_PATH_BG = [BASE_PATH + "/levels/level", "/background.csv"]
 CSV_PATH_FG = [BASE_PATH + "/levels/level", "/foreground.csv"]
 
 DICT_HITBOX_SIZES = {
-    10 : [32, 32, 0, 0],
-    14 : [32, 32, 0, 0],
-    29 : [32, 32, 0, 0],
+    28 : [16, 16, 7, 7],
     43 : [32, 28, 0, 0],
     44 : [32, 28, 0, 0],
     58 : [32, 28, 0, 0],
     59 : [32, 28, 0, 0],
     73 : [32, 16, 0, 7],
-    74 : [16, 32, 7, 0],
-    88 : [16, 16, 7, 7]
+    74 : [16, 32, 7, 0]
 }
 
 OBSTACLES = []
@@ -158,18 +153,15 @@ class GameWorld():
                                 customHitbox[0], customHitbox[1], customHitbox[2], customHitbox[3]))
 
                             '''# Debug info - Uncomment to show hitboxes : 
-                            pygame.draw.rect(screen, (255,0,0), Rect(
-                                posX + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
-                                posY + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3],
-                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
-                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1]), 2
-                            )'''
+                            pygame.draw.rect(screen, (255,0,0), pygame.Rect(
+                                posX + customHitbox[2], posY + customHitbox[3],
+                                customHitbox[0], customHitbox[1]), 2)'''
                             
                         else: # Use the default hitbox 
                             self.obstacles.append(Obstacle(True, False, False, posX, posY, 32, 32, 0, 0))
 
                             '''# Debug info - Uncomment to show hitboxes :  
-                            pygame.draw.rect(screen, (255,0,0), Rect(posX,posY,32, 32), 2)'''
+                            pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(posX, posY, 32, 32), 2)'''
                     
                     else:
                         tileId = y * self.screenNbTilesY + x
