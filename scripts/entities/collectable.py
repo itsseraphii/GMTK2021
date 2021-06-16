@@ -1,7 +1,4 @@
-from enum import Enum
-from spriteUtils import getFrames
-import random
-import math
+from enum import IntEnum
 import pygame
 import sys
 
@@ -14,13 +11,13 @@ AMMO_PICKUP_SOUND = "ammo_pickup.ogg"
 GUN_PICKUP_SOUND = "gun_pickup.wav"
 DASH_SOUND = "dash.wav"
 
-class CollectableType(Enum):
-    AMMO = 125
-    PISTOL = 129
-    RIFLE = 121
-    SNIPER = 119
-    BIG_AMMO = 127
-    GOAL = 132
+class CollectableType(IntEnum):
+    PISTOL = 195
+    RIFLE = 196
+    SNIPER = 197
+    AMMO = 198
+    BIG_AMMO = 199
+    GOAL = 200
 
 class Collectable:
     def __init__(self, id, collectable_type, spawn_location, gameworld):

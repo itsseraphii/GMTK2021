@@ -30,6 +30,8 @@ class Game:
         self.screen = screen
         self.screenSize = pygame.display.get_window_size()
         self.SetResizeAllowed(True)
+
+        self.clock = pygame.time.Clock()
         self.fps = MENU_FPS
 
         self.menuPage = menuPage
@@ -150,6 +152,18 @@ class Game:
         self.screen.blit(self.fontMedium.render("Equipped: " + str(self.player.weaponInventory[self.player.equippedWeaponIndex]), True, TEXT_COLOR), (10, self.screenSize[1] - 70))
         self.screen.blit(self.fontMedium.render("Ammo: " + str(self.player.ammo), True, TEXT_COLOR), (10, self.screenSize[1] - 40))
 
+        # Debug info - Uncomment to show fps average over the last 10 frames
+        fps = round(self.clock.get_fps(), 2)
+
+        if (fps < 80):
+            fpsColor = (255, 0, 0)
+        elif (fps < 90):
+            fpsColor = (255, 255, 0)
+        else:
+            fpsColor = (0, 255, 0)
+
+        self.screen.blit(self.fontMedium.render("FPS: " + str(fps), True, fpsColor, LEVEL_BG_COLOR), (10, self.screenSize[1] / 2))
+
     def DrawParagraph(self, allText):
         for i in range(len(allText)):
                 text = self.fontMedium.render(allText[i], True, TEXT_COLOR)
@@ -221,8 +235,6 @@ class Game:
         self.playing = False # True while a level is beeing played
         self.timeOver = False # True while a level is beeing played and the 60 seconds are over
         self.gameOver = False # True when the level is over
-        
-        clock = pygame.time.Clock()
 
         self.StartMenuMusic()
 
@@ -238,4 +250,4 @@ class Game:
                 self.gameworld.SpawnTimeOverEnemies()
                 self.StartTimeOverMusic()
 
-            clock.tick(self.fps)
+            self.clock.tick(self.fps)

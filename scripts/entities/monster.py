@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import IntEnum
 from spriteUtils import BASE_PATH, getFrames
 import random
 import math
@@ -7,9 +7,9 @@ from pygame import Rect
 
 TURN_ANGLE = 2
 
-class MonsterType(Enum):
-    FATBOI = 105
-    ZOMBIE = 110
+class MonsterType(IntEnum):
+    ZOMBIE = 165
+    FATBOI = 166
 
 HITSOUND_1 = "meat_slap1.wav"
 HITSOUND_2 = "meat_slap2.wav"

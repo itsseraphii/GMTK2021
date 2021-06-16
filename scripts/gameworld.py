@@ -4,7 +4,6 @@ from entities.obstacle import Obstacle
 import sys
 from entities.monster import Monster, MonsterType
 import random
-from pygame import Rect
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS
@@ -18,10 +17,11 @@ TILESHEET_SIZE = (TILE_SHEET_WIDTH, TILE_SHEET_HEIGHT)
 TILESHEET_PIXEL_SIZE = (TILE_SHEET_WIDTH * 16, TILE_SHEET_HEIGHT * 16)
 TILESHEET_PATH = BASE_PATH + "/res/tiled/CosmicLilac_Tiles_greyscale.png"
 
-CSV_PATH_BG = [BASE_PATH + "/levels/level", "/background_layer.csv"]
-CSV_PATH_OB = [BASE_PATH + "/levels/level", "/obstacle_layer.csv"]
-CSV_PATH_EN = [BASE_PATH + "/levels/level", "/entity_layer.csv"]
-CSV_PATH_CO = [BASE_PATH + "/levels/level", "/collectable_layer.csv"]
+OBSTACLES_LAST_ID = 165
+ENTITIES_LAST_ID = 195
+
+CSV_PATH_BG = [BASE_PATH + "/levels/level", "/background.csv"]
+CSV_PATH_FG = [BASE_PATH + "/levels/level", "/foreground.csv"]
 
 DICT_HITBOX_SIZES = {
     10 : [32, 32, 0, 0],
@@ -50,7 +50,6 @@ class GameWorld():
         self.monsters = {}
         self.collectables = {}
         self.LoadTileCSV()
-        self.obstacles = []
 
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
@@ -67,63 +66,33 @@ class GameWorld():
 
     def LoadTileCSV(self):
         self.tileLayoutBG = []
-        self.tileLayoutOB = []
-        self.tileLayoutEN = []
-        self.tileLayoutCO = []
-        self.tileImagesBG = {}
-        self.tileImagesOB = {}
-        self.monsters = {}
-        csvFile = open(CSV_PATH_BG[0] + str(self.currentLevel + 1) + CSV_PATH_BG[1], 'r')
+        self.tileLayoutFG = []
+        self.tileImages = {}
 
-        for line in csvFile:
-            currentRow = []
-            
-            for tileNum in line.split(','):
-                intTileNum = int(tileNum)
-                currentRow.append(intTileNum)
+        bgCSV = CSV_PATH_BG[0] + str(self.currentLevel + 1) + CSV_PATH_BG[1]
+        fgCSV = CSV_PATH_FG[0] + str(self.currentLevel + 1) + CSV_PATH_FG[1]
+        allCSV = [bgCSV, fgCSV]
 
-                # Load tile image in memory if it's not already loaded
-                if (intTileNum not in self.tileImagesBG):
-                    tilePosY = int(intTileNum / TILESHEET_SIZE[0])
-                    tilePosX = intTileNum - (tilePosY * TILESHEET_SIZE[0])
-                    self.tileImagesBG.update({intTileNum: self.GetTileImage(tilePosX, tilePosY)})
+        for i in range(len(allCSV)):
+            csvFile = open(allCSV[i], 'r')
 
-            self.tileLayoutBG.append(currentRow)
+            for line in csvFile:
+                currentRow = []
+                
+                for tileNum in line.split(','):
+                    intTileNum = int(tileNum)
+                    currentRow.append(intTileNum)
 
-        csvFile = open(CSV_PATH_OB[0] + str(self.currentLevel + 1) + CSV_PATH_OB[1], 'r')
-        for line in csvFile:
-            currentRow = []
-            
-            for tileNum in line.split(','):
-                intTileNum = int(tileNum)
-                currentRow.append(intTileNum)
+                    # If the image will be used (it's part of the background / obstacles) and it's not already loaded, load it in memory
+                    if (intTileNum < OBSTACLES_LAST_ID and intTileNum not in self.tileImages):
+                        tilePosY = int(intTileNum / TILESHEET_SIZE[0])
+                        tilePosX = intTileNum - (tilePosY * TILESHEET_SIZE[0])
+                        self.tileImages.update({intTileNum: self.GetTileImage(tilePosX, tilePosY)}) # Load the image from the tileset
 
-                # Load tile image in memory if it's not already loaded
-                if (intTileNum not in self.tileImagesOB):
-                    tilePosY = int(intTileNum / TILESHEET_SIZE[0])
-                    tilePosX = intTileNum - (tilePosY * TILESHEET_SIZE[0])
-                    # Load image from assets to a dictionary
-                    self.tileImagesOB.update({intTileNum: self.GetTileImage(tilePosX, tilePosY)})
-
-            self.tileLayoutOB.append(currentRow)
-
-        csvFile = open(CSV_PATH_EN[0] + str(self.currentLevel + 1) + CSV_PATH_EN[1], 'r')
-        for line in csvFile:
-            currentRow = []
-            
-            for tileNum in line.split(','):
-                currentRow.append(int(tileNum))
-
-            self.tileLayoutEN.append(currentRow)
-
-        csvFile = open(CSV_PATH_CO[0] + str(self.currentLevel + 1) + CSV_PATH_CO[1], 'r')
-        for line in csvFile:
-            currentRow = []
-            
-            for tileNum in line.split(','):
-                currentRow.append(int(tileNum))
-
-            self.tileLayoutCO.append(currentRow)
+                if (i == 0):
+                    self.tileLayoutBG.append(currentRow)
+                else:
+                    self.tileLayoutFG.append(currentRow)
             
         self.backgroundSize = (len(self.tileLayoutBG[0]) * TILE_SIZE, len(self.tileLayoutBG) * TILE_SIZE)
 
@@ -161,12 +130,12 @@ class GameWorld():
             self.collectables[collectableId].posY += offsetY
 
     def FindGoalPosY(self):
-        for y in range(min(50, len(self.tileLayoutCO))):
-            for x in range(len(self.tileLayoutCO[y])):
-                if(self.tileLayoutCO[y][x] != -1 and CollectableType(self.tileLayoutCO[y][x]) == CollectableType.GOAL):
+        for y in range(min(20, len(self.tileLayoutFG))):
+            for x in range(len(self.tileLayoutFG[y])):
+                if (self.tileLayoutFG[y][x] in list(CollectableType) and self.tileLayoutFG[y][x] == CollectableType.GOAL):
                     return y
 
-        print("LEVEL ERROR - Goal is too far from the top of the map")
+        print("LEVEL ERROR - The goal is too far from the top of the map")
 
     def Draw(self, screen):
         self.middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
@@ -176,54 +145,38 @@ class GameWorld():
             for x in range(len(self.tileLayoutBG[y])):
                 posX = (x * TILE_SIZE) + (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2)
                 posY = (y * TILE_SIZE) + (self.screenSize[1] / 2) - (self.backgroundSize[1] / 2) + self.offsetY
-                screen.blit(self.tileImagesBG[self.tileLayoutBG[y][x]], (posX, posY))
+                screen.blit(self.tileImages[self.tileLayoutBG[y][x]], (posX, posY))
 
-                if (self.tileLayoutOB[y][x] != -1):
-                    screen.blit(self.tileImagesOB[self.tileLayoutOB[y][x]], (posX, posY))
-                    
-                    # Est-ce que la key est gérée par le dictionary de tiles?
-                    found = False
-                    try:
-                        DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0]
-                        found = True
-                    except:
-                        found = False
+                if (self.tileLayoutFG[y][x] != -1):
+                    if (self.tileLayoutFG[y][x] < OBSTACLES_LAST_ID): # Id is an obstacle
+                        screen.blit(self.tileImages[self.tileLayoutFG[y][x]], (posX, posY))
 
-                    if found:
-                        self.obstacles.append(
-                            Obstacle(
-                                True, False, False,
-                                posX, posY, 
+                        if (self.tileLayoutFG[y][x] in DICT_HITBOX_SIZES): # The obstacle has a custom hitbox 
+                            customHitbox = DICT_HITBOX_SIZES.get(self.tileLayoutFG[y][x])
+
+                            self.obstacles.append(Obstacle(True, False, False, posX, posY, 
+                                customHitbox[0], customHitbox[1], customHitbox[2], customHitbox[3]))
+
+                            '''# Debug info - Uncomment to show hitboxes : 
+                            pygame.draw.rect(screen, (255,0,0), Rect(
+                                posX + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
+                                posY + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3],
                                 DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
-                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1],
-                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
-                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3]
-                        ))
-                        # Uncomment to show hitboxes : 
-                        
-                        pygame.draw.rect(screen, (255,0,0), Rect(
-                            posX + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[2],
-                            posY + DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[3],
-                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[0], 
-                            DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1]), 2
-                            )
-                        
+                                DICT_HITBOX_SIZES.get(self.tileLayoutOB[y][x])[1]), 2
+                            )'''
+                            
+                        else: # Use the default hitbox 
+                            self.obstacles.append(Obstacle(True, False, False, posX, posY, 32, 32, 0, 0))
 
+                            '''# Debug info - Uncomment to show hitboxes :  
+                            pygame.draw.rect(screen, (255,0,0), Rect(posX,posY,32, 32), 2)'''
+                    
                     else:
-                        self.obstacles.append(
-                            Obstacle(
-                                True, False, False, posX, posY, 
-                                32, 32, 0, 0
-                        ))
-                        # Uncomment to show hitboxes : 
-                         
-                        pygame.draw.rect(screen, (255,0,0), Rect(posX,posY,32, 32), 2)
+                        tileId = y * self.screenNbTilesY + x
                         
+                        if (self.tileLayoutFG[y][x] < ENTITIES_LAST_ID): # Id is an entity
+                            if (tileId not in self.monsters and tileId not in self.deadMonsters): # It has not spawned or died
+                                self.monsters[tileId] = Monster(tileId, (self.tileLayoutFG[y][x]), [posX, posY], self)
 
-                tileId = y * self.screenNbTilesY + x
-
-                if (self.tileLayoutEN[y][x] != -1 and not tileId in self.monsters and not tileId in self.deadMonsters):
-                    self.monsters[tileId] = Monster(tileId, (self.tileLayoutEN[y][x]), [posX, posY], self)
-
-                if (self.tileLayoutCO[y][x] != -1 and not tileId in self.collectables):
-                    self.collectables[tileId] = Collectable(tileId, (self.tileLayoutCO[y][x]), [posX, posY], self)
+                        elif (tileId not in self.collectables): # Id is a collectable that has not spawned
+                            self.collectables[tileId] = Collectable(tileId, (self.tileLayoutFG[y][x]), [posX, posY], self)
