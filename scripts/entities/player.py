@@ -62,24 +62,24 @@ class Player:
                 
         if pressedKeys[K_a]:
             self.posX -= SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            if (self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posX += SPEED
                 
         if pressedKeys[K_s]:
             if (self.posY + SPEED  < self.screenSize[1] - PLAYER_SIZE[1]):
                 self.posY += SPEED
-                if(self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+                if (self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                     self.posY -= SPEED
 
         if pressedKeys[K_d]:
             self.posX += SPEED
-            if(self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, 
-            PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            if (self.CheckCollisionWithObstacles(Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, 
+                PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
                 self.posX -= SPEED
 
         currentTime = pygame.time.get_ticks()
 
-        if (currentTime >= self.lastFrameTime + ANIMATION_SPEED and self.isMoving ):
+        if (currentTime >= self.lastFrameTime + ANIMATION_SPEED and self.isMoving):
             self.lastFrameTime = currentTime
             self.NextFrame()
 
@@ -97,7 +97,7 @@ class Player:
             current_animation = self.rifle_frames
         elif self.weaponInventory[self.equippedWeaponIndex] == "Sniper":
             current_animation = self.sniper_frames
-        else :
+        else:
             current_animation = self.walking_frames
 
         self.frame_counter += 1

@@ -1,4 +1,3 @@
-from math import exp
 import pygame
 from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
 from gameworld import GameWorld, TILE_SIZE
@@ -11,7 +10,7 @@ LEVEL_FPS = 100
 
 LEVEL_TIME = 60000 # 60 seconds
 
-BLACK = (0, 0 ,0)
+BLACK = (0, 0, 0)
 MENU_BG_COLOR = (10, 10, 10)
 LEVEL_BG_COLOR = (33, 33, 35)
 TEXT_COLOR = (200, 200, 200)
