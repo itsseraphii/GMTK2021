@@ -132,8 +132,10 @@ class Weapon:
     
     def Draw(self, screen):
         self.UpdateBullets()
-        # Hitbox Crowbar
-        if(self.meleeRect is not None):
-            pygame.draw.rect(screen, (255,0,0), self.meleeRect, 2)
+
         for bullet in self.bullets:
             screen.blit(self.bulletImage, (bullet[0], bullet[1]))
+
+        '''# Debug info - Uncomment to show crowbar hitbox :
+        if(self.meleeRect is not None):
+            pygame.draw.rect(screen, (255,0,0), self.meleeRect, 2)'''

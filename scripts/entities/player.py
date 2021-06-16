@@ -83,8 +83,8 @@ class Player:
             self.lastFrameTime = currentTime
             self.NextFrame()
 
-        #if (self.CheckCollisionWithMonsters(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
-        #    self.game.TriggerGameOver(False)
+        if (self.CheckCollisionWithMonsters(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))):
+            self.game.TriggerGameOver(False)
 
         self.CheckCollisionWithCollectables(Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]))
     
@@ -131,20 +131,23 @@ class Player:
     def Draw(self, screen):
         self.weapon.Draw(screen)
         screen.blit(self.rotatedImage, (self.posX, self.posY))
-        # Hitboxes
+
+        '''# Debug info - Uncomment to show hitboxes : 
         pygame.draw.rect(screen, (255,0,0), Rect(self.posX + PLAYER_HITBOX_SIZE[0]/2, self.posY + PLAYER_HITBOX_SIZE[1]/2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]), 2)
-        # pygame.draw.circle(screen, (255,0,0), (self.posX + PLAYER_SIZE[0]/2, self.posY + PLAYER_SIZE[0]/2), PLAYER_SIZE[0]/2, 4)
+        # pygame.draw.circle(screen, (255,0,0), (self.posX + PLAYER_SIZE[0]/2, self.posY + PLAYER_SIZE[0]/2), PLAYER_SIZE[0]/2, 4)'''
 
     def CheckCollisionWithObstacles(self, rect):
         for ob in self.gameworld.obstacles:
             if rect.colliderect(Rect(ob.GetX() + ob.GetHitBoxOffsetX(), ob.GetY() + ob.GetHitBoxOffsetY(), ob.GetHitboxWidth(), ob.GetHitboxLength())):
                 return True
+
         return False
 
     def CheckCollisionWithMonsters(self, playerRect):
         for monster in self.gameworld.monsters.values():
             if playerRect.colliderect(Rect(monster.posX + monster.hitBoxOffestX, monster.posY + monster.hitBoxOffestY, monster.hitBoxWidth, monster.hitBoxLength)):
                 return True
+
         return False
     
     def CheckCollisionWithCollectables(self, playerRect):
