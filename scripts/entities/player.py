@@ -111,9 +111,6 @@ class Player:
         relativeX, relativeY = mouseX - self.posX, mouseY - self.posY
         self.angle = (180 / math.pi) * -math.atan2(relativeY, relativeX)
         self.rotatedImage = pygame.transform.rotate(self.image, int(self.angle))
-
-    def PickupWeapon(self, weaponName):
-        self.weaponInventory.append(weaponName)
     
     def SwitchWeapon(self, nextWeapon):
         if (nextWeapon): # Switch to next weapon
