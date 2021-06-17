@@ -98,9 +98,7 @@ class Game:
                 self.running =  False
 
             elif (event.type == pygame.VIDEORESIZE): # Can only resize in menus (between levels)
-                self.screenSize = [max(1280, event.w), max(720, event.h)]
-                self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
-                self.RestartLevel()
+                self.ResizeWindow(event.w, event.h)
 
             elif (event.type == KEYDOWN):
                 if (event.key == K_RETURN and not self.playing):
@@ -122,14 +120,16 @@ class Game:
                     self.player.SwitchWeapon(True)
 
         if (self.playing):
-            pressedKeys = pygame.key.get_pressed()
-            self.player.Move(pressedKeys)
-
-            mouseX, mouseY = pygame.mouse.get_pos()
-            self.player.LookAtMouse(mouseX, mouseY)
+            self.player.Move(pygame.key.get_pressed())
+            self.player.LookAtMouse(pygame.mouse.get_pos())
 
             if (pygame.mouse.get_pressed()[0]):
                 self.player.Attack()
+
+    def ResizeWindow(self, width, height):
+        self.screenSize = [max(1280, width), max(720, height)]
+        self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
+        self.RestartLevel()
 
     def SetResizeAllowed(self, allowed):
         if (allowed):

@@ -107,8 +107,8 @@ class Player:
 
         self.image = current_animation[self.frame_counter]
 
-    def LookAtMouse(self, mouseX, mouseY):
-        relativeX, relativeY = mouseX - self.posX, mouseY - self.posY
+    def LookAtMouse(self, mousePos):
+        relativeX, relativeY = mousePos[0] - self.posX, mousePos[1] - self.posY
         self.angle = (180 / math.pi) * -math.atan2(relativeY, relativeX)
         self.rotatedImage = pygame.transform.rotate(self.image, int(self.angle))
     
