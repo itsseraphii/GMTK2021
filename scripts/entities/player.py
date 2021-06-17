@@ -1,10 +1,10 @@
 import pygame
 from pygame.constants import K_a, K_d, K_s, K_w
-from spriteUtils import getFrames
-import math
-from entities.weapon import Weapon
 from pygame import Rect
+import math
 import sys
+from entities.weapon import Weapon
+from spriteUtils import getFrames
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS

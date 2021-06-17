@@ -1,7 +1,7 @@
 import pygame
 import math
-from gameworld import TILE_SIZE
 import sys
+from gameworld import TILE_SIZE
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS

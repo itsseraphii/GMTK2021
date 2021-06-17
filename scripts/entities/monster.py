@@ -1,9 +1,9 @@
-from enum import IntEnum
-from spriteUtils import BASE_PATH, getFrames
-import random
-import math
 import pygame
 from pygame import Rect
+import random
+import math
+from enum import IntEnum
+from spriteUtils import BASE_PATH, getFrames
 
 TURN_ANGLE = 2
 

@@ -1,9 +1,9 @@
 import pygame
 from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
+import sys
 from gameworld import GameWorld, TILE_SIZE
 from entities.player import Player
 from story import STORY
-import sys
 
 MENU_FPS = 30
 LEVEL_FPS = 100

@@ -1,6 +1,6 @@
-from enum import IntEnum
 import pygame
 import sys
+from enum import IntEnum
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS

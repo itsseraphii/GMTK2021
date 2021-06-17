@@ -1,9 +1,9 @@
 import pygame
-from entities.collectable import Collectable, CollectableType
-from entities.obstacle import Obstacle
 import sys
-from entities.monster import Monster, MonsterType
 import random
+from entities.collectable import Collectable, CollectableType
+from entities.monster import Monster, MonsterType
+from entities.obstacle import Obstacle
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS
@@ -15,8 +15,8 @@ TILESHEET_SIZE = (15, 15)
 TILESHEET_PIXEL_SIZE = (TILESHEET_SIZE[0] * 16, TILESHEET_SIZE[1] * 16)
 TILESHEET_PATH = BASE_PATH + "/res/Tilesheet.png"
 
-OBSTACLES_LAST_ID = 165
-ENTITIES_LAST_ID = 195
+OBSTACLES_LAST_ID = 165 # Ids < than this are obstacles or background tiles
+ENTITIES_LAST_ID = 195 # Id < than this and >= OBSTACLES_LAST_ID are entities
 
 CSV_PATH_BG = [BASE_PATH + "/levels/level", "/background.csv"]
 CSV_PATH_FG = [BASE_PATH + "/levels/level", "/foreground.csv"]

@@ -1,5 +1,3 @@
-import pygame
-
 class Obstacle:
     def __init__(self, BLOCKS_BODIES, BLOCKS_BULLETS, KILLS, x, y, width, length, offX, offY):
         self.BLOCKS_BODIES = BLOCKS_BODIES
@@ -11,6 +9,8 @@ class Obstacle:
         self.length = length
         self.offX = offX
         self.offY = offY
+
+    # TODO All those returns could be remove (just call obstacle.varName)
     
     def BlocksBodies(self):
         return self.BLOCKS_BODIES    
@@ -19,7 +19,7 @@ class Obstacle:
         return self.BLOCKS_BULLETS    
 
     def Kills(self):
-        return self.Kills
+        return self.KILLS
             
     def GetX(self):
         return self.X
