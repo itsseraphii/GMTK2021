@@ -29,10 +29,8 @@ class Game:
     def __init__(self, screen, currentLevel, menuPage = -1):
         self.screen = screen
         self.screenSize = pygame.display.get_window_size()
-        self.SetResizeAllowed(True)
 
         self.clock = pygame.time.Clock()
-        self.fps = MENU_FPS
 
         self.menuPage = menuPage
         self.currentLevel = currentLevel
@@ -41,21 +39,40 @@ class Game:
         self.player = Player(self, self.gameworld)
         self.gameworld.SetPlayer(self.player)
 
-        self.InitUI()
+        self.InitMenu()
         
         self.Run()
 
-    def InitUI(self):
+    def InitMenu(self):
+        self.SetResizeAllowed(True)
+        self.fps = MENU_FPS
+
+        self.fontTitle = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", int(self.screenSize[0] / 8))
+        self.fontLarge = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 45)
+        self.fontLargeMelted = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 48)
+        self.fontMedium = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 25)
+
+    def InitLevel(self):
+        self.SetResizeAllowed(False)
+        
         self.goalPosY = self.gameworld.FindGoalPosY() + 1 # +1 to see the end of the progress bar before touching the goal
         self.startMiddleY = (self.gameworld.backgroundSize[1] - (self.gameworld.offsetY - self.gameworld.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
         self.lastProgressHeight = 1000000 # Forces first progress drawing
         self.progressBarBackground = pygame.Rect(self.screenSize[0] - 25, 10, 15, self.screenSize[1] - 20)
         self.progressRatio = (self.screenSize[1] - 20) / -(self.goalPosY - self.startMiddleY)
 
-        self.fontTitle = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", int(self.screenSize[0] / 8))
-        self.fontLarge = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 45)
-        self.fontLargeMelted = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 50)
-        self.fontMedium = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 25)
+        self.playing = True
+        self.drawnAmmo = -1
+        self.drawnWeaponIndex = -1
+        self.fps = LEVEL_FPS
+        self.startTime = pygame.time.get_ticks()
+
+        self.StartLevelMusic()
+
+        self.screen.fill(LEVEL_BG_COLOR)
+        pygame.draw.rect(self.screen, BLACK, self.progressBarBackground)
+        self.screen.blit(self.fontMedium.render("Ammo:", True, TEXT_COLOR), (10, self.screenSize[1] - 40))
+        self.screen.blit(self.fontMedium.render("Equipped:", True, TEXT_COLOR), (10, self.screenSize[1] - 70))
 
     def StartMenuMusic(self):
         pygame.mixer.music.fadeout # Fade out last music
@@ -89,16 +106,8 @@ class Game:
                 if (event.key == K_RETURN and not self.playing):
                     if (self.menuPage != self.currentLevel):
                         self.menuPage += 1
-                        self.fps = MENU_FPS
-
                     else: # Start of a level
-                        self.SetResizeAllowed(False)
-                        self.fps = LEVEL_FPS
-                        self.startTime = pygame.time.get_ticks()
-                        self.playing = True
-                        self.StartLevelMusic()
-                        self.screen.fill(LEVEL_BG_COLOR)
-                        pygame.draw.rect(self.screen, BLACK, self.progressBarBackground)
+                        self.InitLevel()
 
                 elif (event.key == K_r and self.playing):
                     self.RestartLevel()
@@ -129,12 +138,11 @@ class Game:
             self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]))
 
     def DrawTimeLeft(self):
-        if (self.playing):
-            if (self.timeOver):
-                self.screen.blit(self.fontLargeMelted.render("They're coming", True, TEXT_COLOR, LEVEL_BG_COLOR), (10, 10))
-            else:
-                msLeft = int(max(0, LEVEL_TIME - pygame.time.get_ticks() + self.startTime))
-                self.screen.blit(self.fontLarge.render("Time left: " + str(round(msLeft / 1000, 1)), True, TEXT_COLOR, LEVEL_BG_COLOR), (10, 10))            
+        if (not self.timeOver):
+            msLeft = max(0, LEVEL_TIME - pygame.time.get_ticks() + self.startTime)
+            secLeft = round(msLeft / 1000, 2)
+            extra0 = "0" if (secLeft) < 10 else ""
+            self.screen.blit(self.fontLarge.render(extra0 + str(secLeft), True, TEXT_COLOR, LEVEL_BG_COLOR), (10, 0))
 
     def DrawProgress(self):
         currentPos = self.gameworld.middleY - self.startMiddleY
@@ -145,12 +153,21 @@ class Game:
             progressBarForeground = pygame.Rect(self.screenSize[0] - 22, newProgressHeight, 9, min(self.screenSize[1] - 26, 1))
             pygame.draw.rect(self.screen, TEXT_COLOR, progressBarForeground)
 
+    def DrawWeaponUI(self):
+        if (self.player.equippedWeaponIndex != self.drawnWeaponIndex): # Draw new equipped weapon
+            self.drawnWeaponIndex = self.player.equippedWeaponIndex
+            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((137, self.screenSize[1] - 68), (150, 28))) # Cover last drawn weapon name
+            self.screen.blit(self.fontMedium.render(str(self.player.weaponInventory[self.drawnWeaponIndex]), True, TEXT_COLOR), (138, self.screenSize[1] - 70))
+
+        if (self.player.ammo != self.drawnAmmo): # Draw new ammo count
+            self.drawnAmmo = self.player.ammo
+            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((104, self.screenSize[1] - 38), (60, 28))) # Cover last drawn ammo
+            self.screen.blit(self.fontMedium.render(str(self.drawnAmmo), True, TEXT_COLOR), (105, self.screenSize[1] - 40))
+
     def DrawUI(self):
         self.DrawTimeLeft()
         self.DrawProgress()
-        pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((10, self.screenSize[1] - 70), (300, 60))) # Cover last frame's text
-        self.screen.blit(self.fontMedium.render("Equipped: " + str(self.player.weaponInventory[self.player.equippedWeaponIndex]), True, TEXT_COLOR), (10, self.screenSize[1] - 70))
-        self.screen.blit(self.fontMedium.render("Ammo: " + str(self.player.ammo), True, TEXT_COLOR), (10, self.screenSize[1] - 40))
+        self.DrawWeaponUI()
 
         '''# Debug info - Uncomment to show fps average over the last 10 frames
         fps = round(self.clock.get_fps(), 2)
@@ -204,7 +221,6 @@ class Game:
             for monsterId in self.gameworld.monsters:
                 self.gameworld.monsters[monsterId].Draw(self.screen)
         
-            self.DrawTimeLeft()
             self.DrawUI()
 
         else:
@@ -215,6 +231,13 @@ class Game:
     def UpdateAI(self):
         for monsterId in self.gameworld.monsters:
             self.gameworld.monsters[monsterId].Move()
+
+    def CheckTimeOver(self):
+        if (pygame.time.get_ticks() - self.startTime > LEVEL_TIME):
+            self.timeOver = True
+            self.screen.blit(self.fontLargeMelted.render("They're here", True, TEXT_COLOR, LEVEL_BG_COLOR), (10, 10))
+            self.gameworld.SpawnTimeOverEnemies()
+            self.StartTimeOverMusic()
 
     def RestartLevel(self):
         self.__init__(self.screen, self.currentLevel, self.menuPage)
@@ -232,8 +255,8 @@ class Game:
 
     def Run(self):
         self.running = True # True while game is not exited
-        self.playing = False # True while a level is beeing played
-        self.timeOver = False # True while a level is beeing played and the 60 seconds are over
+        self.playing = False # True while a level is being played
+        self.timeOver = False # True while a level is being played and the 60 seconds are over
         self.gameOver = False # True when the level is over
 
         self.StartMenuMusic()
@@ -245,9 +268,7 @@ class Game:
             if (self.playing) :
                 self.UpdateAI()
 
-            if (self.playing and not self.timeOver and pygame.time.get_ticks() - self.startTime > LEVEL_TIME): # 60 seconds are over
-                self.timeOver = True
-                self.gameworld.SpawnTimeOverEnemies()
-                self.StartTimeOverMusic()
+            if (not self.timeOver and self.playing):
+                self.CheckTimeOver()
 
             self.clock.tick(self.fps)
