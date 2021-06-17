@@ -4,14 +4,13 @@ from pygame import Rect
 import math
 import sys
 from entities.weapon import Weapon
-from spriteUtils import getFrames
+from spriteUtils import GetFrames
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS
 except:
     BASE_PATH = "."
 
-IMAGE_FILE = BASE_PATH + "/res/player_gun.png"
 WALKING_ANIMATION = "player_unarmed.png"
 PISTOL_ANIMATION = "player_pistol.png"
 RIFLE_ANIMATION = "player_rifle.png"
@@ -29,10 +28,10 @@ class Player:
         self.screenSize = pygame.display.get_window_size()
         self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
 
-        self.walking_frames = getFrames(WALKING_ANIMATION, PLAYER_SIZE)
-        self.pistol_frames = getFrames(PISTOL_ANIMATION, PLAYER_SIZE)
-        self.rifle_frames = getFrames(RIFLE_ANIMATION, [48, 32])
-        self.sniper_frames = getFrames(SNIPER_ANIMATION, [48, 32])
+        self.walking_frames = GetFrames(WALKING_ANIMATION, PLAYER_SIZE)
+        self.pistol_frames = GetFrames(PISTOL_ANIMATION, PLAYER_SIZE)
+        self.rifle_frames = GetFrames(RIFLE_ANIMATION, [48, 32])
+        self.sniper_frames = GetFrames(SNIPER_ANIMATION, [48, 32])
         self.frame_counter = 0
         self.lastFrameTime = 0
 

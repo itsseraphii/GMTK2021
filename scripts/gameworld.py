@@ -16,7 +16,8 @@ TILESHEET_PIXEL_SIZE = (TILESHEET_SIZE[0] * 16, TILESHEET_SIZE[1] * 16)
 TILESHEET_PATH = BASE_PATH + "/res/Tilesheet.png"
 
 OBSTACLES_LAST_ID = 165 # Ids < than this are obstacles or background tiles
-ENTITIES_LAST_ID = 195 # Id < than this and >= OBSTACLES_LAST_ID are entities
+ENTITIES_LAST_ID = 195 # Ids < than this and >= OBSTACLES_LAST_ID are entities
+COLLECTABLES_LAST_ID = 225 # Ids < than this and >= ENTITIES_LAST_ID are collectables
 
 CSV_PATH_BG = [BASE_PATH + "/levels/level", "/background.csv"]
 CSV_PATH_FG = [BASE_PATH + "/levels/level", "/foreground.csv"]
@@ -38,7 +39,7 @@ class GameWorld():
         self.tile_size = TILE_SIZE
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()
-        self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2))
+        self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2)) # Scale tilesheet 2x
 
         self.currentLevel = currentLevel if (currentLevel > -1) else 0 
 
@@ -118,6 +119,7 @@ class GameWorld():
 
     def IncreaseOffsetY(self, offsetY):
         self.offsetY += offsetY
+
         for monsterId in self.monsters:
             self.monsters[monsterId].posY += offsetY
 
@@ -160,10 +162,10 @@ class GameWorld():
                                 customHitbox[0], customHitbox[1]), 2)'''
                             
                         else: # Use the default hitbox 
-                            self.obstacles.append(Obstacle(True, False, False, posX, posY, 32, 32, 0, 0))
+                            self.obstacles.append(Obstacle(True, False, False, posX, posY, TILE_SIZE, TILE_SIZE, 0, 0))
 
                             '''# Debug info - Uncomment to show hitboxes :  
-                            pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(posX, posY, 32, 32), 2)'''
+                            pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(posX, posY, TILE_SIZE, TILE_SIZE), 2)'''
                     
                     else:
                         tileId = y * self.screenNbTilesY + x

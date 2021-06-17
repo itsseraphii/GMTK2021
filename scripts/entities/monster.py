@@ -3,7 +3,7 @@ from pygame import Rect
 import random
 import math
 from enum import IntEnum
-from spriteUtils import BASE_PATH, getFrames
+from spriteUtils import BASE_PATH, GetFrames
 
 TURN_ANGLE = 2
 
@@ -64,7 +64,7 @@ class Monster:
         self.hit_3 = pygame.mixer.Sound(BASE_PATH + "/sounds/" + HITSOUND_3)
         self.death_sound = pygame.mixer.Sound(deathsound)
 
-        self.animation = getFrames(self.image_source, self.monster_size)
+        self.animation = GetFrames(self.image_source, self.monster_size)
         self.lastFrameTime = 0
         self.lastTargetUpdate = 0
         self.target = gameworld.player.GetPos()

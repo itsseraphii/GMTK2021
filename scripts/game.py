@@ -181,11 +181,11 @@ class Game:
 
         self.screen.blit(self.fontMedium.render("FPS: " + str(fps), True, fpsColor, LEVEL_BG_COLOR), (10, self.screenSize[1] / 2))'''
 
-    def DrawParagraph(self, allText):
-        for i in range(len(allText)):
-                text = self.fontMedium.render(allText[i], True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, (self.screenSize[1] / 4) + (i * 30)))
-                self.screen.blit(text, textRect)
+    def DrawParagraph(self, lines):
+        for i in range(len(lines)):
+            text = self.fontMedium.render(lines[i], True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, (self.screenSize[1] / 4) + (i * 30)))
+            self.screen.blit(text, textRect)
 
     def DrawMenu(self):
         self.screen.fill(MENU_BG_COLOR)

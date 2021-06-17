@@ -88,7 +88,7 @@ class Collectable:
         if (weaponName not in self.gameworld.player.weaponInventory):
             self.gameworld.player.ammo += ammo
             self.gameworld.player.weaponInventory.append(weaponName)
-            self.gameworld.player.equippedWeaponIndex += 1
+            self.gameworld.player.equippedWeaponIndex = len(self.gameworld.player.weaponInventory) - 1
         else:
             self.gameworld.player.ammo += duplicateAmmo
 

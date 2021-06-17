@@ -7,24 +7,25 @@ except:
     BASE_PATH = "."
 
 # Returns an array of all frames from requested file
-def getFrames(filename, frame_size):
+def GetFrames(filename, frame_size):
     try:
         spriteSheet = pygame.image.load(BASE_PATH + "/res/" + filename).convert()
-    except pygame.error as e:
+    except Exception:
         print("error while fetching " + filename)
 
     nbOfFrames = spriteSheet.get_rect().size[0]/frame_size[0]
 
     i = 0
     frameArray = []
+
     while i < nbOfFrames:
-        frame = getSingleFrame(spriteSheet, frame_size, i)
+        frame = GetSingleFrame(spriteSheet, frame_size, i)
         frameArray.append(frame)
         i += 1
 
     return frameArray
 
-def getSingleFrame(sprite_sheet, frame_size, frame_number):
+def GetSingleFrame(sprite_sheet, frame_size, frame_number):
     # Create a new blank image
     frame = pygame.Surface(frame_size).convert()
 
