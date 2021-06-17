@@ -23,7 +23,7 @@ STORY = {
             "There must be."
         ],
     2:  [   "--------------------------------ARCHIVE #002184--------------------------------", 
-            "        July 3rd 2084                                 Agent Marshall", 
+            "July 3rd 2084                                 Agent Marshall", 
             "", 
             "Amalgamated organisms have demonstrated the ability to produce sounds", 
             "that could be described as human speech.", 
@@ -33,6 +33,6 @@ STORY = {
             "The experience is deeply disturbing and yet, fascinating.", 
             "", 
             "Further investigation is required.", 
-            "-----------------------------------------------------------------------------------------"
+            "----------------------------------------------------------------------------------------------"
         ]
 }

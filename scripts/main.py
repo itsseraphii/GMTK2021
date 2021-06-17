@@ -8,5 +8,3 @@ if (__name__ == "__main__"):
     pygame.display.set_caption('Transgenesis')
     screen = pygame.display.set_mode(DEFAULT_WINDOW_SIZE, pygame.RESIZABLE)
     Game(screen, 0)
-    
-    # comment debug info
