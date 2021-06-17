@@ -7,9 +7,10 @@ try: # Path for files when app is built by PyInstaller
 except:
     BASE_PATH = "."
 
-AMMO_PICKUP_SOUND = "ammo_pickup.ogg"
-GUN_PICKUP_SOUND = "gun_pickup.wav"
-DASH_SOUND = "dash.wav"
+# Sound files
+AMMO_PICKUP_SOUND = BASE_PATH + "/sounds/" + "ammo_pickup.ogg"
+GUN_PICKUP_SOUND = BASE_PATH + "/sounds/" + "gun_pickup.wav"
+DASH_SOUND = BASE_PATH + "/sounds/" + "dash.wav"
 
 class CollectableType(IntEnum):
     PISTOL = 195
@@ -35,32 +36,32 @@ class Collectable:
         self.type = collectable_type
 
         if (self.type == CollectableType.PISTOL):
-            self.image_source = "pistol.png"
+            self.imageFile = "pistol.png"
+            self.soundFile = GUN_PICKUP_SOUND
             self.size = [32, 15]
-            self.soundSource = GUN_PICKUP_SOUND
         elif (self.type == CollectableType.RIFLE):
-            self.image_source = "rifle.png"
+            self.imageFile = "rifle.png"
+            self.soundFile = GUN_PICKUP_SOUND
             self.size = [32, 15]
-            self.soundSource = GUN_PICKUP_SOUND
         elif (self.type == CollectableType.SNIPER):
-            self.image_source = "sniper.png"
+            self.imageFile = "sniper.png"
+            self.soundFile = GUN_PICKUP_SOUND
             self.size = [32, 15]
-            self.soundSource = GUN_PICKUP_SOUND
         elif (self.type == CollectableType.BIG_AMMO):
-            self.image_source = "ammo_big.png"
+            self.imageFile = "ammo_big.png"
+            self.soundFile = AMMO_PICKUP_SOUND
             self.size = [32, 32]
-            self.soundSource = AMMO_PICKUP_SOUND
         elif (self.type == CollectableType.GOAL):
-            self.image_source = "goal.png"
+            self.imageFile = "goal.png"
+            self.soundFile = DASH_SOUND
             self.size = [32, 32]
-            self.soundSource = DASH_SOUND
         else:
-            self.image_source = "ammo.png"
+            self.imageFile = "ammo.png"
+            self.soundFile = AMMO_PICKUP_SOUND
             self.size = [32, 32]
-            self.soundSource = AMMO_PICKUP_SOUND
 
-        self.pickupSound = pygame.mixer.Sound(BASE_PATH + "/sounds/" + self.soundSource)
-        self.image = pygame.image.load(BASE_PATH + "/res/" + self.image_source)
+        self.pickupSound = pygame.mixer.Sound(self.soundFile)
+        self.image = pygame.image.load(BASE_PATH + "/res/" + self.imageFile)
 
     def Pickup(self):
         self.collected = True
