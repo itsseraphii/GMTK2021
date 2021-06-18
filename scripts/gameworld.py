@@ -42,8 +42,9 @@ class GameWorld():
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2)) # Scale tilesheet 2x
 
         self.currentLevel = currentLevel if (currentLevel > -1) else 0 
-
+        
         self.monsters = {}
+        self.obstacles = []
         self.collectables = {}
         self.LoadTileCSV()
 

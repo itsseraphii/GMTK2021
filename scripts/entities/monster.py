@@ -21,13 +21,13 @@ class Monster:
     def __init__(self, id, monster_type, spawn_location, gameworld):
         self.gameworld = gameworld
         self.id = id
+        self.monster_type = monster_type
         self.posX = spawn_location[0]
         self.posY = spawn_location[1]
         self.lastHitTime = 0
         self.angle = 0
 
-        if (MonsterType(monster_type) == MonsterType.FATBOI) :
-            self.monster_type = MonsterType.FATBOI
+        if (monster_type == MonsterType.FATBOI) :
             self.speed = 1
             self.image_source = "monster_n1.png"
             self.animation_speed = 150
@@ -42,8 +42,8 @@ class Monster:
             self.hitBoxOffestY = 15
             self.hitBoxWidth = 30
             self.hitBoxLength = 30
+
         else:
-            self.monster_type = MonsterType.ZOMBIE
             self.speed = 1.5
             self.image_source = "zombie1.png"
             self.animation_speed = 84
@@ -74,18 +74,19 @@ class Monster:
     def Damage(self, damage):
         self.health -= damage
 
-        if (self.health <= 0):
-            self.gameworld.deadMonsters.append(self.id) # Prevents respawn
-            self.gameworld.monsters.pop(self.id)
-            self.death_sound.play()
-        else:
+        if (self.health > 0):
             hitsound = random.randint(1, 3)
+            
             if hitsound == 1 :
                 self.hit_1.play()
             elif hitsound == 2:
                 self.hit_2.play()
             else :
                 self.hit_3.play()
+        else:
+            self.gameworld.deadMonsters.append(self.id) # Prevents respawn
+            self.gameworld.monsters.pop(self.id)
+            self.death_sound.play()
 
     def Stun(self, timeMS):
         self.lastHitTime = pygame.time.get_ticks() + timeMS
@@ -173,8 +174,11 @@ class Monster:
             self.frame_counter = 0
 
         # update l'angle s'il va plus que 360 ou moins que 0 après calculs
-        if self.angle < 0: self.angle = 360 + self.angle
-        else: self.angle %= 360
+        if (self.angle < 0):
+            self.angle = 360 + self.angle
+        else: 
+            self.angle %= 360
+
         self.image = pygame.transform.rotate(self.animation[self.frame_counter], int(self.angle))
 
     def Draw(self, screen):
