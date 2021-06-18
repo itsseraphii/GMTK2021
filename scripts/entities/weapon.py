@@ -41,7 +41,7 @@ class Weapon:
         self.weapons.update({"Assault Rifle": [True, 1, 115]})
         self.weapons.update({"Sniper": [True, 8, 2000]})
 
-    def Attack(self, equippedWeapon, ammo): # playerPos required for melee
+    def Attack(self, equippedWeapon, ammo):
         currentTime = pygame.time.get_ticks()
 
         if (currentTime >= self.lastAttackTime + self.weapons[equippedWeapon][2]): # Attack if cooldown has passed
@@ -102,7 +102,7 @@ class Weapon:
                         self.gameworld.monsters[key].Damage(self.weapons[equippedWeapon][1])
         return False
 
-    def ComputeNewBulletPos(self, oldX, oldY, angle):
+    def GetNextBulletPos(self, oldX, oldY, angle):
         newX = oldX + (BULLET_SPEED * math.cos(angle))
         newY = oldY + (BULLET_SPEED * math.sin(angle))
         return [newX, newY]
@@ -114,7 +114,7 @@ class Weapon:
             if (self.bullets[i][0] > self.screenSize[0] / 2 + playerPos[0] or self.bullets[i][0] < -self.screenSize[0] / 2 + playerPos[0] or self.bullets[i][1] > self.screenSize[1] / 2 + playerPos[1] or self.bullets[i][1] < -self.screenSize[1] + playerPos[1]):
                 self.bullets.pop(i)
             else:
-                newPos = self.ComputeNewBulletPos(self.bullets[i][0], self.bullets[i][1], self.bullets[i][2])
+                newPos = self.GetNextBulletPos(self.bullets[i][0], self.bullets[i][1], self.bullets[i][2])
                 bulletRect = pygame.Rect(newPos[0], newPos[1], BULLET_SIZE, BULLET_SIZE)
                 hasHit = False
 

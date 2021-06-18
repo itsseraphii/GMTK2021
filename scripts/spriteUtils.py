@@ -30,11 +30,10 @@ def GetSingleFrame(sprite_sheet, frame_size, frame_number):
     frame = pygame.Surface(frame_size).convert()
 
     # Copy the sprite from the large sheet onto the smaller image
-    frame.blit(sprite_sheet, (0, 0), (frame_number*frame_size[0], 0, frame_size[0], frame_size[1]))
+    frame.blit(sprite_sheet, (0, 0), (frame_number * frame_size[0], 0, frame_size[0], frame_size[1]))
 
     # Assuming black works as the transparent color
     frame.set_colorkey((0, 0, 0))
 
     # Return the image
     return frame
-

@@ -1,4 +1,6 @@
 # 90 is the max number of chars that looks good at 1280x720
+# Every line will be centered
+# Empty lines "" act as \n
 
 STORY = {
     -1: [
@@ -34,5 +36,27 @@ STORY = {
             "", 
             "Further investigation is required.", 
             "----------------------------------------------------------------------------------------------"
+        ],
+    3:  [   "I almost died today.",
+            "",
+            "There was a voice, it was... so clearly human... calling for someone else.",
+            "",
+            "And like a moth to a flame, I ran to meet them.",
+        ],
+    4:  [   "They’re outside, I’m stuck here.",
+            "They won’t stop calling for me.",
+            "",
+            "Stop... please... please",
+            "",
+            "...",
+            "",
+            "What if...",
+            "No one’s out there ?",
+            "",
+            "I... wouldn’t be alone anymore...",
+            "",
+            "...",
+            "",
+            "Goodbye."
         ]
 }
