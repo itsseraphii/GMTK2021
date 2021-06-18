@@ -103,7 +103,7 @@ class Game:
 
             elif (event.type == KEYDOWN):
                 if (event.key == K_RETURN and not self.playing):
-                    if (self.menuPage == ENDING_MENU_PAGE):
+                    if (self.menuPage >= ENDING_MENU_PAGE):
                         self.running = False
                     elif (self.menuPage != self.currentLevel or self.menuPage == ENDING_MENU_PAGE - 1):
                         self.menuPage += 1
