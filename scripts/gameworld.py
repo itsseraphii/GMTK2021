@@ -15,6 +15,8 @@ TILESHEET_SIZE = (15, 15)
 TILESHEET_PIXEL_SIZE = (TILESHEET_SIZE[0] * 16, TILESHEET_SIZE[1] * 16)
 TILESHEET_PATH = BASE_PATH + "/res/Tilesheet.png"
 
+PLAYER_CENTER_POS_Y = 358 # When the player is at the center of the screen, this will always be it's position 
+
 OBSTACLES_LAST_ID = 165 # Ids < than this are obstacles or background tiles
 ENTITIES_LAST_ID = 195 # Ids < than this and >= OBSTACLES_LAST_ID are entities
 COLLECTABLES_LAST_ID = 225 # Ids < than this and >= ENTITIES_LAST_ID are collectables
@@ -52,6 +54,7 @@ class GameWorld():
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
         self.offsetY = self.startOffsetY
         self.middleY = -1
+        self.startMiddleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
 
         self.deadMonsters = []
 
@@ -99,24 +102,29 @@ class GameWorld():
 
     def SpawnTimeOverEnemies(self):
         nbEnemies = min((self.currentLevel + 1) * 15, 50)
-        selectedEnemyType = 0
-        possibleEnemyTypes = list(MonsterType)
-        playerPos = self.player.GetPos()
+        enemyTypes = list(MonsterType)
+        nbEnemyTypes = len(enemyTypes)
+
+        canSpawnOver = self.middleY - self.screenNbTilesY > self.startMiddleY - (self.backgroundSize[1] / TILE_SIZE) + 8
+        canSpawnUnder = self.middleY - self.startMiddleY + (self.screenNbTilesY / 2) < 0
 
         for i in range(nbEnemies):
-            spawnSide = random.randrange(0, 3)
-
             if (i not in self.monsters):
-                if (spawnSide == 0):
-                    self.monsters[i] = Monster(i, possibleEnemyTypes[selectedEnemyType], [playerPos[0] + (self.screenSize[0] / 3 * 2), playerPos[1] + (i * TILE_SIZE * 3)], self)
-                elif (spawnSide == 1):
-                    self.monsters[i] = Monster(i, possibleEnemyTypes[selectedEnemyType], [playerPos[0] - (self.screenSize[0] / 3 * 2), playerPos[1] + (i * TILE_SIZE * 3)], self)
-                else:
-                    self.monsters[i] = Monster(i, possibleEnemyTypes[selectedEnemyType], [playerPos[0] + random.randint(-self.screenSize[0] / 2, self.screenSize[0] / 2), playerPos[1] - (self.screenSize[0] / 3 * 2) - (i * TILE_SIZE)], self)
+                if (canSpawnOver and canSpawnUnder):
+                    if (i % 2 == 0):
+                        spawnY = PLAYER_CENTER_POS_Y - (self.screenSize[1] / 2) - ((i + 2) * TILE_SIZE)
+                    else:
+                        spawnY = PLAYER_CENTER_POS_Y + (self.screenSize[1] / 2) + (i * TILE_SIZE / 2)
 
-            self.monsters[i].health *= 1.25
-            self.monsters[i].speed *= 1.15
-            selectedEnemyType = (selectedEnemyType + 1) % len(possibleEnemyTypes)
+                elif (canSpawnOver):
+                    spawnY = PLAYER_CENTER_POS_Y - (self.screenSize[1] / 2) - ((i + 2) * TILE_SIZE)
+                else:
+                    spawnY = PLAYER_CENTER_POS_Y + (self.screenSize[1] / 2) + (i * TILE_SIZE / 2)
+                
+                spawnX = (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2) + random.randrange(2 * TILE_SIZE, self.backgroundSize[0] - (4 * TILE_SIZE))
+                self.monsters[i] = Monster(i, enemyTypes[random.randrange(0, nbEnemyTypes)], [spawnX, spawnY], self)
+                self.monsters[i].health *= 1.5
+                self.monsters[i].speed *= 1.25
 
     def IncreaseOffsetY(self, offsetY):
         self.offsetY += offsetY

@@ -1,5 +1,5 @@
 import pygame
-from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
+from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT, VIDEORESIZE
 import sys
 from gameworld import GameWorld, TILE_SIZE
 from entities.player import Player
@@ -8,7 +8,7 @@ from story import STORY
 MENU_FPS = 30
 LEVEL_FPS = 100
 
-LEVEL_TIME = 60000 # 60 seconds
+LEVEL_TIME = 10500 # 60 seconds
 ENDING_MENU_PAGE = len(STORY)
 
 BLACK = (0, 0, 0)
@@ -57,7 +57,7 @@ class Game:
         self.SetResizeAllowed(False)
         
         self.goalPosY = self.gameworld.FindGoalPosY() + 1 # +1 to see the end of the progress bar before touching the goal
-        self.startMiddleY = (self.gameworld.backgroundSize[1] - (self.gameworld.offsetY - self.gameworld.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
+        self.startMiddleY = self.gameworld.startMiddleY
         self.lastProgressHeight = 1000000 # Forces first progress drawing
         self.progressBarBackground = pygame.Rect(self.screenSize[0] - 25, 10, 15, self.screenSize[1] - 20)
         self.progressRatio = (self.screenSize[1] - 20) / -(self.goalPosY - self.startMiddleY)
@@ -98,7 +98,7 @@ class Game:
             if (event.type == QUIT):
                 self.running =  False
 
-            elif (event.type == pygame.VIDEORESIZE): # Can only resize in menus (between levels)
+            elif (event.type == VIDEORESIZE): # Can only resize in menus (between levels)
                 self.ResizeWindow(event.w, event.h)
 
             elif (event.type == KEYDOWN):
@@ -136,9 +136,9 @@ class Game:
 
     def SetResizeAllowed(self, allowed):
         if (allowed):
-            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
+            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE | pygame.DOUBLEBUF)
         else:
-            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]))
+            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.DOUBLEBUF)
 
     def DrawTimeLeft(self):
         if (not self.timeOver):
@@ -199,7 +199,7 @@ class Game:
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
         
-        elif (self.menuPage == ENDING_MENU_PAGE): # Ending
+        elif (self.menuPage >= ENDING_MENU_PAGE): # Ending
             text = self.fontTitle.render("Transgenesis", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2 - 50))
             self.screen.blit(text, textRect)
@@ -257,8 +257,6 @@ class Game:
         self.__init__(self.screen, self.currentLevel + 1, self.menuPage + 1)
 
     def TriggerGameOver(self, victory):
-        self.gameOver = True
-
         if (victory):
             self.NextLevel()
         else:
@@ -268,7 +266,6 @@ class Game:
         self.running = True # True while game is not exited
         self.playing = False # True while a level is being played
         self.timeOver = False # True while a level is being played and the 60 seconds are over
-        self.gameOver = False # True when the level is over
 
         self.StartMenuMusic()
 

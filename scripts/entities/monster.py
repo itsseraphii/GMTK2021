@@ -18,16 +18,16 @@ DEATHSOUND_1 = "meatDeath.wav"
 DEATHSOUND_2 = "meatDeath2.wav"
 
 class Monster:
-    def __init__(self, id, monster_type, spawn_location, gameworld):
+    def __init__(self, id, monsterType, spawnLocation, gameworld):
         self.gameworld = gameworld
         self.id = id
-        self.monster_type = monster_type
-        self.posX = spawn_location[0]
-        self.posY = spawn_location[1]
+        self.monster_type = monsterType
+        self.posX = spawnLocation[0]
+        self.posY = spawnLocation[1]
         self.lastHitTime = 0
         self.angle = 0
 
-        if (monster_type == MonsterType.FATBOI) :
+        if (monsterType == MonsterType.FATBOI) :
             self.speed = 1
             self.image_source = "monster_n1.png"
             self.animation_speed = 150
