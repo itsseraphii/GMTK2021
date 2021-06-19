@@ -8,7 +8,7 @@ from story import STORY
 MENU_FPS = 30
 LEVEL_FPS = 100
 
-LEVEL_TIME = 10500 # 60 seconds
+LEVEL_TIME = 60000 # 60 seconds
 ENDING_MENU_PAGE = len(STORY)
 
 BLACK = (0, 0, 0)
