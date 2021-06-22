@@ -101,18 +101,7 @@ class GameWorld():
         self.player = player
         self.playerSize = player.GetSize()
 
-    def SpawnTimeOverEnemy(self, id, offset, canSpawnOver, canSpawnUnder, basePosOverY, basePosUnderY):
-        if (canSpawnOver and canSpawnUnder):
-            if (offset % 2 == 0):
-                spawnY = basePosOverY - ((offset + 2) * TILE_SIZE)
-            else:
-                spawnY = basePosUnderY + (offset * TILE_SIZE / 2)
-
-        elif (canSpawnOver):
-            spawnY = basePosOverY - ((offset + 2) * TILE_SIZE)
-        else:
-            spawnY = basePosUnderY + (offset * TILE_SIZE / 2)
-
+    def SpawnTimeOverEnemy(self, id, spawnY):
         spawnX = (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2) + random.randrange(2 * TILE_SIZE, self.backgroundSize[0] - (4 * TILE_SIZE))
         self.monsters[id] = Monster(id, self.enemyTypes[random.randrange(0, self.nbEnemyTypes)], [spawnX, spawnY], self)
         self.monsters[id].health *= 1.5

@@ -8,9 +8,9 @@ from story import STORY
 MENU_FPS = 30
 LEVEL_FPS = 100
 
-LEVEL_TIME = 5000 # 60 seconds
+LEVEL_TIME = 3000 # 60 seconds
 ENDING_MENU_PAGE = len(STORY)
-TIME_OVER_ENEMIES_SPAWN_FREQUENCY = 20 # One spawn each x frames
+TIME_OVER_ENEMIES_SPAWN_FREQUENCY = 15 # One spawn each x frames
 PLAYER_CENTER_POS_Y = 358 # When the player is at the center of the screen, this will always be it's position 
 
 BLACK = (0, 0, 0)
@@ -65,8 +65,9 @@ class Game:
         self.progressRatio = (self.screenSize[1] - 20) / -(self.goalPosY - self.startMiddleY)
 
         self.nbTimeOverFrames = -1
-        self.nbTimeOverEnemies = -1
-        self.timeOverEnemiesGenerated = False
+        self.maxTimeOverEnemies = -1
+        self.timeOverEnemySpawned = 0
+        self.timeOverSpawnsY = []
 
         self.playing = True
         self.drawnAmmo = -1
@@ -256,20 +257,23 @@ class Game:
             self.StartTimeOverMusic()
 
     def SpawnTimeOverEnemies(self):
-        if (self.nbTimeOverEnemies > 0): # Check if enemies need to be spawned
+        if (self.timeOverEnemySpawned < self.maxTimeOverEnemies): # Check if there are enemies to spawn
             self.nbTimeOverFrames += 1
 
             if (self.nbTimeOverFrames % TIME_OVER_ENEMIES_SPAWN_FREQUENCY == 0): # Check if it's time to spawn an enemy
-                self.nbTimeOverEnemies -= 1
-                self.gameworld.SpawnTimeOverEnemy(-self.nbTimeOverEnemies, self.nbTimeOverEnemies, self.canSpawnOver, self.canSpawnUnder, self.basePosOverY, self.basePosUnderY)
-        
-        elif (not self.timeOverEnemiesGenerated): # Generate info required to spawn enemies
-            self.timeOverEnemiesGenerated = True
-            self.nbTimeOverEnemies = min((self.currentLevel + 1) * 10 + 5, 50)
-            self.canSpawnOver = self.gameworld.middleY - self.gameworld.screenNbTilesY > self.gameworld.startMiddleY - (self.gameworld.backgroundSize[1] / TILE_SIZE) + 8
-            self.canSpawnUnder = self.gameworld.middleY - self.gameworld.startMiddleY + (self.gameworld.screenNbTilesY / 2) < 0
-            self.basePosOverY = PLAYER_CENTER_POS_Y - (self.screenSize[1] / 2)
-            self.basePosUnderY = PLAYER_CENTER_POS_Y + (self.screenSize[1] / 2)
+                self.gameworld.SpawnTimeOverEnemy(-self.timeOverEnemySpawned, self.timeOverSpawnsY[self.timeOverEnemySpawned % len(self.timeOverSpawnsY)])
+                self.timeOverEnemySpawned += 1
+                
+        elif (self.maxTimeOverEnemies < 0): # Generate info required to spawn enemies
+            self.maxTimeOverEnemies = min((self.currentLevel + 1) * 10 + 5, 50)
+            
+            # Can spawn over player
+            if (self.gameworld.middleY - self.gameworld.screenNbTilesY > self.startMiddleY - (self.gameworld.backgroundSize[1] / TILE_SIZE) + 8):
+                self.timeOverSpawnsY.append(PLAYER_CENTER_POS_Y - (self.screenSize[1] / 2) - (2 * TILE_SIZE))
+            
+            # Can spawn under player
+            if (self.gameworld.middleY - self.startMiddleY + (self.gameworld.screenNbTilesY / 2) < 0):
+                self.timeOverSpawnsY.append(PLAYER_CENTER_POS_Y + (self.screenSize[1] / 2))
 
     def RestartLevel(self):
         self.__init__(self.screen, self.currentLevel, self.menuPage)
