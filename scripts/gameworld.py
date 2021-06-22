@@ -15,8 +15,6 @@ TILESHEET_SIZE = (15, 15)
 TILESHEET_PIXEL_SIZE = (TILESHEET_SIZE[0] * 16, TILESHEET_SIZE[1] * 16)
 TILESHEET_PATH = BASE_PATH + "/res/Tilesheet.png"
 
-PLAYER_CENTER_POS_Y = 358 # When the player is at the center of the screen, this will always be it's position 
-
 OBSTACLES_LAST_ID = 165 # Ids < than this are obstacles or background tiles
 ENTITIES_LAST_ID = 195 # Ids < than this and >= OBSTACLES_LAST_ID are entities
 COLLECTABLES_LAST_ID = 225 # Ids < than this and >= ENTITIES_LAST_ID are collectables
@@ -55,6 +53,9 @@ class GameWorld():
         self.offsetY = self.startOffsetY
         self.middleY = -1
         self.startMiddleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
+
+        self.enemyTypes = list(MonsterType)
+        self.nbEnemyTypes = len(self.enemyTypes)
 
         self.deadMonsters = []
 
@@ -100,31 +101,22 @@ class GameWorld():
         self.player = player
         self.playerSize = player.GetSize()
 
-    def SpawnTimeOverEnemies(self):
-        nbEnemies = min((self.currentLevel + 1) * 15, 50)
-        enemyTypes = list(MonsterType)
-        nbEnemyTypes = len(enemyTypes)
+    def SpawnTimeOverEnemy(self, id, offset, canSpawnOver, canSpawnUnder, basePosOverY, basePosUnderY):
+        if (canSpawnOver and canSpawnUnder):
+            if (offset % 2 == 0):
+                spawnY = basePosOverY - ((offset + 2) * TILE_SIZE)
+            else:
+                spawnY = basePosUnderY + (offset * TILE_SIZE / 2)
 
-        canSpawnOver = self.middleY - self.screenNbTilesY > self.startMiddleY - (self.backgroundSize[1] / TILE_SIZE) + 8
-        canSpawnUnder = self.middleY - self.startMiddleY + (self.screenNbTilesY / 2) < 0
+        elif (canSpawnOver):
+            spawnY = basePosOverY - ((offset + 2) * TILE_SIZE)
+        else:
+            spawnY = basePosUnderY + (offset * TILE_SIZE / 2)
 
-        for i in range(nbEnemies):
-            if (i not in self.monsters):
-                if (canSpawnOver and canSpawnUnder):
-                    if (i % 2 == 0):
-                        spawnY = PLAYER_CENTER_POS_Y - (self.screenSize[1] / 2) - ((i + 2) * TILE_SIZE)
-                    else:
-                        spawnY = PLAYER_CENTER_POS_Y + (self.screenSize[1] / 2) + (i * TILE_SIZE / 2)
-
-                elif (canSpawnOver):
-                    spawnY = PLAYER_CENTER_POS_Y - (self.screenSize[1] / 2) - ((i + 2) * TILE_SIZE)
-                else:
-                    spawnY = PLAYER_CENTER_POS_Y + (self.screenSize[1] / 2) + (i * TILE_SIZE / 2)
-                
-                spawnX = (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2) + random.randrange(2 * TILE_SIZE, self.backgroundSize[0] - (4 * TILE_SIZE))
-                self.monsters[i] = Monster(i, enemyTypes[random.randrange(0, nbEnemyTypes)], [spawnX, spawnY], self)
-                self.monsters[i].health *= 1.5
-                self.monsters[i].speed *= 1.25
+        spawnX = (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2) + random.randrange(2 * TILE_SIZE, self.backgroundSize[0] - (4 * TILE_SIZE))
+        self.monsters[id] = Monster(id, self.enemyTypes[random.randrange(0, self.nbEnemyTypes)], [spawnX, spawnY], self)
+        self.monsters[id].health *= 1.5
+        self.monsters[id].speed *= 1.25
 
     def IncreaseOffsetY(self, offsetY):
         self.offsetY += offsetY

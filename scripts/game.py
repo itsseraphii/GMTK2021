@@ -8,8 +8,10 @@ from story import STORY
 MENU_FPS = 30
 LEVEL_FPS = 100
 
-LEVEL_TIME = 60000 # 60 seconds
+LEVEL_TIME = 5000 # 60 seconds
 ENDING_MENU_PAGE = len(STORY)
+TIME_OVER_ENEMIES_SPAWN_FREQUENCY = 20 # One spawn each x frames
+PLAYER_CENTER_POS_Y = 358 # When the player is at the center of the screen, this will always be it's position 
 
 BLACK = (0, 0, 0)
 MENU_BG_COLOR = (10, 10, 10)
@@ -61,6 +63,10 @@ class Game:
         self.lastProgressHeight = 1000000 # Forces first progress drawing
         self.progressBarBackground = pygame.Rect(self.screenSize[0] - 25, 10, 15, self.screenSize[1] - 20)
         self.progressRatio = (self.screenSize[1] - 20) / -(self.goalPosY - self.startMiddleY)
+
+        self.nbTimeOverFrames = -1
+        self.nbTimeOverEnemies = -1
+        self.timeOverEnemiesGenerated = False
 
         self.playing = True
         self.drawnAmmo = -1
@@ -172,7 +178,7 @@ class Game:
         self.DrawProgress()
         self.DrawWeaponUI()
 
-        '''# Debug info - Uncomment to show fps average over the last 10 frames
+        # Debug info - Uncomment to show fps average over the last 10 frames
         fps = round(self.clock.get_fps(), 2)
 
         if (fps < 80):
@@ -182,7 +188,7 @@ class Game:
         else:
             fpsColor = (0, 255, 0)
 
-        self.screen.blit(self.fontMedium.render("FPS: " + str(fps), True, fpsColor, LEVEL_BG_COLOR), (10, self.screenSize[1] / 2))'''
+        self.screen.blit(self.fontMedium.render("FPS: " + str(fps), True, fpsColor, LEVEL_BG_COLOR), (10, self.screenSize[1] / 2))
 
     def DrawParagraph(self, lines):
         for i in range(len(lines)):
@@ -247,8 +253,23 @@ class Game:
         if (pygame.time.get_ticks() - self.startTime > LEVEL_TIME):
             self.timeOver = True
             self.screen.blit(self.fontLargeMelted.render("They're here", True, TEXT_COLOR, LEVEL_BG_COLOR), (10, 10))
-            self.gameworld.SpawnTimeOverEnemies()
             self.StartTimeOverMusic()
+
+    def SpawnTimeOverEnemies(self):
+        if (self.nbTimeOverEnemies > 0): # Check if enemies need to be spawned
+            self.nbTimeOverFrames += 1
+
+            if (self.nbTimeOverFrames % TIME_OVER_ENEMIES_SPAWN_FREQUENCY == 0): # Check if it's time to spawn an enemy
+                self.nbTimeOverEnemies -= 1
+                self.gameworld.SpawnTimeOverEnemy(-self.nbTimeOverEnemies, self.nbTimeOverEnemies, self.canSpawnOver, self.canSpawnUnder, self.basePosOverY, self.basePosUnderY)
+        
+        elif (not self.timeOverEnemiesGenerated): # Generate info required to spawn enemies
+            self.timeOverEnemiesGenerated = True
+            self.nbTimeOverEnemies = min((self.currentLevel + 1) * 10 + 5, 50)
+            self.canSpawnOver = self.gameworld.middleY - self.gameworld.screenNbTilesY > self.gameworld.startMiddleY - (self.gameworld.backgroundSize[1] / TILE_SIZE) + 8
+            self.canSpawnUnder = self.gameworld.middleY - self.gameworld.startMiddleY + (self.gameworld.screenNbTilesY / 2) < 0
+            self.basePosOverY = PLAYER_CENTER_POS_Y - (self.screenSize[1] / 2)
+            self.basePosUnderY = PLAYER_CENTER_POS_Y + (self.screenSize[1] / 2)
 
     def RestartLevel(self):
         self.__init__(self.screen, self.currentLevel, self.menuPage)
@@ -273,10 +294,12 @@ class Game:
             self.CheckInputs()
             self.Draw()
 
-            if (self.playing) :
+            if (self.playing):
                 self.UpdateAI()
 
-            if (not self.timeOver and self.playing):
+            if (self.timeOver):
+                self.SpawnTimeOverEnemies()
+            elif (self.playing):
                 self.CheckTimeOver()
 
             self.clock.tick(self.fps)
