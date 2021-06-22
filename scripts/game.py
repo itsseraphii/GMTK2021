@@ -8,7 +8,7 @@ from story import STORY
 MENU_FPS = 30
 LEVEL_FPS = 100
 
-LEVEL_TIME = 3000 # 60 seconds
+LEVEL_TIME = 60000 # 60 seconds
 ENDING_MENU_PAGE = len(STORY)
 TIME_OVER_ENEMIES_SPAWN_FREQUENCY = 15 # One spawn each x frames
 PLAYER_CENTER_POS_Y = 358 # When the player is at the center of the screen, this will always be it's position 
