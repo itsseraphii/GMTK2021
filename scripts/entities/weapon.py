@@ -33,7 +33,6 @@ class WeaponController:
         self.screenSize = pygame.display.get_window_size()
         self.bulletImage = pygame.image.load(BULLET_IMAGE)
         self.bullets = []
-        self.meleeRect = None
 
         self.swingSound = pygame.mixer.Sound(SWING_SOUND_FILE)
         self.gunshotSound = pygame.mixer.Sound(GUNSHOT_SOUND_FILE)
@@ -54,7 +53,6 @@ class WeaponController:
 
         if (currentTime >= self.lastAttackTime + self.weapons[equippedWeapon][3]): # Attack if cooldown has passed
             self.lastAttackTime = currentTime
-            self.meleeRect = None
 
             if (self.weapons[equippedWeapon][1] and ammo > 0): # Ranged weapon with ammo
                 playerPos = self.player.GetPos()
@@ -67,9 +65,8 @@ class WeaponController:
 
                 return True # Decrement ammo
 
-            # TODO Cleanup le elif
+            # TODO Cleanup ce elif
             elif (not self.weapons[equippedWeapon][1]): # Melee Weapon 
-                
                 ### Rect hitbox generation of crowbar
                 # translate l'angle en full 360
                 NB_SEPARATORS = 8
@@ -78,37 +75,41 @@ class WeaponController:
                 if(angle < 0): angle = 360 + angle
                 
                 # Décalage des quadrants
-                angle += (360/NB_SEPARATORS)/2
+                angle += (360 / NB_SEPARATORS) / 2
                 angle %= 360
+
                 for i in range(NB_SEPARATORS) :
-                    if angle >= 360/NB_SEPARATORS * i and angle < 360/NB_SEPARATORS*(i+1):
+                    if angle >= 360 / NB_SEPARATORS * i and angle < 360 / NB_SEPARATORS * (i + 1):
                         break
+
                 meleePos = 0
                 playerPos = self.player.GetPos()
                 if   i == 0:
                     meleePos = [playerPos[0] + MELEE_REACH, playerPos[1]]
                 elif i == 1:
-                    meleePos = [playerPos[0] + MELEE_REACH/2, playerPos[1] - MELEE_REACH/2]
+                    meleePos = [playerPos[0] + MELEE_REACH / 2, playerPos[1] - MELEE_REACH / 2]
                 elif i == 2:
                     meleePos = [playerPos[0], playerPos[1] - MELEE_REACH]
                 elif i == 3:
-                    meleePos = [playerPos[0] - MELEE_REACH/2, playerPos[1] - MELEE_REACH/2]
+                    meleePos = [playerPos[0] - MELEE_REACH / 2, playerPos[1] - MELEE_REACH / 2]
                 elif i == 4:
                     meleePos = [playerPos[0] - MELEE_REACH, playerPos[1]]
                 elif i == 5:
-                    meleePos = [playerPos[0] - MELEE_REACH /2, playerPos[1] + MELEE_REACH /2]
+                    meleePos = [playerPos[0] - MELEE_REACH / 2, playerPos[1] + MELEE_REACH / 2]
                 elif i == 6:
                     meleePos = [playerPos[0], playerPos[1] + MELEE_REACH]
                 elif i == 7:
-                    meleePos = [playerPos[0] + MELEE_REACH /2, playerPos[1] + MELEE_REACH /2]                
+                    meleePos = [playerPos[0] + MELEE_REACH / 2, playerPos[1] + MELEE_REACH / 2]                
 
-                self.meleeRect = pygame.Rect((meleePos[0], meleePos[1]), MELEE_SIZE)
                 self.swingSound.play()
 
+                meleeRect = pygame.Rect((meleePos[0], meleePos[1]), MELEE_SIZE)
+                
                 for key in list(self.gameworld.monsters): # Check collisions with multiple monsters
-                    if (pygame.Rect(self.gameworld.monsters[key].posX, self.gameworld.monsters[key].posY, self.gameworld.monsters[key].size[0], self.gameworld.monsters[key].size[1]).colliderect(self.meleeRect)):
+                    if (meleeRect.colliderect(pygame.Rect(self.gameworld.monsters[key].posX + self.gameworld.monsters[key].hitBoxOffestX, self.gameworld.monsters[key].posY + self.gameworld.monsters[key].hitBoxOffestY, self.gameworld.monsters[key].hitBoxWidth, self.gameworld.monsters[key].hitBoxHeight))):
                         self.gameworld.monsters[key].Stun(self.weapons[equippedWeapon][2] * 200) # More stun than ranged weapons
                         self.gameworld.monsters[key].Damage(self.weapons[equippedWeapon][2])
+
         return False
 
     def GetNextBulletPos(self, oldX, oldY, angle):
@@ -119,8 +120,8 @@ class WeaponController:
     def UpdateBullets(self):
         playerPos = self.player.GetPos()
 
-        for i in range(len(self.bullets) - 1, -1, -1): # Check bullet out of screen
-            if (self.bullets[i][0] > self.screenSize[0] / 2 + playerPos[0] or self.bullets[i][0] < -self.screenSize[0] / 2 + playerPos[0] or self.bullets[i][1] > self.screenSize[1] / 2 + playerPos[1] or self.bullets[i][1] < -self.screenSize[1] + playerPos[1]):
+        for i in range(len(self.bullets) - 1, -1, -1): 
+            if (self.bullets[i][0] > self.screenSize[0] / 2 + playerPos[0] or self.bullets[i][0] < -self.screenSize[0] / 2 + playerPos[0] or self.bullets[i][1] > self.screenSize[1] / 2 + playerPos[1] or self.bullets[i][1] < -self.screenSize[1] + playerPos[1]): # Check if the bullet is out of the screen
                 self.bullets.pop(i)
             else:
                 newPos = self.GetNextBulletPos(self.bullets[i][0], self.bullets[i][1], self.bullets[i][2])
@@ -128,7 +129,7 @@ class WeaponController:
                 hasHit = False
 
                 for monster in self.gameworld.monsters.values(): # Check collisions with monsters
-                    if (pygame.Rect(monster.posX, monster.posY, monster.size[0], monster.size[1]).colliderect(bulletRect)):
+                    if (bulletRect.colliderect(pygame.Rect(monster.posX + monster.hitBoxOffestX, monster.posY + monster.hitBoxOffestY, monster.hitBoxWidth, monster.hitBoxHeight))):
                         monster.Stun(self.bullets[i][3] * 150)
                         monster.Damage(self.bullets[i][3])
                         self.bullets.pop(i) # Delete bullet
@@ -138,7 +139,7 @@ class WeaponController:
                 if (not hasHit): # Continue moving bullet
                     self.bullets[i][0] = newPos[0]
                     self.bullets[i][1] = newPos[1]
-    
+
     def Draw(self, screen):
         self.UpdateBullets()
 

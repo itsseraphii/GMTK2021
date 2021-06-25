@@ -39,7 +39,6 @@ class Game:
         self.currentLevel = currentLevel
 
         self.InitMenu()
-        
         self.Run()
 
     def InitMenu(self):
@@ -50,6 +49,8 @@ class Game:
         self.fontLarge = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 45)
         self.fontLargeMelted = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 48)
         self.fontMedium = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 25)
+
+        self.StartMenuMusic()
 
     def InitLevel(self):
         self.gameworld = GameWorld(self.currentLevel)
@@ -143,9 +144,9 @@ class Game:
 
     def SetResizeAllowed(self, allowed):
         if (allowed):
-            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE | pygame.DOUBLEBUF)
+            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
         else:
-            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.DOUBLEBUF)
+            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]))
 
     def DrawTimeLeft(self):
         if (not self.timeOver):
@@ -247,8 +248,8 @@ class Game:
         pygame.display.update()
 
     def UpdateAI(self):
-        for monsterId in self.gameworld.monsters:
-            self.gameworld.monsters[monsterId].Move()
+        for monster in self.gameworld.monsters.values():
+            monster.Move()
 
     def CheckTimeOver(self):
         if (pygame.time.get_ticks() - self.startTime > LEVEL_TIME):
@@ -291,8 +292,6 @@ class Game:
         self.running = True # True while game is not exited
         self.playing = False # True while a level is being played
         self.timeOver = False # True while a level is being played and the 60 seconds are over
-
-        self.StartMenuMusic()
 
         while (self.running):
             self.CheckInputs()

@@ -31,10 +31,10 @@ class Monster:
             deathSoundName = "meatDeath2"
 
             # Hitbox Info
+            self.hitBoxWidth = 30
+            self.hitBoxHeight = 30
             self.hitBoxOffestX = 15
             self.hitBoxOffestY = 15
-            self.hitBoxWidth = 30
-            self.hitBoxLength = 30
 
         else:
             self.speed = 1.5
@@ -48,9 +48,9 @@ class Monster:
 
             # Hitbox Info
             self.hitBoxWidth = 15
-            self.hitBoxLength = 15
+            self.hitBoxHeight = 15
             self.hitBoxOffestX = self.hitBoxWidth / 2
-            self.hitBoxOffestY = self.hitBoxLength / 2
+            self.hitBoxOffestY = self.hitBoxHeight / 2
 
         self.hitSounds = [self.gameworld.entitySounds["meatSlap1"], self.gameworld.entitySounds["meatSlap2"], self.gameworld.entitySounds["meatSlap3"]]
         self.deathSound = self.gameworld.entitySounds[deathSoundName]
@@ -106,7 +106,7 @@ class Monster:
                 Rect(
                     self.posX + self.hitBoxOffestX, 
                     self.posY + self.hitBoxOffestY,
-                    self.hitBoxWidth, self.hitBoxLength
+                    self.hitBoxWidth, self.hitBoxHeight
                     ))):
                     self.posX -= self.speed
             elif self.target[0] < self.posX :
@@ -120,7 +120,7 @@ class Monster:
                 Rect(
                     self.posX + self.hitBoxOffestX, 
                     self.posY + self.hitBoxOffestY,
-                    self.hitBoxWidth, self.hitBoxLength
+                    self.hitBoxWidth, self.hitBoxHeight
                     ))):
                     self.posX += self.speed
             
@@ -134,7 +134,7 @@ class Monster:
                 Rect(
                     self.posX + self.hitBoxOffestX, 
                     self.posY + self.hitBoxOffestY,
-                    self.hitBoxWidth, self.hitBoxLength
+                    self.hitBoxWidth, self.hitBoxHeight
                     ))):
                     self.posY -= self.speed
             elif self.target[1] < self.posY :
@@ -147,7 +147,7 @@ class Monster:
                 Rect(
                     self.posX + self.hitBoxOffestX, 
                     self.posY + self.hitBoxOffestY,
-                    self.hitBoxWidth, self.hitBoxLength
+                    self.hitBoxWidth, self.hitBoxHeight
                     ))):
                     self.posY += self.speed
 
