@@ -8,9 +8,9 @@ except:
     BASE_PATH = "."
 
 # Sound files
-AMMO_PICKUP_SOUND = BASE_PATH + "/sounds/" + "ammo_pickup.ogg"
-GUN_PICKUP_SOUND = BASE_PATH + "/sounds/" + "gun_pickup.wav"
-DASH_SOUND = BASE_PATH + "/sounds/" + "dash.wav"
+AMMO_PICKUP_SOUND = BASE_PATH + "/sounds/" + "ammoPickup.mp3"
+GUN_PICKUP_SOUND = BASE_PATH + "/sounds/" + "gunPickup.mp3"
+LEVEL_COMPLETE_SOUND = BASE_PATH + "/sounds/" + "levelComplete.mp3"
 
 class CollectableType(IntEnum):
     PISTOL = 195
@@ -28,12 +28,10 @@ class Collectable:
         self.posY = spawn_location[1]
         self.collected = False
 
-        try:
-            CollectableType(collectable_type)
-        except:
-            collectable_type = CollectableType.AMMO
-
-        self.type = collectable_type
+        if (collectable_type not in list(CollectableType)):
+            self.type = CollectableType.AMMO
+        else:
+            self.type = collectable_type
 
         if (self.type == CollectableType.PISTOL):
             self.imageFile = "pistol.png"
@@ -48,12 +46,12 @@ class Collectable:
             self.soundFile = GUN_PICKUP_SOUND
             self.size = [32, 15]
         elif (self.type == CollectableType.BIG_AMMO):
-            self.imageFile = "ammo_big.png"
+            self.imageFile = "ammoBig.png"
             self.soundFile = AMMO_PICKUP_SOUND
             self.size = [32, 32]
         elif (self.type == CollectableType.GOAL):
             self.imageFile = "goal.png"
-            self.soundFile = DASH_SOUND
+            self.soundFile = LEVEL_COMPLETE_SOUND
             self.size = [32, 32]
         else:
             self.imageFile = "ammo.png"
@@ -68,13 +66,13 @@ class Collectable:
         self.pickupSound.play()
 
         if (self.type == CollectableType.PISTOL):
-            self.AddPlayerWeapon(5, 8, "Revolver")
+            self.gameworld.player.AddWeapon(5, 8, "Revolver")
 
         elif (self.type == CollectableType.RIFLE):
-            self.AddPlayerWeapon(10, 15, "Assault Rifle")
+            self.gameworld.player.AddWeapon(10, 15, "Assault Rifle")
 
         elif (self.type == CollectableType.SNIPER):
-            self.AddPlayerWeapon(2, 5, "Sniper")
+            self.gameworld.player.AddWeapon(2, 5, "Sniper")
 
         elif (self.type == CollectableType.BIG_AMMO):
             self.gameworld.player.ammo += 10
@@ -82,16 +80,8 @@ class Collectable:
         elif (self.type == CollectableType.GOAL):
             self.gameworld.player.game.TriggerGameOver(True)
 
-        else: # Ammo pickup
+        else: # Small ammo pickup
             self.gameworld.player.ammo += 4
-
-    def AddPlayerWeapon(self, ammo, duplicateAmmo, weaponName):
-        if (weaponName not in self.gameworld.player.weaponInventory):
-            self.gameworld.player.ammo += ammo
-            self.gameworld.player.weaponInventory.append(weaponName)
-            self.gameworld.player.equippedWeaponIndex = len(self.gameworld.player.weaponInventory) - 1
-        else:
-            self.gameworld.player.ammo += duplicateAmmo
 
     def Draw(self, screen):
         if not self.collected :

@@ -11,11 +11,11 @@ class MonsterType(IntEnum):
     ZOMBIE = 165
     FATBOI = 166
 
-HITSOUND_1 = "meat_slap1.wav"
-HITSOUND_2 = "meat_slap2.wav"
-HITSOUND_3 = "meat_slap3.wav"
-DEATHSOUND_1 = "meatDeath.wav"
-DEATHSOUND_2 = "meatDeath2.wav"
+HITSOUND_1 = "meatSlap1.mp3"
+HITSOUND_2 = "meatSlap2.mp3"
+HITSOUND_3 = "meatSlap3.mp3"
+DEATHSOUND_1 = "meatDeath1.mp3"
+DEATHSOUND_2 = "meatDeath2.mp3"
 
 class Monster:
     def __init__(self, id, monsterType, spawnLocation, gameworld):
@@ -29,7 +29,7 @@ class Monster:
 
         if (monsterType == MonsterType.FATBOI) :
             self.speed = 1
-            self.image_source = "monster_n1.png"
+            self.image_source = "monster.png"
             self.animation_speed = 150
             self.accuracy = 2
             self.target_cooldown = 1750 #ms
@@ -45,7 +45,7 @@ class Monster:
 
         else:
             self.speed = 1.5
-            self.image_source = "zombie1.png"
+            self.image_source = "zombie.png"
             self.animation_speed = 84
             self.accuracy = 3 # Range of target, lower is better
             self.target_cooldown = 1250 #ms

@@ -11,10 +11,10 @@ try: # Path for files when app is built by PyInstaller
 except:
     BASE_PATH = "."
 
-WALKING_ANIMATION = "player_unarmed.png"
-PISTOL_ANIMATION = "player_pistol.png"
-RIFLE_ANIMATION = "player_rifle.png"
-SNIPER_ANIMATION = "player_sniper.png"
+PISTOL_ANIMATION = "playerPistol.png"
+RIFLE_ANIMATION = "playerRifle.png"
+SNIPER_ANIMATION = "playerSniper.png"
+WALKING_ANIMATION = "playerUnarmed.png"
 
 SPEED = 2
 ANIMATION_SPEED = 84 # ms
@@ -117,6 +117,14 @@ class Player:
         else: # Switch to previous weapon
             self.equippedWeaponIndex = self.equippedWeaponIndex - 1 if (self.equippedWeaponIndex > 0) else len(self.weaponInventory) - 1
 
+    def AddWeapon(self, ammo, duplicateAmmo, weaponName):
+        if (weaponName not in self.weaponInventory):
+            self.ammo += ammo
+            self.weaponInventory.append(weaponName)
+            self.equippedWeaponIndex = len(self.weaponInventory) - 1
+        else:
+            self.ammo += duplicateAmmo
+
     def Attack(self):
         if (self.weapon.Attack(self.weaponInventory[self.equippedWeaponIndex], self.ammo)):
             self.ammo -= 1
@@ -151,6 +159,6 @@ class Player:
     
     def CheckCollisionWithCollectables(self, playerRect):
         for collectable in self.gameworld.collectables.values():
-            if not collectable.collected :
+            if not collectable.collected:
                 if playerRect.colliderect(Rect(collectable.posX, collectable.posY, collectable.size[0], collectable.size[1])):
                     collectable.Pickup()

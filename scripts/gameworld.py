@@ -97,6 +97,19 @@ class GameWorld():
             
         self.backgroundSize = (len(self.tileLayoutBG[0]) * TILE_SIZE, len(self.tileLayoutBG) * TILE_SIZE)
 
+    def LoadObstacleRessources(self):
+        self.collectableSounds = ["ammoPickup", "gunPickup", "levelComplete"]
+        self.collectableImages = ["pistol", "rifle", "sniper", "ammoBig", "goal", "ammo"]
+
+        for i in range(len(self.collectableSounds)):
+            self.collectableSounds[i] = pygame.mixer.Sound(BASE_PATH + "/sounds/" + self.collectableSounds[i])
+
+        for i in range(len(self.collectableImages)):
+            self.collectableSounds[i] = pygame.image.load(BASE_PATH + "/res/" + self.collectableSounds[i])
+
+    def LoadEntityRessources(self):
+        pass
+
     def SetPlayer(self, player):
         self.player = player
         self.playerSize = player.GetSize()
