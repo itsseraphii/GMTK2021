@@ -44,8 +44,8 @@ class GameWorld():
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
         self.offsetY = self.startOffsetY
-        self.middleY = -1
         self.startMiddleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
+        self.middleY = -1
 
         self.enemyTypes = list(MonsterType)
         self.nbEnemyTypes = len(self.enemyTypes)
@@ -166,9 +166,7 @@ class GameWorld():
                             self.obstacles.append(Obstacle(True, True, posX, posY, customHitbox))
 
                             '''# Debug info - Uncomment to show hitboxes : 
-                            pygame.draw.rect(screen, (255,0,0), pygame.Rect(
-                                posX + customHitbox[2], posY + customHitbox[3],
-                                customHitbox[0], customHitbox[1]), 2)'''
+                            pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(posX + customHitbox[2], posY + customHitbox[3], customHitbox[0], customHitbox[1]), 2)'''
                             
                         else: # Use the default hitbox
                             self.obstacles.append(Obstacle(True, True, posX, posY, [TILE_SIZE, TILE_SIZE, 0, 0]))

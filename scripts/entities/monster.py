@@ -31,10 +31,10 @@ class Monster:
             deathSoundName = "meatDeath2"
 
             # Hitbox Info
-            self.hitBoxWidth = 30
-            self.hitBoxHeight = 30
-            self.hitBoxOffestX = 15
-            self.hitBoxOffestY = 15
+            self.hitBoxWidth = 40
+            self.hitBoxHeight = 40
+            self.hitBoxOffestX = 12
+            self.hitBoxOffestY = 12
 
         else:
             self.speed = 1.5
@@ -47,10 +47,10 @@ class Monster:
             deathSoundName = "meatDeath1"
 
             # Hitbox Info
-            self.hitBoxWidth = 15
-            self.hitBoxHeight = 15
-            self.hitBoxOffestX = self.hitBoxWidth / 2
-            self.hitBoxOffestY = self.hitBoxHeight / 2
+            self.hitBoxWidth = 24
+            self.hitBoxHeight = 16
+            self.hitBoxOffestX = 4
+            self.hitBoxOffestY = 8
 
         self.hitSounds = [self.gameworld.entitySounds["meatSlap1"], self.gameworld.entitySounds["meatSlap2"], self.gameworld.entitySounds["meatSlap3"]]
         self.deathSound = self.gameworld.entitySounds[deathSoundName]
@@ -166,4 +166,4 @@ class Monster:
         screen.blit(self.image, (self.posX, self.posY))
 
         '''# Debug info - Uncomment to show hitboxes : 
-        pygame.draw.rect(screen, (255,0,0), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxLength), 2)'''
+        pygame.draw.rect(screen, (255,0,0), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight), 2)'''

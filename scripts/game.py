@@ -121,8 +121,9 @@ class Game:
                 elif (event.key == K_r and self.playing):
                     self.RestartLevel()
 
-                elif (event.key == K_n and self.playing): # TODO remove
-                    self.NextLevel()
+                '''# Debug info - Uncomment to allow level skipping
+                elif (event.key == K_n and self.playing):
+                    self.NextLevel()'''
 
             elif (self.playing and event.type == MOUSEBUTTONDOWN):
                 if (event.button == 4): # Mouse wheel up
