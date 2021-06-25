@@ -36,7 +36,7 @@ def GetSingleFrame(spriteSheet, frameSize, frameNumber):
     # Copy the sprite from the large sheet onto the smaller image
     frame.blit(spriteSheet, (0, 0), (frameNumber * frameSize[0], 0, frameSize[0], frameSize[1]))
 
-    # Assuming black works as the transparent color
+    # Assuming black is the transparent color
     frame.set_colorkey((0, 0, 0))
 
     # Return the image

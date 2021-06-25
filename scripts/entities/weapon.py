@@ -1,12 +1,14 @@
 import pygame
+from enum import IntEnum
 import math
 import sys
-from gameworld import TILE_SIZE
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS
 except:
     BASE_PATH = "."
+
+TILE_SIZE = 32
 
 SWING_SOUND_FILE = BASE_PATH + "/sounds/swing.mp3"
 GUNSHOT_SOUND_FILE = BASE_PATH + "/sounds/gunshot.mp3"
@@ -17,7 +19,13 @@ BULLET_SIZE = 3
 MELEE_OFFSET_XY = -(TILE_SIZE / 2)
 MELEE_SIZE = [TILE_SIZE * 1.5] * 2
 
-class Weapon:
+class WeaponType(IntEnum):
+    CROWBAR = 0
+    REVOLVER = 1
+    RIFLE = 2
+    SNIPER = 3
+
+class WeaponController:
     def __init__(self, player, gameworld):
         self.player = player
         self.gameworld = gameworld
@@ -35,31 +43,32 @@ class Weapon:
 
     def CreateWeapons(self):
         self.weapons = {}
-        # key: name   value: [isRanged, damage, weaponCooldown]
-        self.weapons["Crowbar"] = [False, 2, 750]
-        self.weapons["Revolver"] = [True, 3, 800]
-        self.weapons["Assault Rifle"] = [True, 1, 115]
-        self.weapons["Sniper"] = [True, 8, 2000]
+        # key: name   value: [name, isRanged, damage, weaponCooldown]
+        self.weapons[WeaponType.CROWBAR] = ["Crowbar", False, 2, 750]
+        self.weapons[WeaponType.REVOLVER] = ["Revolver", True, 3, 800]
+        self.weapons[WeaponType.RIFLE] = ["Assault Rifle", True, 1, 115]
+        self.weapons[WeaponType.SNIPER] = ["Sniper", True, 8, 2000]
 
     def Attack(self, equippedWeapon, ammo):
         currentTime = pygame.time.get_ticks()
 
-        if (currentTime >= self.lastAttackTime + self.weapons[equippedWeapon][2]): # Attack if cooldown has passed
+        if (currentTime >= self.lastAttackTime + self.weapons[equippedWeapon][3]): # Attack if cooldown has passed
             self.lastAttackTime = currentTime
             self.meleeRect = None
 
-            if (self.weapons[equippedWeapon][0] and ammo > 0): # Ranged weapon with ammo
+            if (self.weapons[equippedWeapon][1] and ammo > 0): # Ranged weapon with ammo
                 playerPos = self.player.GetPos()
                 angle = -math.radians(self.player.angle)
 
                 # [posX, posY, angle, damage]
-                self.bullets.append([self.playerSize[0] / 2 + playerPos[0], self.playerSize[1] + playerPos[1], angle, self.weapons[equippedWeapon][1]])
+                self.bullets.append([self.playerSize[0] / 2 + playerPos[0], self.playerSize[1] + playerPos[1], angle, self.weapons[equippedWeapon][2]])
 
                 self.gunshotSound.play()
 
                 return True # Decrement ammo
 
-            elif (not self.weapons[equippedWeapon][0]): # Melee Weapon
+            # TODO Cleanup le elif
+            elif (not self.weapons[equippedWeapon][1]): # Melee Weapon 
                 
                 ### Rect hitbox generation of crowbar
                 # translate l'angle en full 360
@@ -98,8 +107,8 @@ class Weapon:
 
                 for key in list(self.gameworld.monsters): # Check collisions with multiple monsters
                     if (pygame.Rect(self.gameworld.monsters[key].posX, self.gameworld.monsters[key].posY, self.gameworld.monsters[key].size[0], self.gameworld.monsters[key].size[1]).colliderect(self.meleeRect)):
-                        self.gameworld.monsters[key].Stun(self.weapons[equippedWeapon][1] * 200) # More stun than ranged weapons
-                        self.gameworld.monsters[key].Damage(self.weapons[equippedWeapon][1])
+                        self.gameworld.monsters[key].Stun(self.weapons[equippedWeapon][2] * 200) # More stun than ranged weapons
+                        self.gameworld.monsters[key].Damage(self.weapons[equippedWeapon][2])
         return False
 
     def GetNextBulletPos(self, oldX, oldY, angle):

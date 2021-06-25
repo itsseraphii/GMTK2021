@@ -166,8 +166,8 @@ class Game:
     def DrawWeaponUI(self):
         if (self.player.equippedWeaponIndex != self.drawnWeaponIndex): # Draw new equipped weapon
             self.drawnWeaponIndex = self.player.equippedWeaponIndex
-            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((137, self.screenSize[1] - 68), (150, 28))) # Cover last drawn weapon name
-            self.screen.blit(self.fontMedium.render(str(self.player.weaponInventory[self.drawnWeaponIndex]), True, TEXT_COLOR), (138, self.screenSize[1] - 70))
+            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((137, self.screenSize[1] - 68), (150, 29))) # Cover last drawn weapon name
+            self.screen.blit(self.fontMedium.render(self.player.GetEquippedWeaponName(), True, TEXT_COLOR), (138, self.screenSize[1] - 70))
 
         if (self.player.ammo != self.drawnAmmo): # Draw new ammo count
             self.drawnAmmo = self.player.ammo

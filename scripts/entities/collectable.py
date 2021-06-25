@@ -1,3 +1,4 @@
+from entities.weapon import WeaponType
 from enum import IntEnum
 
 DEFAULT_SIZE = [32, 32]
@@ -61,13 +62,13 @@ class Collectable:
         self.pickupSound.play()
 
         if (self.type == CollectableType.PISTOL):
-            self.gameworld.player.AddWeapon(5, 8, "Revolver")
+            self.gameworld.player.AddWeapon(5, 8, WeaponType.REVOLVER)
 
         elif (self.type == CollectableType.RIFLE):
-            self.gameworld.player.AddWeapon(10, 15, "Assault Rifle")
+            self.gameworld.player.AddWeapon(10, 15, WeaponType.RIFLE)
 
         elif (self.type == CollectableType.SNIPER):
-            self.gameworld.player.AddWeapon(2, 5, "Sniper")
+            self.gameworld.player.AddWeapon(2, 5, WeaponType.SNIPER)
 
         elif (self.type == CollectableType.BIG_AMMO):
             self.gameworld.player.ammo += 10
