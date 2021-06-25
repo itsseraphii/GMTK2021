@@ -3,7 +3,6 @@ from pygame import Rect
 import random
 import math
 from enum import IntEnum
-from spriteUtils import GetFramesFromImage
 
 TURN_ANGLE = 2
 
@@ -21,7 +20,7 @@ class Monster:
         self.lastHitTime = 0
         self.angle = 0
 
-        if (monsterType == MonsterType.FATBOI) :
+        if (monsterType == MonsterType.FATBOI):
             self.speed = 1
             self.animationSpeed = 150
             self.accuracy = 2
@@ -76,7 +75,7 @@ class Monster:
     def Stun(self, timeMS):
         self.lastHitTime = pygame.time.get_ticks() + timeMS
 
-    def Move(self):
+    def Move(self): # TODO optimiser et cleanup
         currentTime = pygame.time.get_ticks()
 
         if currentTime > self.lastTargetUpdate + self.targetCooldown :
@@ -155,7 +154,7 @@ class Monster:
     def NextFrame(self):
         self.frameCounter = (self.frameCounter + 1) % len(self.animation)
 
-        # update l'angle s'il va plus que 360 ou moins que 0 après calculs
+        # Update l'angle s'il va plus que 360 ou moins que 0 après calculs
         if (self.angle < 0):
             self.angle = 360 + self.angle
         else: 

@@ -144,8 +144,8 @@ class Player:
         # pygame.draw.circle(screen, (255,0,0), (self.posX + PLAYER_SIZE[0]/2, self.posY + PLAYER_SIZE[0]/2), PLAYER_SIZE[0]/2, 4)'''
 
     def CheckCollisionWithObstacles(self, rect):
-        for ob in self.gameworld.obstacles:
-            if rect.colliderect(Rect(ob.GetX() + ob.GetHitBoxOffsetX(), ob.GetY() + ob.GetHitBoxOffsetY(), ob.GetHitboxWidth(), ob.GetHitboxLength())):
+        for obstacle in self.gameworld.obstacles:
+            if rect.colliderect(Rect(obstacle.posX + obstacle.offsetX, obstacle.posY + obstacle.offsetY, obstacle.width, obstacle.height)):
                 return True
 
         return False

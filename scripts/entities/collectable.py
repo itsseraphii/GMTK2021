@@ -1,5 +1,7 @@
 from enum import IntEnum
 
+DEFAULT_SIZE = [32, 32]
+
 class CollectableType(IntEnum):
     PISTOL = 195
     RIFLE = 196
@@ -16,35 +18,40 @@ class Collectable:
         self.posY = spawn_location[1]
         self.collected = False
 
-        if (collectable_type not in list(CollectableType)):
-            self.type = CollectableType.AMMO
-        else:
+        if (collectable_type in list(CollectableType)):
             self.type = collectable_type
+        else:
+            self.type = CollectableType.AMMO
 
         if (self.type == CollectableType.PISTOL):
             imageName = "pistol"
             soundName = "gunPickup"
             self.size = [32, 15]
+
         elif (self.type == CollectableType.RIFLE):
             imageName = "rifle"
             soundName = "gunPickup"
             self.size = [32, 15]
+
         elif (self.type == CollectableType.SNIPER):
             imageName = "sniper"
             soundName = "gunPickup"
             self.size = [32, 15]
+
         elif (self.type == CollectableType.BIG_AMMO):
             imageName = "ammoBig"
             soundName = "ammoPickup"
-            self.size = [32, 32]
+            self.size = DEFAULT_SIZE
+
         elif (self.type == CollectableType.GOAL):
             imageName = "goal"
             soundName = "levelComplete"
-            self.size = [32, 32]
+            self.size = DEFAULT_SIZE
+
         else:
             imageName = "ammo"
             soundName = "ammoPickup"
-            self.size = [32, 32]
+            self.size = DEFAULT_SIZE
 
         self.pickupSound = self.gameworld.collectableSounds[soundName]
         self.image = self.gameworld.collectableImages[imageName]

@@ -3,7 +3,7 @@ import sys
 import random
 from entities.collectable import Collectable, CollectableType
 from entities.monster import Monster, MonsterType
-from entities.obstacle import Obstacle
+from entities.obstacle import HITBOX_SIZES, Obstacle
 from spriteUtils import GetFramesFromFile
 
 try: # Path for files when app is built by PyInstaller
@@ -22,16 +22,6 @@ COLLECTABLES_LAST_ID = 225 # Ids < than this and >= ENTITIES_LAST_ID are collect
 
 CSV_PATH_BG = [BASE_PATH + "/levels/level", "/background.csv"]
 CSV_PATH_FG = [BASE_PATH + "/levels/level", "/foreground.csv"]
-
-DICT_HITBOX_SIZES = {
-    28 : [16, 16, 7, 7],
-    43 : [32, 28, 0, 0],
-    44 : [32, 28, 0, 0],
-    58 : [32, 28, 0, 0],
-    59 : [32, 28, 0, 0],
-    73 : [32, 16, 0, 7],
-    74 : [16, 32, 7, 0]
-}
 
 OBSTACLES = []
 
@@ -170,19 +160,18 @@ class GameWorld():
                     if (self.tileLayoutFG[y][x] < OBSTACLES_LAST_ID): # Id is an obstacle
                         screen.blit(self.tileImages[self.tileLayoutFG[y][x]], (posX, posY))
 
-                        if (self.tileLayoutFG[y][x] in DICT_HITBOX_SIZES): # The obstacle has a custom hitbox 
-                            customHitbox = DICT_HITBOX_SIZES.get(self.tileLayoutFG[y][x])
+                        if (self.tileLayoutFG[y][x] in HITBOX_SIZES): # The obstacle has a custom hitbox 
+                            customHitbox = HITBOX_SIZES.get(self.tileLayoutFG[y][x])
 
-                            self.obstacles.append(Obstacle(True, False, False, posX, posY, 
-                                customHitbox[0], customHitbox[1], customHitbox[2], customHitbox[3]))
+                            self.obstacles.append(Obstacle(True, True, posX, posY, customHitbox))
 
                             '''# Debug info - Uncomment to show hitboxes : 
                             pygame.draw.rect(screen, (255,0,0), pygame.Rect(
                                 posX + customHitbox[2], posY + customHitbox[3],
                                 customHitbox[0], customHitbox[1]), 2)'''
                             
-                        else: # Use the default hitbox 
-                            self.obstacles.append(Obstacle(True, False, False, posX, posY, TILE_SIZE, TILE_SIZE, 0, 0))
+                        else: # Use the default hitbox
+                            self.obstacles.append(Obstacle(True, True, posX, posY, [TILE_SIZE, TILE_SIZE, 0, 0]))
 
                             '''# Debug info - Uncomment to show hitboxes :  
                             pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(posX, posY, TILE_SIZE, TILE_SIZE), 2)'''

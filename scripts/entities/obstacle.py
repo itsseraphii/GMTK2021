@@ -1,40 +1,21 @@
+
+HITBOX_SIZES = {
+    28 : [16, 16, 7, 7],
+    43 : [32, 28, 0, 0],
+    44 : [32, 28, 0, 0],
+    58 : [32, 28, 0, 0],
+    59 : [32, 28, 0, 0],
+    73 : [32, 16, 0, 7],
+    74 : [16, 32, 7, 0]
+}
+
 class Obstacle:
-    def __init__(self, BLOCKS_BODIES, BLOCKS_BULLETS, KILLS, posX, posY, width, length, offsetX, offsetY):
-        self.BLOCKS_BODIES = BLOCKS_BODIES
-        self.BLOCKS_BULLETS = BLOCKS_BULLETS
-        self.KILLS = KILLS
+    def __init__(self, blocksBodies, blocksBullets, posX, posY, hitbox):
+        self.blocksBodies = blocksBodies
+        self.blocksBullets = blocksBullets
         self.posX = posX
         self.posY = posY
-        self.width = width
-        self.length = length
-        self.offsetX = offsetX
-        self.offsetY = offsetY
-
-    # TODO All those returns could be remove (just call obstacle.varName)
-    
-    def BlocksBodies(self):
-        return self.BLOCKS_BODIES    
-
-    def BlocksBullets(self):
-        return self.BLOCKS_BULLETS    
-
-    def Kills(self):
-        return self.KILLS
-    
-    def GetX(self):
-        return self.posX
-
-    def GetY(self):
-        return self.posY
-    
-    def GetHitboxWidth(self):
-        return self.width
-
-    def GetHitboxLength(self):
-        return self.length
-    
-    def GetHitBoxOffsetX(self):
-        return self.offsetX
-
-    def GetHitBoxOffsetY(self):
-        return self.offsetY
+        self.width = hitbox[0]
+        self.height = hitbox[1]
+        self.offsetX = hitbox[2]
+        self.offsetY = hitbox[3]
