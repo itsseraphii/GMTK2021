@@ -3,7 +3,7 @@ from pygame import Rect
 import random
 import math
 from enum import IntEnum
-from spriteUtils import BASE_PATH, GetFrames
+from spriteUtils import GetFramesFromImage
 
 TURN_ANGLE = 2
 
@@ -11,17 +11,11 @@ class MonsterType(IntEnum):
     ZOMBIE = 165
     FATBOI = 166
 
-HITSOUND_1 = "meatSlap1.mp3"
-HITSOUND_2 = "meatSlap2.mp3"
-HITSOUND_3 = "meatSlap3.mp3"
-DEATHSOUND_1 = "meatDeath1.mp3"
-DEATHSOUND_2 = "meatDeath2.mp3"
-
 class Monster:
     def __init__(self, id, monsterType, spawnLocation, gameworld):
         self.gameworld = gameworld
         self.id = id
-        self.monster_type = monsterType
+        self.type = monsterType
         self.posX = spawnLocation[0]
         self.posY = spawnLocation[1]
         self.lastHitTime = 0
@@ -29,13 +23,13 @@ class Monster:
 
         if (monsterType == MonsterType.FATBOI) :
             self.speed = 1
-            self.image_source = "monster.png"
-            self.animation_speed = 150
+            self.animationSpeed = 150
             self.accuracy = 2
-            self.target_cooldown = 1750 #ms
-            self.monster_size = [64, 64]
-            deathsound = BASE_PATH + "/sounds/" + DEATHSOUND_2
+            self.targetCooldown = 1750 #ms
+            self.size = [64, 64]
             self.health = 9
+            imageName = "monster"
+            deathSoundName = "meatDeath2"
 
             # Hitbox Info
             self.hitBoxOffestX = 15
@@ -45,48 +39,39 @@ class Monster:
 
         else:
             self.speed = 1.5
-            self.image_source = "zombie.png"
-            self.animation_speed = 84
+            self.animationSpeed = 84
             self.accuracy = 3 # Range of target, lower is better
-            self.target_cooldown = 1250 #ms
-            self.monster_size = [32, 32]
-            deathsound = BASE_PATH + "/sounds/" + DEATHSOUND_1
+            self.targetCooldown = 1250 #ms
+            self.size = [32, 32]
             self.health = 6
+            imageName = "zombie"
+            deathSoundName = "meatDeath1"
 
             # Hitbox Info
             self.hitBoxWidth = 15
             self.hitBoxLength = 15
-            self.hitBoxOffestX = self.hitBoxWidth/2
-            self.hitBoxOffestY = self.hitBoxLength/2
+            self.hitBoxOffestX = self.hitBoxWidth / 2
+            self.hitBoxOffestY = self.hitBoxLength / 2
 
-        self.hit_1 = pygame.mixer.Sound(BASE_PATH + "/sounds/" + HITSOUND_1)
-        self.hit_2 = pygame.mixer.Sound(BASE_PATH + "/sounds/" + HITSOUND_2)
-        self.hit_3 = pygame.mixer.Sound(BASE_PATH + "/sounds/" + HITSOUND_3)
-        self.death_sound = pygame.mixer.Sound(deathsound)
+        self.hitSounds = [self.gameworld.entitySounds["meatSlap1"], self.gameworld.entitySounds["meatSlap2"], self.gameworld.entitySounds["meatSlap3"]]
+        self.deathSound = self.gameworld.entitySounds[deathSoundName]
 
-        self.animation = GetFrames(self.image_source, self.monster_size)
+        self.animation = self.gameworld.entityImages[imageName]
         self.lastFrameTime = 0
         self.lastTargetUpdate = 0
         self.target = gameworld.player.GetPos()
-        self.frame_counter = 0
+        self.frameCounter = 0
         self.NextFrame()
 
     def Damage(self, damage):
         self.health -= damage
 
         if (self.health > 0):
-            hitsound = random.randint(1, 3)
-            
-            if hitsound == 1 :
-                self.hit_1.play()
-            elif hitsound == 2:
-                self.hit_2.play()
-            else :
-                self.hit_3.play()
+            self.hitSounds[random.randint(0, 2)].play()
         else:
             self.gameworld.deadMonsters.append(self.id) # Prevents respawn
             self.gameworld.monsters.pop(self.id)
-            self.death_sound.play()
+            self.deathSound.play()
 
     def Stun(self, timeMS):
         self.lastHitTime = pygame.time.get_ticks() + timeMS
@@ -94,7 +79,7 @@ class Monster:
     def Move(self):
         currentTime = pygame.time.get_ticks()
 
-        if currentTime > self.lastTargetUpdate + self.target_cooldown :
+        if currentTime > self.lastTargetUpdate + self.targetCooldown :
             self.lastTargetUpdate = currentTime
             playerLocation = self.gameworld.player.GetPos()
 
@@ -102,13 +87,13 @@ class Monster:
             if abs(playerLocation[0]) - abs(self.posX) > 100 or abs(playerLocation[1]) - abs(self.posY) > 100 :
                 # Draws a zone around the player, choosing a random angle to select a target
                 targetAngle = math.degrees(random.uniform(0, 6.29))
-                self.target[0] = playerLocation[0] + (self.accuracy * self.gameworld.tile_size) * math.sin(targetAngle)
-                self.target[1] = playerLocation[1] + (self.accuracy * self.gameworld.tile_size) * math.cos(targetAngle)
+                self.target[0] = playerLocation[0] + (self.accuracy * self.gameworld.tileSize) * math.sin(targetAngle)
+                self.target[1] = playerLocation[1] + (self.accuracy * self.gameworld.tileSize) * math.cos(targetAngle)
             else: # straight to the player
                 self.target = playerLocation
 
         if (self.lastHitTime < pygame.time.get_ticks()):
-            if (currentTime >= self.lastFrameTime + self.animation_speed ):
+            if (currentTime >= self.lastFrameTime + self.animationSpeed ):
                 self.lastFrameTime = currentTime
                 self.NextFrame()
 
@@ -168,10 +153,7 @@ class Monster:
                     self.posY += self.speed
 
     def NextFrame(self):
-        self.frame_counter += 1
-
-        if (self.frame_counter >= len(self.animation)) :
-            self.frame_counter = 0
+        self.frameCounter = (self.frameCounter + 1) % len(self.animation)
 
         # update l'angle s'il va plus que 360 ou moins que 0 après calculs
         if (self.angle < 0):
@@ -179,7 +161,7 @@ class Monster:
         else: 
             self.angle %= 360
 
-        self.image = pygame.transform.rotate(self.animation[self.frame_counter], int(self.angle))
+        self.image = pygame.transform.rotate(self.animation[self.frameCounter], int(self.angle))
 
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))

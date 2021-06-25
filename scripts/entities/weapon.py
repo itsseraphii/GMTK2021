@@ -15,7 +15,7 @@ BULLET_SPEED = 20
 BULLET_SIZE = 3
 
 MELEE_OFFSET_XY = -(TILE_SIZE / 2)
-MELEE_SIZE = [TILE_SIZE *1.5] * 2
+MELEE_SIZE = [TILE_SIZE * 1.5] * 2
 
 class Weapon:
     def __init__(self, player, gameworld):
@@ -36,10 +36,10 @@ class Weapon:
     def CreateWeapons(self):
         self.weapons = {}
         # key: name   value: [isRanged, damage, weaponCooldown]
-        self.weapons.update({"Crowbar": [False, 2, 750]})
-        self.weapons.update({"Revolver": [True, 3, 800]})
-        self.weapons.update({"Assault Rifle": [True, 1, 115]})
-        self.weapons.update({"Sniper": [True, 8, 2000]})
+        self.weapons["Crowbar"] = [False, 2, 750]
+        self.weapons["Revolver"] = [True, 3, 800]
+        self.weapons["Assault Rifle"] = [True, 1, 115]
+        self.weapons["Sniper"] = [True, 8, 2000]
 
     def Attack(self, equippedWeapon, ammo):
         currentTime = pygame.time.get_ticks()
@@ -97,7 +97,7 @@ class Weapon:
                 self.swingSound.play()
 
                 for key in list(self.gameworld.monsters): # Check collisions with multiple monsters
-                    if (pygame.Rect(self.gameworld.monsters[key].posX, self.gameworld.monsters[key].posY, self.gameworld.monsters[key].monster_size[0], self.gameworld.monsters[key].monster_size[1]).colliderect(self.meleeRect)):
+                    if (pygame.Rect(self.gameworld.monsters[key].posX, self.gameworld.monsters[key].posY, self.gameworld.monsters[key].size[0], self.gameworld.monsters[key].size[1]).colliderect(self.meleeRect)):
                         self.gameworld.monsters[key].Stun(self.weapons[equippedWeapon][1] * 200) # More stun than ranged weapons
                         self.gameworld.monsters[key].Damage(self.weapons[equippedWeapon][1])
         return False
@@ -119,7 +119,7 @@ class Weapon:
                 hasHit = False
 
                 for monster in self.gameworld.monsters.values(): # Check collisions with monsters
-                    if (pygame.Rect(monster.posX, monster.posY, monster.monster_size[0], monster.monster_size[1]).colliderect(bulletRect)):
+                    if (pygame.Rect(monster.posX, monster.posY, monster.size[0], monster.size[1]).colliderect(bulletRect)):
                         monster.Stun(self.bullets[i][3] * 150)
                         monster.Damage(self.bullets[i][3])
                         self.bullets.pop(i) # Delete bullet

@@ -1,16 +1,4 @@
-import pygame
-import sys
 from enum import IntEnum
-
-try: # Path for files when app is built by PyInstaller
-    BASE_PATH = sys._MEIPASS
-except:
-    BASE_PATH = "."
-
-# Sound files
-AMMO_PICKUP_SOUND = BASE_PATH + "/sounds/" + "ammoPickup.mp3"
-GUN_PICKUP_SOUND = BASE_PATH + "/sounds/" + "gunPickup.mp3"
-LEVEL_COMPLETE_SOUND = BASE_PATH + "/sounds/" + "levelComplete.mp3"
 
 class CollectableType(IntEnum):
     PISTOL = 195
@@ -34,32 +22,32 @@ class Collectable:
             self.type = collectable_type
 
         if (self.type == CollectableType.PISTOL):
-            self.imageFile = "pistol.png"
-            self.soundFile = GUN_PICKUP_SOUND
+            imageName = "pistol"
+            soundName = "gunPickup"
             self.size = [32, 15]
         elif (self.type == CollectableType.RIFLE):
-            self.imageFile = "rifle.png"
-            self.soundFile = GUN_PICKUP_SOUND
+            imageName = "rifle"
+            soundName = "gunPickup"
             self.size = [32, 15]
         elif (self.type == CollectableType.SNIPER):
-            self.imageFile = "sniper.png"
-            self.soundFile = GUN_PICKUP_SOUND
+            imageName = "sniper"
+            soundName = "gunPickup"
             self.size = [32, 15]
         elif (self.type == CollectableType.BIG_AMMO):
-            self.imageFile = "ammoBig.png"
-            self.soundFile = AMMO_PICKUP_SOUND
+            imageName = "ammoBig"
+            soundName = "ammoPickup"
             self.size = [32, 32]
         elif (self.type == CollectableType.GOAL):
-            self.imageFile = "goal.png"
-            self.soundFile = LEVEL_COMPLETE_SOUND
+            imageName = "goal"
+            soundName = "levelComplete"
             self.size = [32, 32]
         else:
-            self.imageFile = "ammo.png"
-            self.soundFile = AMMO_PICKUP_SOUND
+            imageName = "ammo"
+            soundName = "ammoPickup"
             self.size = [32, 32]
 
-        self.pickupSound = pygame.mixer.Sound(self.soundFile)
-        self.image = pygame.image.load(BASE_PATH + "/res/" + self.imageFile)
+        self.pickupSound = self.gameworld.collectableSounds[soundName]
+        self.image = self.gameworld.collectableImages[imageName]
 
     def Pickup(self):
         self.collected = True

@@ -4,6 +4,7 @@ import random
 from entities.collectable import Collectable, CollectableType
 from entities.monster import Monster, MonsterType
 from entities.obstacle import Obstacle
+from spriteUtils import GetFramesFromFile
 
 try: # Path for files when app is built by PyInstaller
     BASE_PATH = sys._MEIPASS
@@ -36,10 +37,10 @@ OBSTACLES = []
 
 class GameWorld():
     def __init__(self, currentLevel):
-        self.tile_size = TILE_SIZE
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2)) # Scale tilesheet 2x
+        self.tileSize = TILE_SIZE
 
         self.currentLevel = currentLevel if (currentLevel > -1) else 0 
         
@@ -47,6 +48,8 @@ class GameWorld():
         self.obstacles = []
         self.collectables = {}
         self.LoadTileCSV()
+        self.LoadObstacleRessources()
+        self.LoadEntityRessources()
 
         self.screenNbTilesY = int(self.screenSize[1] / TILE_SIZE) + 2
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
@@ -88,7 +91,7 @@ class GameWorld():
                     if (intTileNum < OBSTACLES_LAST_ID and intTileNum not in self.tileImages):
                         tilePosY = int(intTileNum / TILESHEET_SIZE[0])
                         tilePosX = intTileNum - (tilePosY * TILESHEET_SIZE[0])
-                        self.tileImages.update({intTileNum: self.GetTileImage(tilePosX, tilePosY)}) # Load the image from the tileset
+                        self.tileImages[intTileNum] = self.GetTileImage(tilePosX, tilePosY) # Load the image from the tileset
 
                 if (i == 0):
                     self.tileLayoutBG.append(currentRow)
@@ -98,17 +101,31 @@ class GameWorld():
         self.backgroundSize = (len(self.tileLayoutBG[0]) * TILE_SIZE, len(self.tileLayoutBG) * TILE_SIZE)
 
     def LoadObstacleRessources(self):
-        self.collectableSounds = ["ammoPickup", "gunPickup", "levelComplete"]
-        self.collectableImages = ["pistol", "rifle", "sniper", "ammoBig", "goal", "ammo"]
+        soundNames = ["ammoPickup", "gunPickup", "levelComplete"]
+        imageNames = ["pistol", "rifle", "sniper", "ammoBig", "goal", "ammo"]
 
-        for i in range(len(self.collectableSounds)):
-            self.collectableSounds[i] = pygame.mixer.Sound(BASE_PATH + "/sounds/" + self.collectableSounds[i])
+        self.collectableSounds = dict.fromkeys(soundNames)
+        self.collectableImages = dict.fromkeys(imageNames)
 
-        for i in range(len(self.collectableImages)):
-            self.collectableSounds[i] = pygame.image.load(BASE_PATH + "/res/" + self.collectableSounds[i])
+        for sound in soundNames:
+            self.collectableSounds[sound] = pygame.mixer.Sound(BASE_PATH + "/sounds/" + sound + ".mp3")
+
+        for image in imageNames:
+            self.collectableImages[image] = pygame.image.load(BASE_PATH + "/res/" + image + ".png").convert_alpha()
 
     def LoadEntityRessources(self):
-        pass
+        soundNames = ["meatSlap1", "meatSlap2", "meatSlap3", "meatDeath1", "meatDeath2"]
+        imageNames = ["monster", "zombie"]
+        imageFrameSizes = [[64, 64], [32, 32]]
+
+        self.entitySounds = dict.fromkeys(soundNames)
+        self.entityImages = dict.fromkeys(imageNames)
+
+        for sound in soundNames:
+            self.entitySounds[sound] = pygame.mixer.Sound(BASE_PATH + "/sounds/" + sound + ".mp3")
+
+        for i in range(len(imageNames)):
+            self.entityImages[imageNames[i]] = GetFramesFromFile(imageNames[i] + ".png", imageFrameSizes[i])
 
     def SetPlayer(self, player):
         self.player = player

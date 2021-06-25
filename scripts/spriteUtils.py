@@ -6,31 +6,35 @@ try: # Path for files when app is built by PyInstaller
 except:
     BASE_PATH = "."
 
-# Returns an array of all frames from requested file
-def GetFrames(filename, frame_size):
+# Returns an array of all frames from a file
+def GetFramesFromFile(filename, frameSize):
     try:
         spriteSheet = pygame.image.load(BASE_PATH + "/res/" + filename).convert()
     except Exception:
-        print("error while fetching " + filename)
+        print("Error while fetching " + filename)
 
-    nbOfFrames = spriteSheet.get_rect().size[0]/frame_size[0]
+    return GetFramesFromImage(spriteSheet, frameSize)
+
+# Returns an array of all frames from an image
+def GetFramesFromImage(spriteSheet, frameSize):
+    frameCount = spriteSheet.get_rect().size[0] / frameSize[0]
 
     i = 0
     frameArray = []
 
-    while i < nbOfFrames:
-        frame = GetSingleFrame(spriteSheet, frame_size, i)
+    while i < frameCount:
+        frame = GetSingleFrame(spriteSheet, frameSize, i)
         frameArray.append(frame)
         i += 1
 
     return frameArray
 
-def GetSingleFrame(sprite_sheet, frame_size, frame_number):
+def GetSingleFrame(spriteSheet, frameSize, frameNumber):
     # Create a new blank image
-    frame = pygame.Surface(frame_size).convert()
+    frame = pygame.Surface(frameSize).convert()
 
     # Copy the sprite from the large sheet onto the smaller image
-    frame.blit(sprite_sheet, (0, 0), (frame_number * frame_size[0], 0, frame_size[0], frame_size[1]))
+    frame.blit(spriteSheet, (0, 0), (frameNumber * frameSize[0], 0, frameSize[0], frameSize[1]))
 
     # Assuming black works as the transparent color
     frame.set_colorkey((0, 0, 0))
