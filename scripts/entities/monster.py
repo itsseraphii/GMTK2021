@@ -3,6 +3,7 @@ from pygame import Rect
 import random
 import math
 from enum import IntEnum
+from utils.constants import TILE_SIZE
 
 TURN_ANGLE = 2
 
@@ -86,8 +87,8 @@ class Monster:
             if abs(playerLocation[0]) - abs(self.posX) > 100 or abs(playerLocation[1]) - abs(self.posY) > 100 :
                 # Draws a zone around the player, choosing a random angle to select a target
                 targetAngle = math.degrees(random.uniform(0, 6.29))
-                self.target[0] = playerLocation[0] + (self.accuracy * self.gameworld.tileSize) * math.sin(targetAngle)
-                self.target[1] = playerLocation[1] + (self.accuracy * self.gameworld.tileSize) * math.cos(targetAngle)
+                self.target[0] = playerLocation[0] + (self.accuracy * TILE_SIZE) * math.sin(targetAngle)
+                self.target[1] = playerLocation[1] + (self.accuracy * TILE_SIZE) * math.cos(targetAngle)
             else: # straight to the player
                 self.target = playerLocation
 

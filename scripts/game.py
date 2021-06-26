@@ -1,9 +1,9 @@
 import pygame
 from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT, VIDEORESIZE
-import sys
-from gameworld import GameWorld, TILE_SIZE
+from gameworld import GameWorld
 from entities.player import Player
-from story import STORY
+from utils.story import STORY
+from utils.constants import TILE_SIZE, BASE_PATH
 
 MENU_FPS = 30
 LEVEL_FPS = 100
@@ -17,11 +17,6 @@ BLACK = (0, 0, 0)
 MENU_BG_COLOR = (10, 10, 10)
 LEVEL_BG_COLOR = (33, 33, 35)
 TEXT_COLOR = (200, 200, 200)
-
-try: # Path for files when app is built by PyInstaller
-    BASE_PATH = sys._MEIPASS
-except:
-    BASE_PATH = "."
 
 MAIN_MUSIC = BASE_PATH + "/music/Main_theme_v2_loopable.mp3"
 # Path for each level 

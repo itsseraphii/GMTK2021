@@ -2,8 +2,8 @@ import pygame
 from pygame.constants import K_a, K_d, K_s, K_w
 from pygame import Rect
 import math
-from entities.weaponController import WeaponController, WeaponType
-from spriteUtils import GetFramesFromFile
+from weaponController import WeaponController, WeaponType
+from utils.spriteUtils import GetFramesFromFile
 
 PISTOL_ANIMATION = "playerPistol.png"
 RIFLE_ANIMATION = "playerRifle.png"

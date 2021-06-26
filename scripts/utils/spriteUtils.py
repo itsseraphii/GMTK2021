@@ -1,10 +1,5 @@
 import pygame
-import sys
-
-try: # Path for files when app is built by PyInstaller
-    BASE_PATH = sys._MEIPASS
-except:
-    BASE_PATH = "."
+from utils.constants import BASE_PATH
 
 # Returns an array of all frames from a file
 def GetFramesFromFile(filename, frameSize):

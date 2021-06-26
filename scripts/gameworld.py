@@ -1,17 +1,11 @@
 import pygame
-import sys
 import random
 from entities.collectable import Collectable, CollectableType
 from entities.monster import Monster, MonsterType
 from entities.obstacle import HITBOX_SIZES, Obstacle
-from spriteUtils import GetFramesFromFile
+from utils.spriteUtils import GetFramesFromFile
+from utils.constants import TILE_SIZE, BASE_PATH
 
-try: # Path for files when app is built by PyInstaller
-    BASE_PATH = sys._MEIPASS
-except:
-    BASE_PATH = "."
-
-TILE_SIZE = 32
 TILESHEET_SIZE = (15, 15)
 TILESHEET_PIXEL_SIZE = (TILESHEET_SIZE[0] * 16, TILESHEET_SIZE[1] * 16)
 TILESHEET_PATH = BASE_PATH + "/res/Tilesheet.png"
@@ -30,7 +24,6 @@ class GameWorld():
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2)) # Scale tilesheet 2x
-        self.tileSize = TILE_SIZE
 
         self.currentLevel = currentLevel if (currentLevel > -1) else 0 
         

@@ -1,14 +1,7 @@
 import pygame
 from enum import IntEnum
 import math
-import sys
-
-try: # Path for files when app is built by PyInstaller
-    BASE_PATH = sys._MEIPASS
-except:
-    BASE_PATH = "."
-
-TILE_SIZE = 32
+from utils.constants import TILE_SIZE, BASE_PATH
 
 SWING_SOUND_FILE = BASE_PATH + "/sounds/swing.mp3"
 GUNSHOT_SOUND_FILE = BASE_PATH + "/sounds/gunshot.mp3"
