@@ -29,7 +29,7 @@ LEVELS_MUSIC = [BASE_PATH + "/music/level_theme_v2.mp3", BASE_PATH + "/music/lev
 TIME_OVER_MUSIC = BASE_PATH + "/music/everything_goes_to_shit_v1.mp3"
 
 class Game:
-    def __init__(self, screen, currentLevel, menuPage = -1):
+    def Init(self, screen, currentLevel, menuPage):
         self.screen = screen
         self.screenSize = pygame.display.get_window_size()
 
@@ -37,9 +37,11 @@ class Game:
 
         self.menuPage = menuPage
         self.currentLevel = currentLevel
+        self.gameState = -1
 
         self.InitMenu()
-        self.Run()
+
+        return self.Run()
 
     def InitMenu(self):
         self.SetResizeAllowed(True)
@@ -119,11 +121,11 @@ class Game:
                         self.InitLevel()
 
                 elif (event.key == K_r and self.playing):
-                    self.RestartLevel()
+                    self.TriggerGameOver(False)
 
                 '''# Debug info - Uncomment to allow level skipping
                 elif (event.key == K_n and self.playing):
-                    self.NextLevel()'''
+                    self.TriggerGameOver(True)'''
 
             elif (self.playing and event.type == MOUSEBUTTONDOWN):
                 if (event.button == 4): # Mouse wheel up
@@ -141,7 +143,7 @@ class Game:
     def ResizeWindow(self, width, height):
         self.screenSize = [max(1280, width), max(720, height)]
         self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
-        self.RestartLevel()
+        self.TriggerGameOver(False)
 
     def SetResizeAllowed(self, allowed):
         if (allowed):
@@ -277,20 +279,12 @@ class Game:
             if (self.gameworld.middleY - self.startMiddleY + (self.gameworld.screenNbTilesY / 2) < 0):
                 self.timeOverSpawnsY.append(PLAYER_CENTER_POS_Y + (self.screenSize[1] / 2))
 
-    def RestartLevel(self):
-        self.__init__(self.screen, self.currentLevel, self.menuPage)
-
-    def NextLevel(self):
-        self.__init__(self.screen, self.currentLevel + 1, self.menuPage + 1)
-
     def TriggerGameOver(self, victory):
-        if (victory):
-            self.NextLevel()
-        else:
-            self.RestartLevel()
+        self.gameState = 1 if (victory) else 0
+        self.running = False
 
     def Run(self):
-        self.running = True # True while game is not exited
+        self.running = True # True while the game is not exited
         self.playing = False # True while a level is being played
         self.timeOver = False # True while a level is being played and the 60 seconds are over
 
@@ -307,3 +301,5 @@ class Game:
                 self.CheckTimeOver()
 
             self.clock.tick(self.fps)
+
+        return [self.gameState, self.currentLevel, self.menuPage]

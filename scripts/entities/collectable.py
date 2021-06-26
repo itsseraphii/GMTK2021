@@ -1,4 +1,4 @@
-from entities.weapon import WeaponType
+from entities.weaponController import WeaponType
 from enum import IntEnum
 
 DEFAULT_SIZE = [32, 32]
