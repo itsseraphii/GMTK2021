@@ -112,7 +112,6 @@ class GameWorld():
 
     def SetPlayer(self, player):
         self.player = player
-        self.playerSize = player.GetSize()
 
     def SpawnTimeOverEnemy(self, id, spawnY):
         spawnX = (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2) + random.randrange(2 * TILE_SIZE, self.backgroundSize[0] - (4 * TILE_SIZE))

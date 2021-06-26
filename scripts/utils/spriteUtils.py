@@ -5,7 +5,7 @@ from utils.constants import BASE_PATH
 def GetFramesFromFile(filename, frameSize):
     try:
         spriteSheet = pygame.image.load(BASE_PATH + "/res/" + filename).convert()
-    except Exception:
+    except:
         print("Error while fetching " + filename)
 
     return GetFramesFromImage(spriteSheet, frameSize)

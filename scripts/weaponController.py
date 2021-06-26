@@ -1,7 +1,7 @@
 import pygame
 from enum import IntEnum
 import math
-from utils.constants import TILE_SIZE, BASE_PATH
+from utils.constants import TILE_SIZE, BASE_PATH, PLAYER_SIZE
 
 SWING_SOUND_FILE = BASE_PATH + "/sounds/swing.mp3"
 GUNSHOT_SOUND_FILE = BASE_PATH + "/sounds/gunshot.mp3"
@@ -22,7 +22,6 @@ class WeaponController:
     def __init__(self, player, gameworld):
         self.player = player
         self.gameworld = gameworld
-        self.playerSize = self.player.GetSize()
         self.screenSize = pygame.display.get_window_size()
         self.bulletImage = pygame.image.load(BULLET_IMAGE)
         self.bullets = []
@@ -52,7 +51,7 @@ class WeaponController:
                 angle = -math.radians(self.player.angle)
 
                 # [posX, posY, angle, damage]
-                self.bullets.append([self.playerSize[0] / 2 + playerPos[0], self.playerSize[1] + playerPos[1], angle, self.weapons[equippedWeapon][2]])
+                self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] + playerPos[1], angle, self.weapons[equippedWeapon][2]])
 
                 self.gunshotSound.play()
 

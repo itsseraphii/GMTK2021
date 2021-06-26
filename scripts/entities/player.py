@@ -4,6 +4,7 @@ from pygame import Rect
 import math
 from weaponController import WeaponController, WeaponType
 from utils.spriteUtils import GetFramesFromFile
+from utils.constants import PLAYER_SIZE, PLAYER_HITBOX_SIZE
 
 PISTOL_ANIMATION = "playerPistol.png"
 RIFLE_ANIMATION = "playerRifle.png"
@@ -12,8 +13,6 @@ WALKING_ANIMATION = "playerUnarmed.png"
 
 SPEED = 2
 ANIMATION_SPEED = 84 # ms
-PLAYER_SIZE = [32, 32]
-PLAYER_HITBOX_SIZE = [20, 20]
 
 class Player:
     def __init__(self, game, gameworld):
@@ -117,9 +116,6 @@ class Player:
     def Attack(self):
         if (self.weaponController.Attack(self.weaponInventory[self.equippedWeaponIndex], self.ammo)):
             self.ammo -= 1
-
-    def GetSize(self):
-        return PLAYER_SIZE
 
     def GetPos(self):
         return [self.posX, self.posY]
