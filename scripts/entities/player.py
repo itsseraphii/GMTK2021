@@ -13,7 +13,7 @@ WALKING_ANIMATION = "playerUnarmed.png"
 SPEED = 2
 ANIMATION_SPEED = 84 # ms
 PLAYER_SIZE = [32, 32]
-PLAYER_HITBOX_SIZE = [20,20]
+PLAYER_HITBOX_SIZE = [20, 20]
 
 class Player:
     def __init__(self, game, gameworld):
@@ -71,7 +71,7 @@ class Player:
             self.lastFrameTime = currentTime
             self.NextFrame()
 
-        currentHitbox = Rect(self.posX, self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1])
+        currentHitbox = Rect(PLAYER_HITBOX_SIZE[0] / 2 + self.posX, PLAYER_HITBOX_SIZE[1] / 2 + self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1])
 
         if (self.CheckCollisionWithMonsters(currentHitbox)):
             self.game.TriggerGameOver(False)
@@ -153,5 +153,5 @@ class Player:
         screen.blit(self.rotatedImage, (self.posX, self.posY))
 
         '''# Debug info - Uncomment to show hitboxes : 
-        pygame.draw.rect(screen, (255, 0, 0), Rect(self.posX + PLAYER_HITBOX_SIZE[0] / 2, self.posY + PLAYER_HITBOX_SIZE[1] / 2, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]), 2)
+        pygame.draw.rect(screen, (255, 0, 0), Rect(PLAYER_HITBOX_SIZE[0] / 2 + self.posX, PLAYER_HITBOX_SIZE[1] / 2 + self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]), 2)
         #pygame.draw.circle(screen, (255, 0, 0), (self.posX + PLAYER_SIZE[0] / 2, self.posY + PLAYER_SIZE[0] / 2), PLAYER_SIZE[0] / 2, 4)'''

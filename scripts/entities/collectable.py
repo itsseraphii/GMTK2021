@@ -82,3 +82,7 @@ class Collectable:
     def Draw(self, screen):
         if not self.collected :
             screen.blit(self.image, (self.posX, self.posY))
+
+            '''# Debug info - Uncomment to show hitboxes : 
+            import pygame
+            pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(self.posX, self.posY, self.size[0], self.size[1]), 2)'''

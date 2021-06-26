@@ -40,8 +40,9 @@ class Game:
         self.gameState = -1
 
         self.InitMenu()
+        self.Run()
 
-        return self.Run()
+        return [self.gameState, self.currentLevel, self.menuPage]
 
     def InitMenu(self):
         self.SetResizeAllowed(True)
@@ -301,5 +302,3 @@ class Game:
                 self.CheckTimeOver()
 
             self.clock.tick(self.fps)
-
-        return [self.gameState, self.currentLevel, self.menuPage]
