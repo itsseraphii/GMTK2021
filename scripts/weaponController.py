@@ -5,7 +5,7 @@ from utils.constants import TILE_SIZE, BASE_PATH, PLAYER_SIZE
 
 SWING_SOUND_FILE = BASE_PATH + "/sounds/swing.mp3"
 GUNSHOT_SOUND_FILE = BASE_PATH + "/sounds/gunshot.mp3"
-BULLET_IMAGE = BASE_PATH + "/res/bullet.png"
+BULLET_IMAGE_PATH = BASE_PATH + "/res/bullet.png"
 BULLET_SPEED = 20
 BULLET_SIZE = 3
 
@@ -23,7 +23,7 @@ class WeaponController:
         self.player = player
         self.gameworld = gameworld
         self.screenSize = pygame.display.get_window_size()
-        self.bulletImage = pygame.image.load(BULLET_IMAGE)
+        self.bulletImage = pygame.image.load(BULLET_IMAGE_PATH).convert()
         self.bullets = []
 
         self.swingSound = pygame.mixer.Sound(SWING_SOUND_FILE)
