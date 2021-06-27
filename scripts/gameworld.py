@@ -2,7 +2,7 @@ import pygame
 import random
 from entities.collectable import Collectable, CollectableType
 from entities.monster import Monster, MonsterType
-from entities.obstacle import HITBOX_SIZES, Obstacle
+from entities.obstacle import HITBOX_SIZES, Obstacle, RESISTANCES
 from utils.spriteUtils import GetFramesFromFile
 from utils.constants import TILE_SIZE, BASE_PATH
 
@@ -152,16 +152,17 @@ class GameWorld():
                     if (self.tileLayoutFG[y][x] < OBSTACLES_LAST_ID): # Id is an obstacle
                         screen.blit(self.tileImages[self.tileLayoutFG[y][x]], (posX, posY))
 
+                        resistance = RESISTANCES[self.tileLayoutFG[y][x]] if (self.tileLayoutFG[y][x] in RESISTANCES) else 2
+
                         if (self.tileLayoutFG[y][x] in HITBOX_SIZES): # The obstacle has a custom hitbox 
                             customHitbox = HITBOX_SIZES.get(self.tileLayoutFG[y][x])
-
-                            self.obstacles.append(Obstacle(True, True, posX, posY, customHitbox))
+                            self.obstacles.append(Obstacle(resistance, posX, posY, customHitbox))
 
                             '''# Debug info - Uncomment to show hitboxes : 
                             pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(posX + customHitbox[2], posY + customHitbox[3], customHitbox[0], customHitbox[1]), 2)'''
                             
                         else: # Use the default hitbox
-                            self.obstacles.append(Obstacle(True, True, posX, posY, [TILE_SIZE, TILE_SIZE, 0, 0]))
+                            self.obstacles.append(Obstacle(resistance, posX, posY, [TILE_SIZE, TILE_SIZE, 0, 0]))
 
                             '''# Debug info - Uncomment to show hitboxes :  
                             pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(posX, posY, TILE_SIZE, TILE_SIZE), 2)'''

@@ -34,11 +34,11 @@ class WeaponController:
 
     def CreateWeapons(self):
         self.weapons = {}
-        # key: name   value: [name, isRanged, damage, weaponCooldown]
-        self.weapons[WeaponType.CROWBAR] = ["Crowbar", False, 2, 750]
-        self.weapons[WeaponType.REVOLVER] = ["Revolver", True, 3, 800]
-        self.weapons[WeaponType.RIFLE] = ["Assault Rifle", True, 1, 115]
-        self.weapons[WeaponType.SNIPER] = ["Sniper", True, 8, 2000]
+        # key: name   value: [name, isRanged, damage, weaponCooldown, caliber]
+        self.weapons[WeaponType.CROWBAR] = ["Crowbar", False, 2, 750, 0]
+        self.weapons[WeaponType.REVOLVER] = ["Revolver", True, 3, 800, 1]
+        self.weapons[WeaponType.RIFLE] = ["Assault Rifle", True, 1, 115, 1]
+        self.weapons[WeaponType.SNIPER] = ["Sniper", True, 8, 2000, 2]
 
     def Attack(self, equippedWeapon, ammo):
         currentTime = pygame.time.get_ticks()
@@ -50,8 +50,8 @@ class WeaponController:
                 playerPos = self.player.GetPos()
                 angle = -math.radians(self.player.angle)
 
-                # [posX, posY, angle, damage]
-                self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angle, self.weapons[equippedWeapon][2]])
+                # [posX, posY, angle, damage, caliber]
+                self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angle, self.weapons[equippedWeapon][2], self.weapons[equippedWeapon][4]])
 
                 self.gunshotSound.play()
 
@@ -98,9 +98,11 @@ class WeaponController:
                 meleeRect = pygame.Rect((meleePos[0], meleePos[1]), MELEE_SIZE)
                 
                 for key in list(self.gameworld.monsters): # Check collisions with multiple monsters
-                    if (meleeRect.colliderect(pygame.Rect(self.gameworld.monsters[key].posX + self.gameworld.monsters[key].hitBoxOffestX, self.gameworld.monsters[key].posY + self.gameworld.monsters[key].hitBoxOffestY, self.gameworld.monsters[key].hitBoxWidth, self.gameworld.monsters[key].hitBoxHeight))):
-                        self.gameworld.monsters[key].Stun(self.weapons[equippedWeapon][2] * 200) # More stun than ranged weapons
-                        self.gameworld.monsters[key].Damage(self.weapons[equippedWeapon][2])
+                    monster = self.gameworld.monsters[key]
+
+                    if (meleeRect.colliderect(pygame.Rect(monster.posX + monster.hitBoxOffestX, monster.posY + monster.hitBoxOffestY, monster.hitBoxWidth, monster.hitBoxHeight))):
+                        monster.Stun(self.weapons[equippedWeapon][2] * 200) # More stun than ranged weapons
+                        monster.Damage(self.weapons[equippedWeapon][2])
 
         return False
 
@@ -112,23 +114,34 @@ class WeaponController:
     def UpdateBullets(self):
         playerPos = self.player.GetPos()
 
-        for i in range(len(self.bullets) - 1, -1, -1): 
-            if (self.bullets[i][0] > self.screenSize[0] / 2 + playerPos[0] or self.bullets[i][0] < -self.screenSize[0] / 2 + playerPos[0] or self.bullets[i][1] > self.screenSize[1] / 2 + playerPos[1] or self.bullets[i][1] < -self.screenSize[1] + playerPos[1]): # Check if the bullet is out of the screen
-                self.bullets.pop(i)
+        for i in range(len(self.bullets) - 1, -1, -1): # Check if the bullet is out of the screen on y axis
+            if (self.bullets[i][1] > self.screenSize[1] / 2 + playerPos[1] or self.bullets[i][1] < -self.screenSize[1] + playerPos[1]):
+                self.bullets.pop(i) # Delete bullet
             else:
                 newPos = self.GetNextBulletPos(self.bullets[i][0], self.bullets[i][1], self.bullets[i][2])
                 bulletRect = pygame.Rect(newPos[0], newPos[1], BULLET_SIZE, BULLET_SIZE)
-                hasHit = False
+                isDestroyed = False
 
-                for monster in self.gameworld.monsters.values(): # Check collisions with monsters
+                for key in list(self.gameworld.monsters): # Check collisions with monsters
+                    monster = self.gameworld.monsters[key]
+
                     if (bulletRect.colliderect(pygame.Rect(monster.posX + monster.hitBoxOffestX, monster.posY + monster.hitBoxOffestY, monster.hitBoxWidth, monster.hitBoxHeight))):
                         monster.Stun(self.bullets[i][3] * 150)
                         monster.Damage(self.bullets[i][3])
-                        self.bullets.pop(i) # Delete bullet
-                        hasHit = True
-                        break
+
+                        if (self.bullets[i][4] < 2 or key not in self.gameworld.deadMonsters): # If the weapon uses high caliber and the monster dies, don't destroy the bullet
+                            self.bullets.pop(i)
+                            isDestroyed = True
+                            break
+
+                if (not isDestroyed): # Check collisions with obstacles
+                    for obstacle in self.gameworld.obstacles: # Check collisions with obstacles
+                        if (obstacle.resistance >= self.bullets[i][4] and bulletRect.colliderect(pygame.Rect(obstacle.posX + obstacle.offsetX, obstacle.posY + obstacle.offsetY, obstacle.width, obstacle.height))):
+                            self.bullets.pop(i)
+                            isDestroyed = True
+                            break
                 
-                if (not hasHit): # Continue moving bullet
+                if (not isDestroyed): # Continue moving bullet
                     self.bullets[i][0] = newPos[0]
                     self.bullets[i][1] = newPos[1]
 
