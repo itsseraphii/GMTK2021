@@ -51,7 +51,7 @@ class WeaponController:
                 angle = -math.radians(self.player.angle)
 
                 # [posX, posY, angle, damage]
-                self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] + playerPos[1], angle, self.weapons[equippedWeapon][2]])
+                self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angle, self.weapons[equippedWeapon][2]])
 
                 self.gunshotSound.play()
 
