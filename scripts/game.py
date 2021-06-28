@@ -261,6 +261,9 @@ class Game:
             self.nbTimeOverFrames += 1
 
             if (self.nbTimeOverFrames % TIME_OVER_ENEMIES_SPAWN_FREQUENCY == 0): # Check if it's time to spawn an enemy
+                if (len(self.timeOverSpawnsY) == 2 and not self.gameworld.middleY - self.gameworld.screenNbTilesY > self.startMiddleY - (self.gameworld.backgroundSize[1] / TILE_SIZE) + 6): # If ennemies can no longer spawn over
+                    self.timeOverSpawnsY.pop(0)
+                
                 self.gameworld.SpawnTimeOverEnemy(-self.timeOverEnemySpawned, self.timeOverSpawnsY[self.timeOverEnemySpawned % len(self.timeOverSpawnsY)])
                 self.timeOverEnemySpawned += 1
                 
@@ -268,7 +271,7 @@ class Game:
             self.maxTimeOverEnemies = min((self.currentLevel + 1) * 10 + 5, 50)
             
             # Can spawn over player
-            if (self.gameworld.middleY - self.gameworld.screenNbTilesY > self.startMiddleY - (self.gameworld.backgroundSize[1] / TILE_SIZE) + 8):
+            if (self.gameworld.middleY - self.gameworld.screenNbTilesY > self.startMiddleY - (self.gameworld.backgroundSize[1] / TILE_SIZE) + 7):
                 self.timeOverSpawnsY.append(PLAYER_CENTER_POS_Y - (self.screenSize[1] / 2) - (2 * TILE_SIZE))
             
             # Can spawn under player
