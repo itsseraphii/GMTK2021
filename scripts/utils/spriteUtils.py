@@ -1,10 +1,10 @@
 import pygame
-from utils.constants import BASE_PATH
+from utils.constants import DATA_PATH
 
 # Returns an array of all frames from a file
 def GetFramesFromFile(filename, frameSize):
     try:
-        spriteSheet = pygame.image.load(BASE_PATH + "/res/" + filename).convert()
+        spriteSheet = pygame.image.load(DATA_PATH + "/res/" + filename).convert()
     except:
         print("Error while fetching " + filename)
 

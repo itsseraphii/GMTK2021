@@ -1,27 +1,21 @@
 import pygame
-from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT, VIDEORESIZE
+from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
 from gameworld import GameWorld
 from entities.player import Player
-from utils.story import STORY
-from utils.constants import TILE_SIZE, BASE_PATH
+from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, ENDING_MENU_PAGE
+from menu import Menu
 
 MENU_FPS = 30
 LEVEL_FPS = 100
 
 LEVEL_TIME = 60000 # 60 seconds
-ENDING_MENU_PAGE = len(STORY)
 TIME_OVER_ENEMIES_SPAWN_FREQUENCY = 15 # One spawn each x frames
 PLAYER_CENTER_POS_Y = 358 # When the player is at the center of the screen, this will always be it's position 
 
-BLACK = (0, 0, 0)
-MENU_BG_COLOR = (10, 10, 10)
-LEVEL_BG_COLOR = (33, 33, 35)
-TEXT_COLOR = (200, 200, 200)
-
-MAIN_MUSIC = BASE_PATH + "/music/Main_theme_v2_loopable.mp3"
+MAIN_MUSIC = DATA_PATH + "/music/Main_theme_v2_loopable.mp3"
 # Path for each level 
-LEVELS_MUSIC = [BASE_PATH + "/music/level_theme_v2.mp3", BASE_PATH + "/music/level_theme_v2.mp3", BASE_PATH + "/music/level_theme_v2.mp3", BASE_PATH + "/music/level_theme_v2.mp3", BASE_PATH + "/music/level_theme_v2.mp3"]
-TIME_OVER_MUSIC = BASE_PATH + "/music/everything_goes_to_shit_v1.mp3"
+LEVELS_MUSIC = [DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3"]
+TIME_OVER_MUSIC = DATA_PATH + "/music/everything_goes_to_shit_v1.mp3"
 
 class Game:
     def Init(self, screen, currentLevel, menuPage):
@@ -43,10 +37,12 @@ class Game:
         self.SetResizeAllowed(True)
         self.fps = MENU_FPS
 
-        self.fontTitle = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", int(self.screenSize[0] / 8))
-        self.fontLarge = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 45)
-        self.fontLargeMelted = pygame.font.Font(BASE_PATH + "/fonts/melted.ttf", 48)
-        self.fontMedium = pygame.font.Font(BASE_PATH + "/fonts/FreeSansBold.ttf", 25)
+        self.fontTitle = pygame.font.Font(DATA_PATH + "/fonts/melted.ttf", int(self.screenSize[0] / 8))
+        self.fontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", 45)
+        self.fontLargeMelted = pygame.font.Font(DATA_PATH + "/fonts/melted.ttf", 48)
+        self.fontMedium = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", 25)
+
+        self.menu = Menu(self.screen, self)
 
         self.StartMenuMusic()
 
@@ -100,41 +96,32 @@ class Game:
         pygame.mixer.music.play() # play once
 
     def CheckInputs(self):
-        for event in pygame.event.get():
-            if (event.type == QUIT):
-                self.running =  False
-
-            elif (event.type == VIDEORESIZE): # Can only resize in menus (between levels)
-                self.ResizeWindow(event.w, event.h)
-
-            elif (event.type == KEYDOWN):
-                if (event.key == K_RETURN and not self.playing):
-                    if (self.menuPage >= ENDING_MENU_PAGE):
-                        self.running = False
-                    elif (self.menuPage != self.currentLevel or self.menuPage == ENDING_MENU_PAGE - 1):
-                        self.menuPage += 1
-                    else: # Start of a level
-                        self.InitLevel()
-
-                elif (event.key == K_r and self.playing):
-                    self.TriggerGameOver(False)
-
-                '''# Debug info - Uncomment to allow level skipping
-                elif (event.key == K_n and self.playing):
-                    self.TriggerGameOver(True)'''
-
-            elif (self.playing and event.type == MOUSEBUTTONDOWN):
-                if (event.button == 4): # Mouse wheel up
-                    self.player.SwitchWeapon(False)
-                elif event.button == 5: # Mouse wheel down
-                    self.player.SwitchWeapon(True)
-
         if (self.playing):
+            for event in pygame.event.get():
+                if (event.type == QUIT):
+                    self.running =  False
+
+                elif (event.type == KEYDOWN):
+                    if (event.key == K_r and self.playing):
+                        self.TriggerGameOver(False)
+
+                    # Debug info - Uncomment to allow level skipping
+                    elif (event.key == K_n and self.playing):
+                        self.TriggerGameOver(True)
+
+                elif (event.type == MOUSEBUTTONDOWN):
+                    if (event.button == 4): # Mouse wheel up
+                        self.player.SwitchWeapon(False)
+                    elif event.button == 5: # Mouse wheel down
+                        self.player.SwitchWeapon(True)
+
             self.player.Move(pygame.key.get_pressed())
             self.player.LookAtMouse(pygame.mouse.get_pos())
 
             if (pygame.mouse.get_pressed()[0]):
                 self.player.Attack()
+        else:
+            self.menu.CheckInputs()
 
     def ResizeWindow(self, width, height):
         self.screenSize = [max(1280, width), max(720, height)]
@@ -191,42 +178,6 @@ class Game:
 
         self.screen.blit(self.fontMedium.render("FPS: " + str(fps), True, fpsColor, LEVEL_BG_COLOR), (10, self.screenSize[1] / 2))'''
 
-    def DrawParagraph(self, lines):
-        for i in range(len(lines)):
-            text = self.fontMedium.render(lines[i], True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, (self.screenSize[1] / 4) + (i * 30)))
-            self.screen.blit(text, textRect)
-
-    def DrawMenu(self):
-        self.screen.fill(MENU_BG_COLOR)
-
-        if (self.menuPage == -1 or self.menuPage == ENDING_MENU_PAGE - 1): # Start lore and end lore
-            self.DrawParagraph(STORY[self.menuPage])
-            text = self.fontMedium.render("Press Enter to continue", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
-            self.screen.blit(text, textRect)
-        
-        elif (self.menuPage >= ENDING_MENU_PAGE): # Ending
-            text = self.fontTitle.render("Transgenesis", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2 - 50))
-            self.screen.blit(text, textRect)
-            text = self.fontLarge.render("Thank you for playing!", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 200))
-            self.screen.blit(text, textRect)
-        
-        else:
-            text = self.fontMedium.render("Press Enter to start level " + str(self.currentLevel + 1), True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
-            self.screen.blit(text, textRect)
-
-            if (self.menuPage == 0): # Title page (level 1)
-                text = self.fontTitle.render("Transgenesis", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2))
-                self.screen.blit(text, textRect)
-
-            else: # Story for each normal level
-                self.DrawParagraph(STORY[self.menuPage])
-
     def Draw(self):
         if (self.playing):
             self.gameworld.Draw(self.screen)
@@ -242,7 +193,7 @@ class Game:
             self.DrawUI()
 
         else:
-            self.DrawMenu()
+            self.menu.Draw()
 
         pygame.display.update()
 

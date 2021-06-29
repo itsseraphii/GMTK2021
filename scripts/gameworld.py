@@ -4,18 +4,18 @@ from entities.collectable import Collectable, CollectableType
 from entities.monster import Monster, MonsterType
 from entities.obstacle import HITBOX_SIZES, Obstacle, RESISTANCES
 from utils.spriteUtils import GetFramesFromFile
-from utils.constants import TILE_SIZE, BASE_PATH
+from utils.constants import TILE_SIZE, DATA_PATH
 
 TILESHEET_SIZE = (15, 15)
 TILESHEET_PIXEL_SIZE = (TILESHEET_SIZE[0] * 16, TILESHEET_SIZE[1] * 16)
-TILESHEET_PATH = BASE_PATH + "/res/Tilesheet.png"
+TILESHEET_PATH = DATA_PATH + "/res/Tilesheet.png"
 
 OBSTACLES_LAST_ID = 165 # Ids < than this are obstacles or background tiles
 ENTITIES_LAST_ID = 195 # Ids < than this and >= OBSTACLES_LAST_ID are entities
 COLLECTABLES_LAST_ID = 225 # Ids < than this and >= ENTITIES_LAST_ID are collectables
 
-CSV_PATH_BG = [BASE_PATH + "/levels/level", "/background.csv"]
-CSV_PATH_FG = [BASE_PATH + "/levels/level", "/foreground.csv"]
+CSV_PATH_BG = [DATA_PATH + "/levels/level", "/background.csv"]
+CSV_PATH_FG = [DATA_PATH + "/levels/level", "/foreground.csv"]
 
 OBSTACLES = []
 
@@ -91,10 +91,10 @@ class GameWorld():
         self.collectableImages = dict.fromkeys(imageNames)
 
         for sound in soundNames:
-            self.collectableSounds[sound] = pygame.mixer.Sound(BASE_PATH + "/sounds/" + sound + ".mp3")
+            self.collectableSounds[sound] = pygame.mixer.Sound(DATA_PATH + "/sounds/" + sound + ".mp3")
 
         for image in imageNames:
-            self.collectableImages[image] = pygame.image.load(BASE_PATH + "/res/" + image + ".png").convert_alpha()
+            self.collectableImages[image] = pygame.image.load(DATA_PATH + "/res/" + image + ".png").convert_alpha()
 
     def LoadEntityRessources(self):
         soundNames = ["meatSlap1", "meatSlap2", "meatSlap3", "meatDeath1", "meatDeath2"]
@@ -105,7 +105,7 @@ class GameWorld():
         self.entityImages = dict.fromkeys(imageNames)
 
         for sound in soundNames:
-            self.entitySounds[sound] = pygame.mixer.Sound(BASE_PATH + "/sounds/" + sound + ".mp3")
+            self.entitySounds[sound] = pygame.mixer.Sound(DATA_PATH + "/sounds/" + sound + ".mp3")
 
         for i in range(len(imageNames)):
             self.entityImages[imageNames[i]] = GetFramesFromFile(imageNames[i] + ".png", imageFrameSizes[i])

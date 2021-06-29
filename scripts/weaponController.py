@@ -1,11 +1,11 @@
 import pygame
 from enum import IntEnum
 import math
-from utils.constants import TILE_SIZE, BASE_PATH, PLAYER_SIZE
+from utils.constants import TILE_SIZE, DATA_PATH, PLAYER_SIZE
 
-SWING_SOUND_FILE = BASE_PATH + "/sounds/swing.mp3"
-GUNSHOT_SOUND_FILE = BASE_PATH + "/sounds/gunshot.mp3"
-BULLET_IMAGE_PATH = BASE_PATH + "/res/bullet.png"
+SWING_SOUND_FILE = DATA_PATH + "/sounds/swing.mp3"
+GUNSHOT_SOUND_FILE = DATA_PATH + "/sounds/gunshot.mp3"
+BULLET_IMAGE_PATH = DATA_PATH + "/res/bullet.png"
 BULLET_SPEED = 20
 BULLET_SIZE = 3
 
