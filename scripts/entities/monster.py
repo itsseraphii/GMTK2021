@@ -72,6 +72,7 @@ class Monster:
             self.gameworld.deadMonsters.append(self.id) # Prevents respawn
             self.gameworld.monsters.pop(self.id)
             self.deathSound.play()
+            self.gameworld.player.game.levelController.savedKills += 1
 
     def Stun(self, timeMS):
         self.lastHitTime = pygame.time.get_ticks() + timeMS

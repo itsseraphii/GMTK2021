@@ -73,6 +73,7 @@ class Player:
         currentHitbox = Rect(PLAYER_HITBOX_SIZE[0] / 2 + self.posX, PLAYER_HITBOX_SIZE[1] / 2 + self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1])
 
         if (self.CheckCollisionWithMonsters(currentHitbox)):
+            self.game.levelController.savedDeaths += 1
             self.game.TriggerGameOver(False)
         else:
             self.CheckCollisionWithCollectables(currentHitbox)

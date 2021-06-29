@@ -72,14 +72,26 @@ class Menu:
         self.screen.fill(MENU_BG_COLOR)
 
         if (self.game.menuPage == -4): # Stats
-            text = self.game.fontLarge.render("Best Times", True, TEXT_COLOR)
+            text = self.game.fontLarge.render("Stats", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, 40))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("Kills: " + str(self.game.levelController.savedKills), True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 125))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("Deaths: " + str(self.game.levelController.savedDeaths), True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 200))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("Best Times", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 300))
             self.screen.blit(text, textRect)
 
             for key in list(self.game.levelController.savedTimes):
                 level = int(key)
                 text = self.game.fontMedium.render("Level " + str(level + 1) + ": " + str(self.game.levelController.savedTimes[key] / 1000) + "s", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), int(level / 3) * 50 + 100))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), int(level / 3) * 50 + 350))
                 self.screen.blit(text, textRect)
 
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
@@ -87,6 +99,10 @@ class Menu:
             self.screen.blit(text, textRect)
 
         elif (self.game.menuPage == -3): # Controls
+            text = self.game.fontLarge.render("Controls", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 40))
+            self.screen.blit(text, textRect)
+
             controls = ["W A S D  -  Move", "", "Mouse  -  Aim", "", "Left click  -  Shoot", "", "Scrollwheel  -  Change weapons", "", "R  -  Restart level"]
             self.DrawParagraph(controls)
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)

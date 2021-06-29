@@ -8,6 +8,8 @@ class LevelController:
     def __init__(self, screen):
         gameState = [0, 0, -2] # [-1: exit  0: restart level  1: next level, currentLevel, menuPage]
         self.savedTimes = {}
+        self.savedKills = 0
+        self.savedDeaths = 0
         self.save = self.LoadGame()
         game = Game()
 
@@ -19,9 +21,6 @@ class LevelController:
 
     def VerifyTime(self, level, newTime):
         key = str(level)
-
-        print(newTime)
-        print(self.savedTimes)
         
         if (key in self.savedTimes):
             if (newTime < int(self.savedTimes[key])):
@@ -40,6 +39,8 @@ class LevelController:
             saveData = Fernet(SAVE_KEY).decrypt(saveData.encode()).decode()
             saveData = json.loads(saveData)
 
+            self.savedKills = saveData["kills"]
+            self.savedDeaths = saveData["deaths"]
             self.savedTimes = saveData["times"]
 
             return [int(saveData["level"]), int(saveData["menu"])]
@@ -55,6 +56,8 @@ class LevelController:
         saveData = {
             "level": max(0, gameState[1]),
             "menu": max(0, gameState[2]),
+            "deaths": self.savedDeaths,
+            "kills": self.savedKills,
             "times": self.savedTimes
         }
 
