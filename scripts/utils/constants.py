@@ -1,3 +1,4 @@
+import os
 import sys
 from utils.story import STORY
 
@@ -16,3 +17,5 @@ if (hasattr(sys, '_MEIPASS')): # Path for data when the game is built by PyInsta
     DATA_PATH = sys._MEIPASS
 else:
     DATA_PATH = "."
+
+SAVE_PATH = os.getenv('APPDATA') + "\\Transgenesis"

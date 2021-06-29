@@ -18,15 +18,16 @@ LEVELS_MUSIC = [DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/lev
 TIME_OVER_MUSIC = DATA_PATH + "/music/everything_goes_to_shit_v1.mp3"
 
 class Game:
-    def Init(self, screen, currentLevel, menuPage):
+    def Init(self, levelController, screen, currentLevel, menuPage):
         self.screen = screen
         self.screenSize = pygame.display.get_window_size()
 
         self.clock = pygame.time.Clock()
 
+        self.gameState = -1
         self.menuPage = menuPage
         self.currentLevel = currentLevel
-        self.gameState = -1
+        self.levelController = levelController
 
         self.InitMenu()
         self.Run()
