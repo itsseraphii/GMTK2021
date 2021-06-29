@@ -234,6 +234,9 @@ class Game:
         self.gameState = 1 if (victory) else 0
         self.running = False
 
+        if (victory): # Keep level time
+            self.levelController.VerifyTime(self.currentLevel, pygame.time.get_ticks() - self.startTime)
+
     def Run(self):
         self.running = True # True while the game is not exited
         self.playing = False # True while a level is being played

@@ -3,6 +3,9 @@ from pygame.constants import KEYDOWN, K_RETURN, QUIT, VIDEORESIZE
 from utils.constants import MENU_BG_COLOR, LEVEL_BG_COLOR, TEXT_COLOR, CREDITS_PAGE, DATA_PATH
 from utils.story import STORY
 
+MEDIUM_BTN_SIZE = [300, 75]
+SMALL_BTN_SIZE = [200, 50]
+
 class Menu:
     def __init__(self, screen, game):
         self.screen = screen
@@ -14,19 +17,19 @@ class Menu:
         self.creditsFontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 35))
         self.creditsSpace = self.screenSize[1] / 6
 
-        buttonBasePos = [self.screenSize[0] / 2, self.screenSize[1] / 2 - 50 + self.screenSize[0] / 16]
-        buttonSize = [300, 75]
+        buttonBasePos = [self.screenSize[0] / 2, self.screenSize[1] / 2 - 25 + self.screenSize[0] / 16]
 
         self.menuButtons = {
-            "newGame": Button(buttonBasePos[0] + 50, buttonBasePos[1], buttonSize, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "New Game"),
-            "controls": Button(buttonBasePos[0] - 350, buttonBasePos[1] + 150, buttonSize, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Controls"),
-            "exit": Button(buttonBasePos[0] + 50, buttonBasePos[1] + 150, buttonSize, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Exit")
+            "newGame": Button(buttonBasePos[0] + 50, buttonBasePos[1], MEDIUM_BTN_SIZE, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "New Game"),
+            "controls": Button(2, self.screenSize[1] - 52, SMALL_BTN_SIZE, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Controls"),
+            "stats": Button(210, self.screenSize[1] - 52, SMALL_BTN_SIZE, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Stats"),
+            "exit": Button(self.screenSize[0] - 202, self.screenSize[1] - 52, SMALL_BTN_SIZE, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Exit")
         }
 
         if (self.game.levelController.save): # If a save was found
-            self.menuButtons["continue"] = Button(buttonBasePos[0] - 350, buttonBasePos[1], buttonSize, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Continue")
+            self.menuButtons["continue"] = Button(buttonBasePos[0] - 350, buttonBasePos[1], MEDIUM_BTN_SIZE, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Continue")
         else:
-            self.menuButtons["continueDisabled"] = Button(buttonBasePos[0] - 350, buttonBasePos[1], buttonSize, MENU_BG_COLOR, LEVEL_BG_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Continue")
+            self.menuButtons["continueDisabled"] = Button(buttonBasePos[0] - 350, buttonBasePos[1], MEDIUM_BTN_SIZE, MENU_BG_COLOR, LEVEL_BG_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Continue")
 
     def CheckInputs(self):
         for event in pygame.event.get():
@@ -48,11 +51,13 @@ class Menu:
                             self.game.levelController.save = None
                         elif (key == "controls"):
                             self.game.menuPage = -3
+                        elif (key == "stats"):
+                            self.game.menuPage = -4
                         elif (key == "exit"):
                             self.game.running = False
 
             elif (event.type == KEYDOWN):
-                if (self.game.menuPage == -2 or self.game.menuPage == -3): # Press any key on title screen or in controls to go to the main menu
+                if (self.game.menuPage < -1): # Press any key on title screen, in controls or in stats to go to the main menu
                     self.game.menuPage = -1
                 elif (self.game.menuPage == CREDITS_PAGE): # Press any key on credits to go to title screen
                     self.game.menuPage = -2
@@ -66,7 +71,22 @@ class Menu:
     def Draw(self):
         self.screen.fill(MENU_BG_COLOR)
 
-        if (self.game.menuPage == -3): # Controls
+        if (self.game.menuPage == -4): # Stats
+            text = self.game.fontLarge.render("Best Times", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 40))
+            self.screen.blit(text, textRect)
+
+            for key in list(self.game.levelController.savedTimes):
+                level = int(key)
+                text = self.game.fontMedium.render("Level " + str(level + 1) + ": " + str(self.game.levelController.savedTimes[key] / 1000) + "s", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), int(level / 3) * 50 + 100))
+                self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
+            self.screen.blit(text, textRect)
+
+        elif (self.game.menuPage == -3): # Controls
             controls = ["W A S D  -  Move", "", "Mouse  -  Aim", "", "Left click  -  Shoot", "", "Scrollwheel  -  Change weapons", "", "R  -  Restart level"]
             self.DrawParagraph(controls)
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
@@ -88,7 +108,7 @@ class Menu:
             for button in self.menuButtons.values():
                 button.Draw(self.screen, button.IsMouseOver(mousePos))
 
-        elif (self.game.menuPage == CREDITS_PAGE):
+        elif (self.game.menuPage >= CREDITS_PAGE):
             if (13 * self.creditsSpace + self.menuScrollY > 0):
                 text = self.game.fontTitle.render("Transgenesis", True, TEXT_COLOR)
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, self.menuScrollY))
