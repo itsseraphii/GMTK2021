@@ -19,7 +19,7 @@ CSV_PATH_FG = [DATA_PATH + "/levels/level", "/foreground.csv"]
 
 OBSTACLES = []
 
-class GameWorld():
+class GameWorld:
     def __init__(self, currentLevel):
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()

@@ -10,7 +10,7 @@ MENU_BG_COLOR = (10, 10, 10)
 LEVEL_BG_COLOR = (33, 33, 35)
 TEXT_COLOR = (200, 200, 200)
 
-ENDING_MENU_PAGE = len(STORY)
+CREDITS_PAGE = len(STORY)
 
 if (hasattr(sys, '_MEIPASS')): # Path for data when the game is built by PyInstaller
     DATA_PATH = sys._MEIPASS

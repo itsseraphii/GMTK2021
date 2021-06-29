@@ -1,13 +1,19 @@
 import pygame
 from pygame.constants import KEYDOWN, K_RETURN, QUIT, VIDEORESIZE
-from utils.constants import MENU_BG_COLOR, LEVEL_BG_COLOR, TEXT_COLOR, ENDING_MENU_PAGE
+from utils.constants import MENU_BG_COLOR, LEVEL_BG_COLOR, TEXT_COLOR, CREDITS_PAGE, DATA_PATH
 from utils.story import STORY
 
-class Menu():
+class Menu:
     def __init__(self, screen, game):
         self.screen = screen
         self.game = game
         self.screenSize = self.game.screenSize
+
+        if (self.game.menuPage == CREDITS_PAGE):
+            self.menuScrollY = self.screenSize[1] / 7 + self.screenSize[1]
+            self.creditsFont = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 45))
+            self.creditsFontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 35))
+            self.creditsSpace = self.screenSize[1] / 6
 
         buttonBasePos = [self.screenSize[0] / 2, self.screenSize[1] / 2 - 50 + self.screenSize[0] / 16]
         buttonSize = [300, 75]
@@ -44,13 +50,13 @@ class Menu():
             elif (event.type == KEYDOWN):
                 if (self.game.menuPage == -2): # Press any key on title screen to go to menu
                     self.game.menuPage += 1
-                elif (self.game.menuPage == ENDING_MENU_PAGE): # Press any key on credits to go to title screen
+                elif (self.game.menuPage == CREDITS_PAGE): # Press any key on credits to go to title screen
                     self.game.menuPage = -2
                 elif (self.game.menuPage == -3): # Press any key on controls to go to menu
                     self.game.menuPage = -1
 
                 elif (event.key == K_RETURN):
-                    if (self.game.menuPage != self.game.currentLevel or self.game.menuPage == ENDING_MENU_PAGE - 1):
+                    if (self.game.menuPage != self.game.currentLevel or self.game.menuPage == CREDITS_PAGE - 1):
                         self.game.menuPage += 1
                     else: # Start of a level
                         self.game.InitLevel()
@@ -80,16 +86,40 @@ class Menu():
             for button in self.menuButtons.values():
                 button.Draw(self.screen, button.IsMouseOver(mousePos))
 
-        elif (self.game.menuPage == ENDING_MENU_PAGE): # Credits
-            text = self.game.fontTitle.render("Transgenesis", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] / 2 - 50))
-            self.screen.blit(text, textRect)
-            text = self.game.fontLarge.render("Thank you for playing!", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 200))
-            self.screen.blit(text, textRect)
+        elif (self.game.menuPage == CREDITS_PAGE):
+            if (13 * self.creditsSpace + self.menuScrollY > 0):
+                text = self.game.fontTitle.render("Transgenesis", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, self.menuScrollY))
+                self.screen.blit(text, textRect)
+
+                text = self.creditsFont.render("Psycho - Developer, Software Architect", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 4 * self.creditsSpace + self.menuScrollY))
+                self.screen.blit(text, textRect)
+                text = self.creditsFont.render("Seraphii - Developer, Assets Artist", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 5 * self.creditsSpace + self.menuScrollY))
+                self.screen.blit(text, textRect)
+                text = self.creditsFont.render("Hypstersaurus - Developer, Texture Artist", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 6 * self.creditsSpace + self.menuScrollY))
+                self.screen.blit(text, textRect)
+                text = self.creditsFont.render("Parazyte - Composer, Level Designer, Writer", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 7 * self.creditsSpace + self.menuScrollY))
+                self.screen.blit(text, textRect)
+                text = self.creditsFont.render("Nemesis - Enemy Designer, Writer", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 8 * self.creditsSpace + self.menuScrollY))
+                self.screen.blit(text, textRect)
+
+                text = self.creditsFontLarge.render("Thank you for playing!", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 12 * self.creditsSpace + self.menuScrollY))
+                self.screen.blit(text, textRect)
+
+                self.menuScrollY -= 1
+            else:
+                text = self.game.fontMedium.render("Press any key", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
+                self.screen.blit(text, textRect)
 
         else: # Levels
-            message = "Press Enter to start level " + str(self.game.currentLevel + 1) if (self.game.menuPage != ENDING_MENU_PAGE - 1) else "Press Enter to continue"
+            message = "Press Enter to start level " + str(self.game.currentLevel + 1) if (self.game.menuPage != CREDITS_PAGE - 1) else "Press Enter to continue"
             text = self.game.fontMedium.render(message, True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
@@ -101,7 +131,7 @@ class Menu():
             textRect = text.get_rect(center = (self.screenSize[0] / 2, (self.screenSize[1] / 4) + (i * 30)))
             self.screen.blit(text, textRect)
 
-class Button():
+class Button:
     def __init__(self, x, y, size, bgColor, textColor, hoverColor, font, text):
         self.x = x
         self.y = y

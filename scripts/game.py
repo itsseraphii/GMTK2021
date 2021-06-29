@@ -1,8 +1,8 @@
 import pygame
-from pygame.constants import KEYDOWN, K_RETURN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
+from pygame.constants import KEYDOWN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
 from gameworld import GameWorld
 from entities.player import Player
-from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, ENDING_MENU_PAGE
+from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR
 from menu import Menu
 
 MENU_FPS = 30

@@ -7,3 +7,9 @@ class LevelController:
 
         while (gameState[0] != -1):
             gameState = game.Init(screen, gameState[0] + gameState[1], gameState[0] + gameState[2])
+
+    def LoadGame(self):
+        return [0, 3, 3]
+
+    def SaveGame(self):
+        pass
