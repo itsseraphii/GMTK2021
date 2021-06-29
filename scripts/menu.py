@@ -40,11 +40,12 @@ class Menu:
                 for key in list(self.menuButtons):
                     if (self.menuButtons[key].IsMouseOver(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]):
                         if (key == "continue"):
-                            self.game.menuPage = self.game.levelController.save[0]
-                            self.game.currentLevel = self.game.levelController.save[1]
+                            self.game.currentLevel = self.game.levelController.save[0]
+                            self.game.menuPage = self.game.levelController.save[1]
                         elif (key == "newGame"):
-                            self.game.menuPage = 0
                             self.game.currentLevel = 0
+                            self.game.menuPage = 0
+                            self.game.levelController.save = None
                         elif (key == "controls"):
                             self.game.menuPage = -3
                         elif (key == "exit"):
@@ -66,7 +67,7 @@ class Menu:
         self.screen.fill(MENU_BG_COLOR)
 
         if (self.game.menuPage == -3): # Controls
-            controls = ["W A S D to move", "", "Mouse to aim", "", "Left click to shoot", "", "Scrollwheel to change weapons", "", "R to restart a level"]
+            controls = ["W A S D  -  Move", "", "Mouse  -  Aim", "", "Left click  -  Shoot", "", "Scrollwheel  -  Change weapons", "", "R  -  Restart level"]
             self.DrawParagraph(controls)
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))

@@ -18,4 +18,7 @@ if (hasattr(sys, '_MEIPASS')): # Path for data when the game is built by PyInsta
 else:
     DATA_PATH = "."
 
-SAVE_PATH = os.getenv('APPDATA') + "\\Transgenesis"
+SAVE_PATH = os.getenv('APPDATA') + "\\Transgenesis\\save.dat"
+
+# Very unsecure, but still prevents the average gamer from editing his save file
+SAVE_KEY = b"mNixSeRoW1JXa27N4F2VR8vttF82yqtSSeQAI_nrTPo="
