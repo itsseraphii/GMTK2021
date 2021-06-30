@@ -2,7 +2,7 @@ import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT
 from gameworld import GameWorld
 from entities.player import Player
-from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR
+from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE
 from menu import Menu
 
 MENU_FPS = 30
@@ -44,6 +44,7 @@ class Game:
         self.fontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", 45)
         self.fontLargeMelted = pygame.font.Font(DATA_PATH + "/fonts/melted.ttf", 48)
         self.fontMedium = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", 25)
+        self.fontAmmo = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", 32)
 
         self.menu = Menu(self.screen, self)
 
@@ -77,8 +78,8 @@ class Game:
 
         self.screen.fill(LEVEL_BG_COLOR)
         pygame.draw.rect(self.screen, BLACK, self.progressBarBackground)
-        self.screen.blit(self.fontMedium.render("Ammo:", True, TEXT_COLOR), (10, self.screenSize[1] - 40))
-        self.screen.blit(self.fontMedium.render("Equipped:", True, TEXT_COLOR), (10, self.screenSize[1] - 70))
+
+        self.screen.blit(pygame.transform.scale(pygame.image.load(DATA_PATH + "/res/ammoUI.png").convert_alpha(), (48, 48)), (10, self.screenSize[1] - 55))
 
     def StartMenuMusic(self):
         pygame.mixer.music.fadeout # Fade out last music
@@ -112,9 +113,9 @@ class Game:
                     elif (event.key == K_r):
                         self.TriggerGameOver(False)
 
-                    # Debug info - Uncomment to allow level skipping
+                    '''# Debug info - Uncomment to allow level skipping
                     elif (event.key == K_n):
-                        self.TriggerGameOver(True)
+                        self.TriggerGameOver(True)'''
 
                 elif (event.type == MOUSEBUTTONDOWN):
                     if (event.button == 4): # Mouse wheel up
@@ -160,13 +161,15 @@ class Game:
     def DrawWeaponUI(self):
         if (self.player.equippedWeaponIndex != self.drawnWeaponIndex): # Draw new equipped weapon
             self.drawnWeaponIndex = self.player.equippedWeaponIndex
-            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((137, self.screenSize[1] - 68), (150, 29))) # Cover last drawn weapon name
-            self.screen.blit(self.fontMedium.render(self.player.GetEquippedWeaponName(), True, TEXT_COLOR), (138, self.screenSize[1] - 70))
+            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((10, self.screenSize[1] - 113), (92, 53))) # Cover last drawn weapon name
+
+            # This scales the image each time which is not good, but it's only when the player changes weapon, so I decided to ignore it
+            self.screen.blit(pygame.transform.scale(self.gameworld.collectableImages[self.player.GetEquippedWeaponName()], (WEAPON_IMAGE_SIZE[0] * 3, WEAPON_IMAGE_SIZE[1] * 3)), (10, self.screenSize[1] - 110))
 
         if (self.player.ammo != self.drawnAmmo): # Draw new ammo count
             self.drawnAmmo = self.player.ammo
-            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((104, self.screenSize[1] - 38), (60, 28))) # Cover last drawn ammo
-            self.screen.blit(self.fontMedium.render(str(self.drawnAmmo), True, TEXT_COLOR), (105, self.screenSize[1] - 40))
+            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((62, self.screenSize[1] - 44), (76, 30))) # Cover last drawn ammo
+            self.screen.blit(self.fontAmmo.render(str(self.drawnAmmo), True, TEXT_COLOR), (64, self.screenSize[1] - 50))
 
     def DrawUI(self):
         self.DrawTimeLeft()

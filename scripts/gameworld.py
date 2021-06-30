@@ -85,7 +85,7 @@ class GameWorld:
 
     def LoadObstacleRessources(self):
         soundNames = ["ammoPickup", "gunPickup", "levelComplete"]
-        imageNames = ["pistol", "rifle", "sniper", "ammoBig", "goal", "ammo"]
+        imageNames = ["crowbar", "revolver", "rifle", "sniper", "ammoBig", "goal", "ammo"]
 
         self.collectableSounds = dict.fromkeys(soundNames)
         self.collectableImages = dict.fromkeys(imageNames)

@@ -25,7 +25,7 @@ class Collectable:
             self.type = CollectableType.AMMO
 
         if (self.type == CollectableType.PISTOL):
-            imageName = "pistol"
+            imageName = "revolver"
             soundName = "gunPickup"
             self.size = [32, 15]
 

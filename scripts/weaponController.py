@@ -35,10 +35,10 @@ class WeaponController:
     def CreateWeapons(self):
         self.weapons = {}
         # key: name   value: [name, isRanged, damage, weaponCooldown, caliber]
-        self.weapons[WeaponType.CROWBAR] = ["Crowbar", False, 2, 750, 0]
-        self.weapons[WeaponType.REVOLVER] = ["Revolver", True, 3, 800, 1]
-        self.weapons[WeaponType.RIFLE] = ["Assault Rifle", True, 1, 115, 1]
-        self.weapons[WeaponType.SNIPER] = ["Sniper", True, 8, 2000, 2]
+        self.weapons[WeaponType.CROWBAR] = ["crowbar", False, 2, 750, 0]
+        self.weapons[WeaponType.REVOLVER] = ["revolver", True, 3, 800, 1]
+        self.weapons[WeaponType.RIFLE] = ["rifle", True, 1, 115, 1]
+        self.weapons[WeaponType.SNIPER] = ["sniper", True, 8, 2000, 2]
 
     def Attack(self, equippedWeapon, ammo):
         currentTime = pygame.time.get_ticks()
