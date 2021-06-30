@@ -28,15 +28,14 @@ class LevelController:
             self.savedTimes[key] = newTime
 
     def Progressed(self, gameState): # True if no progress is saved or if there has been progress
-        return not self.savedProgress or gameState[1] > self.savedProgress[0] or gameState[2] > self.savedProgress[1] or gameState[1] == CREDITS_PAGE - 1 and gameState[2] < CREDITS_PAGE - 1
+        return not self.savedProgress or gameState[1] > self.savedProgress[0] or gameState[2] > self.savedProgress[1]
+
+    def UpdateProgress(self, gameState):
+        if (self.Progressed(gameState)):
+            self.savedProgress = [gameState[1], gameState[2]]
 
     def SaveData(self, gameState):
-        # Edge case (if the player finishes the game and returns to the main menu before exiting)
-        if (gameState[1] == CREDITS_PAGE - 1 and gameState[2] < CREDITS_PAGE - 1):
-            gameState[2] = CREDITS_PAGE
-
-        if (self.Progressed):
-            self.savedProgress = [gameState[1], max(0, gameState[2])]
+        self.UpdateProgress(gameState)
 
         saveData = {
             "level": self.savedProgress[0],

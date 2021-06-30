@@ -1,5 +1,5 @@
 import pygame
-from pygame.constants import KEYDOWN, K_n, K_r, MOUSEBUTTONDOWN, QUIT
+from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT
 from gameworld import GameWorld
 from entities.player import Player
 from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR
@@ -28,6 +28,8 @@ class Game:
         self.menuPage = menuPage
         self.currentLevel = currentLevel
         self.levelController = levelController
+
+        self.levelController.UpdateProgress([self.gameState, self.currentLevel, self.menuPage])
 
         self.InitMenu()
         self.Run()
@@ -103,12 +105,16 @@ class Game:
                     self.running =  False
 
                 elif (event.type == KEYDOWN):
-                    if (event.key == K_r and self.playing):
+                    if (event.key == K_ESCAPE):
+                        self.menuPage = -1
                         self.TriggerGameOver(False)
 
-                    '''# Debug info - Uncomment to allow level skipping
-                    elif (event.key == K_n and self.playing):
-                        self.TriggerGameOver(True)'''
+                    elif (event.key == K_r):
+                        self.TriggerGameOver(False)
+
+                    # Debug info - Uncomment to allow level skipping
+                    elif (event.key == K_n):
+                        self.TriggerGameOver(True)
 
                 elif (event.type == MOUSEBUTTONDOWN):
                     if (event.button == 4): # Mouse wheel up
@@ -232,10 +238,11 @@ class Game:
 
     def TriggerGameOver(self, victory):
         self.gameState = 1 if (victory) else 0
-        self.running = False
 
         if (victory): # Check if this level's best time has been beaten
             self.levelController.VerifyLevelTime(self.currentLevel, pygame.time.get_ticks() - self.startTime)
+
+        self.running = False
 
     def Run(self):
         self.running = True # True while the game is not exited
