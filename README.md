@@ -15,8 +15,8 @@ py scripts/main.py
 All you have to do is run `main.py` using your Python interpreter.
 
 ## Contributions
- - Seraphii - Developper, Assets Artist
- - Hypstersaurus - Developper, Texture artist
- - Psycho - Developper, Software Architect
- - Parazyte - Composer, Level designer, Writer
- - Nemesis - Enemy design, Writer
+ - Seraphii - Developer, Assets Artist
+ - Hypstersaurus - Developer, Texture Artist
+ - Psycho - Developer, Software Architect
+ - Parazyte - Composer, Level Designer, Writer
+ - Nemesis - Enemy Designer, Writer
