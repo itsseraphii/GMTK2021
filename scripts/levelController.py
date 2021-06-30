@@ -27,8 +27,11 @@ class LevelController:
         else:
             self.savedTimes[key] = newTime
 
+    def HasSavedProgress(self):
+        return self.savedProgress is not None and self.savedProgress[1] >= 0
+
     def Progressed(self, gameState): # True if no progress is saved or if there has been progress
-        return not self.savedProgress or gameState[1] > self.savedProgress[0] or gameState[2] > self.savedProgress[1]
+        return not self.HasSavedProgress() or gameState[1] > self.savedProgress[0] or gameState[2] > self.savedProgress[1]
 
     def UpdateProgress(self, gameState):
         if (self.Progressed(gameState)):

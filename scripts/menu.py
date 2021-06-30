@@ -28,7 +28,7 @@ class Menu:
             "exit": Button(self.screenSize[0] - 205, self.screenSize[1] - 55, SMALL_BTN_SIZE, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Exit")
         }
 
-        if (self.game.levelController.savedProgress): # If a save was found
+        if (self.game.levelController.HasSavedProgress()): # If a save was found
             self.menuButtons["continue"] = Button(buttonBasePos[0] - 320, buttonBasePos[1], MEDIUM_BTN_SIZE, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Continue")
         else:
             self.menuButtons["continueDisabled"] = Button(buttonBasePos[0] - 320, buttonBasePos[1], MEDIUM_BTN_SIZE, MENU_BG_COLOR, LEVEL_BG_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Continue")
@@ -77,7 +77,7 @@ class Menu:
                         elif (key == "newGame"):
                             self.game.currentLevel = 0
                             self.game.menuPage = 0
-                            self.game.levelController.savedProgress = None
+                            self.game.levelController.savedProgress = [0, 0]
                         elif (key == "controls"):
                             self.game.menuPage = -3
                         elif (key == "stats"):
