@@ -106,9 +106,9 @@ class Game:
                     if (event.key == K_r and self.playing):
                         self.TriggerGameOver(False)
 
-                    # Debug info - Uncomment to allow level skipping
+                    '''# Debug info - Uncomment to allow level skipping
                     elif (event.key == K_n and self.playing):
-                        self.TriggerGameOver(True)
+                        self.TriggerGameOver(True)'''
 
                 elif (event.type == MOUSEBUTTONDOWN):
                     if (event.button == 4): # Mouse wheel up
@@ -213,7 +213,7 @@ class Game:
             self.nbTimeOverFrames += 1
 
             if (self.nbTimeOverFrames % TIME_OVER_ENEMIES_SPAWN_FREQUENCY == 0): # Check if it's time to spawn an enemy
-                if (len(self.timeOverSpawnsY) == 2 and not self.gameworld.middleY - self.gameworld.screenNbTilesY > self.startMiddleY - (self.gameworld.backgroundSize[1] / TILE_SIZE) + 6): # If ennemies can no longer spawn over
+                if (len(self.timeOverSpawnsY) == 2 and not self.gameworld.middleY - self.gameworld.screenNbTilesY > self.startMiddleY - (self.gameworld.backgroundSize[1] / TILE_SIZE) + 6): # If enemies can no longer spawn over
                     self.timeOverSpawnsY.pop(0)
                 
                 self.gameworld.SpawnTimeOverEnemy(-self.timeOverEnemySpawned, self.timeOverSpawnsY[self.timeOverEnemySpawned % len(self.timeOverSpawnsY)])
@@ -234,8 +234,8 @@ class Game:
         self.gameState = 1 if (victory) else 0
         self.running = False
 
-        if (victory): # Keep level time
-            self.levelController.VerifyTime(self.currentLevel, pygame.time.get_ticks() - self.startTime)
+        if (victory): # Check if this level's best time has been beaten
+            self.levelController.VerifyLevelTime(self.currentLevel, pygame.time.get_ticks() - self.startTime)
 
     def Run(self):
         self.running = True # True while the game is not exited

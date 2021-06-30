@@ -10,16 +10,15 @@ class LevelController:
         self.savedTimes = {}
         self.savedKills = 0
         self.savedDeaths = 0
-        self.save = self.LoadGame()
+        self.savedProgress = self.LoadData()
         game = Game()
 
         while (gameState[0] != -1):
             gameState = game.Init(self, screen, gameState[0] + gameState[1], gameState[0] + gameState[2])
 
-        if (self.SaveRequired(gameState)):
-            self.SaveGame(gameState)
+        self.SaveData(gameState)
 
-    def VerifyTime(self, level, newTime):
+    def VerifyLevelTime(self, level, newTime):
         key = str(level)
         
         if (key in self.savedTimes):
@@ -28,10 +27,34 @@ class LevelController:
         else:
             self.savedTimes[key] = newTime
 
-    def SaveRequired(self, gameState): # True if nothing is saved or if there has been progress
-        return not self.save or gameState[1] > self.save[0] or gameState[2] > self.save[1]
+    def Progressed(self, gameState): # True if no progress is saved or if there has been progress
+        return not self.savedProgress or gameState[1] > self.savedProgress[0] or gameState[2] > self.savedProgress[1] or gameState[1] == CREDITS_PAGE - 1 and gameState[2] < CREDITS_PAGE - 1
 
-    def LoadGame(self):
+    def SaveData(self, gameState):
+        # Edge case (if the player finishes the game and returns to the main menu before exiting)
+        if (gameState[1] == CREDITS_PAGE - 1 and gameState[2] < CREDITS_PAGE - 1):
+            gameState[2] = CREDITS_PAGE
+
+        if (self.Progressed):
+            self.savedProgress = [gameState[1], max(0, gameState[2])]
+
+        saveData = {
+            "level": self.savedProgress[0],
+            "menu": self.savedProgress[1],
+            "deaths": self.savedDeaths,
+            "kills": self.savedKills,
+            "times": self.savedTimes
+        }
+
+        saveData = json.dumps(saveData)
+        saveData = Fernet(SAVE_KEY).encrypt(saveData.encode()).decode()
+
+        os.makedirs(os.path.dirname(SAVE_PATH), exist_ok=True)
+
+        with open(SAVE_PATH, "w") as file:
+            file.write(saveData)
+
+    def LoadData(self):
         try:
             with open(SAVE_PATH, "r") as file:
                 saveData = file.read()
@@ -47,24 +70,3 @@ class LevelController:
 
         except:
             return None
-
-    def SaveGame(self, gameState):
-        # Edge case (if the player finishes the game and returns to the main menu before exiting)
-        if (gameState[1] == CREDITS_PAGE - 1 and gameState[2] < CREDITS_PAGE - 1):
-            gameState[2] = CREDITS_PAGE
-
-        saveData = {
-            "level": max(0, gameState[1]),
-            "menu": max(0, gameState[2]),
-            "deaths": self.savedDeaths,
-            "kills": self.savedKills,
-            "times": self.savedTimes
-        }
-
-        saveData = json.dumps(saveData)
-        saveData = Fernet(SAVE_KEY).encrypt(saveData.encode()).decode()
-
-        os.makedirs(os.path.dirname(SAVE_PATH), exist_ok=True)
-
-        with open(SAVE_PATH, "w") as file:
-            file.write(saveData)
