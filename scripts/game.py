@@ -79,7 +79,7 @@ class Game:
         self.screen.fill(LEVEL_BG_COLOR)
         pygame.draw.rect(self.screen, BLACK, self.progressBarBackground)
 
-        self.screen.blit(pygame.transform.scale(pygame.image.load(DATA_PATH + "/res/ammoUI.png").convert_alpha(), (48, 48)), (10, self.screenSize[1] - 55))
+        self.screen.blit(pygame.transform.scale(pygame.image.load(DATA_PATH + "/res/ammoUI.png").convert_alpha(), (48, 48)), (120, self.screenSize[1] - 55))
 
     def StartMenuMusic(self):
         pygame.mixer.music.fadeout # Fade out last music
@@ -161,15 +161,15 @@ class Game:
     def DrawWeaponUI(self):
         if (self.player.equippedWeaponIndex != self.drawnWeaponIndex): # Draw new equipped weapon
             self.drawnWeaponIndex = self.player.equippedWeaponIndex
-            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((10, self.screenSize[1] - 113), (92, 53))) # Cover last drawn weapon name
+            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((10, self.screenSize[1] - 56), (92, 53))) # Cover last drawn weapon name
 
             # This scales the image each time which is not good, but it's only when the player changes weapon, so I decided to ignore it
-            self.screen.blit(pygame.transform.scale(self.gameworld.collectableImages[self.player.GetEquippedWeaponName()], (WEAPON_IMAGE_SIZE[0] * 3, WEAPON_IMAGE_SIZE[1] * 3)), (10, self.screenSize[1] - 110))
+            self.screen.blit(pygame.transform.scale(self.gameworld.collectableImages[self.player.GetEquippedWeaponName()], (WEAPON_IMAGE_SIZE[0] * 3, WEAPON_IMAGE_SIZE[1] * 3)), (10, self.screenSize[1] - 53))
 
         if (self.player.ammo != self.drawnAmmo): # Draw new ammo count
             self.drawnAmmo = self.player.ammo
-            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((62, self.screenSize[1] - 44), (76, 30))) # Cover last drawn ammo
-            self.screen.blit(self.fontAmmo.render(str(self.drawnAmmo), True, TEXT_COLOR), (64, self.screenSize[1] - 50))
+            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((172, self.screenSize[1] - 44), (76, 30))) # Cover last drawn ammo
+            self.screen.blit(self.fontAmmo.render(str(self.drawnAmmo), True, TEXT_COLOR), (174, self.screenSize[1] - 50))
 
     def DrawUI(self):
         self.DrawTimeLeft()
