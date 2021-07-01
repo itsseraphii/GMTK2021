@@ -13,7 +13,7 @@ TIME_OVER_ENEMIES_SPAWN_FREQUENCY = 15 # One spawn each x frames
 PLAYER_CENTER_POS_Y = 358 # When the player is at the center of the screen, this will always be it's position 
 
 MAIN_MUSIC = DATA_PATH + "/music/Main_theme_v2_loopable.mp3"
-# Path for each level 
+# Path for each level
 LEVELS_MUSIC = [DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3"]
 TIME_OVER_MUSIC = DATA_PATH + "/music/everything_goes_to_shit_v1.mp3"
 
