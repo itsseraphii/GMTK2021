@@ -167,8 +167,11 @@ class Monster:
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))
 
-        '''# Debug info - Uncomment to show hitboxes : 
+        # Debug info - Uncomment to show hitboxes : 
         pygame.draw.rect(screen, (255, 0, 0), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight), 2)
         
         imageRect = self.image.get_rect(topleft=(self.posX, self.posY)) # Test hitbox
-        pygame.draw.rect(screen, (0, 0, 255), imageRect, 2) # Test hitbox'''
+        pygame.draw.rect(screen, (0, 0, 255), imageRect, 2) # Test hitbox
+
+        # Looking pretty sweet, noice
+        pygame.draw.rect(screen, (0, 255, 0), Rect((imageRect.width / 2) - (self.hitBoxWidth / 2) + self.posX, (imageRect.height / 2) - (self.hitBoxHeight / 2) + self.posY, self.hitBoxWidth, self.hitBoxHeight), 2)
