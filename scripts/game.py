@@ -1,9 +1,9 @@
 import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT
-from gameworld import GameWorld
-from entities.player import Player
 from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE
-from musicController import *
+from musicController import StartMusicMenu, StartMusicLevel, ProcessMusicEvents, MusicEvents
+from entities.player import Player
+from gameworld import GameWorld
 from menu import Menu
 
 MENU_FPS = 30

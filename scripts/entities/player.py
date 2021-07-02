@@ -2,7 +2,7 @@ import pygame
 from pygame.constants import K_a, K_d, K_s, K_w
 from pygame import Rect
 import math
-from weaponController import WeaponController, WeaponType
+from weaponController import WeaponController, WeaponTypes
 from utils.spriteUtils import GetFramesFromFile
 from utils.constants import PLAYER_SIZE, PLAYER_HITBOX_SIZE
 
@@ -32,7 +32,7 @@ class Player:
         self.rotatedImage = self.image
 
         self.weaponController = WeaponController(self, gameworld)
-        self.weaponInventory = [WeaponType.CROWBAR]
+        self.weaponInventory = [WeaponTypes.CROWBAR]
         self.equippedWeaponIndex = 0
         self.ammo = 0
 
@@ -79,11 +79,11 @@ class Player:
             self.CheckCollisionWithCollectables(currentHitbox)
 
     def SetAnimation(self, currentWeapon): # Change animations based on weapon held
-        if currentWeapon == WeaponType.REVOLVER:
+        if currentWeapon == WeaponTypes.REVOLVER:
             self.currentAnimation = self.pistolFrames
-        elif currentWeapon == WeaponType.RIFLE:
+        elif currentWeapon == WeaponTypes.RIFLE:
             self.currentAnimation = self.rifleFrames
-        elif currentWeapon == WeaponType.SNIPER:
+        elif currentWeapon == WeaponTypes.SNIPER:
             self.currentAnimation = self.sniperFrames
         else:
             self.currentAnimation = self.walkingFrames

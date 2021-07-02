@@ -7,7 +7,7 @@ from utils.constants import TILE_SIZE
 
 TURN_ANGLE = 2
 
-class MonsterType(IntEnum):
+class MonsterTypes(IntEnum):
     ZOMBIE = 165
     FATBOI = 166
 
@@ -21,7 +21,7 @@ class Monster:
         self.lastHitTime = 0
         self.angle = 0
 
-        if (monsterType == MonsterType.FATBOI):
+        if (monsterType == MonsterTypes.FATBOI):
             self.speed = 1
             self.animationSpeed = 150
             self.accuracy = 2

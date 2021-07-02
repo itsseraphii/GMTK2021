@@ -1,7 +1,7 @@
 import pygame
 import random
-from entities.collectable import Collectable, CollectableType
-from entities.monster import Monster, MonsterType
+from entities.collectable import Collectable, CollectableTypes
+from entities.monster import Monster, MonsterTypes
 from entities.obstacle import HITBOX_SIZES, Obstacle, RESISTANCES
 from utils.spriteUtils import GetFramesFromFile
 from utils.constants import TILE_SIZE, DATA_PATH
@@ -40,7 +40,7 @@ class GameWorld:
         self.startMiddleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
         self.middleY = -1
 
-        self.enemyTypes = list(MonsterType)
+        self.enemyTypes = list(MonsterTypes)
         self.nbEnemyTypes = len(self.enemyTypes)
 
         self.deadMonsters = []
@@ -131,7 +131,7 @@ class GameWorld:
     def FindGoalPosY(self):
         for y in range(min(20, len(self.tileLayoutFG))):
             for x in range(len(self.tileLayoutFG[y])):
-                if (self.tileLayoutFG[y][x] in list(CollectableType) and self.tileLayoutFG[y][x] == CollectableType.GOAL):
+                if (self.tileLayoutFG[y][x] in list(CollectableTypes) and self.tileLayoutFG[y][x] == CollectableTypes.GOAL):
                     return y
 
         print("LEVEL ERROR - The goal is too far from the top of the map")

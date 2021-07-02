@@ -1,9 +1,9 @@
-from weaponController import WeaponType
+from weaponController import WeaponTypes
 from enum import IntEnum
 
 DEFAULT_SIZE = [32, 32]
 
-class CollectableType(IntEnum):
+class CollectableTypes(IntEnum):
     PISTOL = 195
     RIFLE = 196
     SNIPER = 197
@@ -12,39 +12,39 @@ class CollectableType(IntEnum):
     GOAL = 200
 
 class Collectable:
-    def __init__(self, id, collectable_type, spawn_location, gameworld):
+    def __init__(self, id, collectableType, spawnLocation, gameworld):
         self.gameworld = gameworld
         self.id = id
-        self.posX = spawn_location[0]
-        self.posY = spawn_location[1]
+        self.posX = spawnLocation[0]
+        self.posY = spawnLocation[1]
         self.collected = False
 
-        if (collectable_type in list(CollectableType)):
-            self.type = collectable_type
+        if (collectableType in list(CollectableTypes)):
+            self.type = collectableType
         else:
-            self.type = CollectableType.AMMO
+            self.type = CollectableTypes.AMMO
 
-        if (self.type == CollectableType.PISTOL):
+        if (self.type == CollectableTypes.PISTOL):
             imageName = "revolver"
             soundName = "gunPickup"
             self.size = [32, 15]
 
-        elif (self.type == CollectableType.RIFLE):
+        elif (self.type == CollectableTypes.RIFLE):
             imageName = "rifle"
             soundName = "gunPickup"
             self.size = [32, 15]
 
-        elif (self.type == CollectableType.SNIPER):
+        elif (self.type == CollectableTypes.SNIPER):
             imageName = "sniper"
             soundName = "gunPickup"
             self.size = [32, 15]
 
-        elif (self.type == CollectableType.BIG_AMMO):
+        elif (self.type == CollectableTypes.BIG_AMMO):
             imageName = "ammoBig"
             soundName = "ammoPickup"
             self.size = DEFAULT_SIZE
 
-        elif (self.type == CollectableType.GOAL):
+        elif (self.type == CollectableTypes.GOAL):
             imageName = "goal"
             soundName = "levelComplete"
             self.size = DEFAULT_SIZE
@@ -61,19 +61,19 @@ class Collectable:
         self.collected = True
         self.pickupSound.play()
 
-        if (self.type == CollectableType.PISTOL):
-            self.gameworld.player.AddWeapon(5, 8, WeaponType.REVOLVER)
+        if (self.type == CollectableTypes.PISTOL):
+            self.gameworld.player.AddWeapon(5, 8, WeaponTypes.REVOLVER)
 
-        elif (self.type == CollectableType.RIFLE):
-            self.gameworld.player.AddWeapon(10, 15, WeaponType.RIFLE)
+        elif (self.type == CollectableTypes.RIFLE):
+            self.gameworld.player.AddWeapon(10, 15, WeaponTypes.RIFLE)
 
-        elif (self.type == CollectableType.SNIPER):
-            self.gameworld.player.AddWeapon(2, 5, WeaponType.SNIPER)
+        elif (self.type == CollectableTypes.SNIPER):
+            self.gameworld.player.AddWeapon(2, 5, WeaponTypes.SNIPER)
 
-        elif (self.type == CollectableType.BIG_AMMO):
+        elif (self.type == CollectableTypes.BIG_AMMO):
             self.gameworld.player.ammo += 10
 
-        elif (self.type == CollectableType.GOAL):
+        elif (self.type == CollectableTypes.GOAL):
             self.gameworld.player.game.TriggerGameOver(True)
 
         else: # Small ammo pickup

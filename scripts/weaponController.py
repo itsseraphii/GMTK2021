@@ -12,7 +12,7 @@ BULLET_SIZE = 3
 MELEE_OFFSET_XY = -(TILE_SIZE / 2)
 MELEE_SIZE = [TILE_SIZE * 1.5] * 2
 
-class WeaponType(IntEnum):
+class WeaponTypes(IntEnum):
     CROWBAR = 0
     REVOLVER = 1
     RIFLE = 2
@@ -35,10 +35,10 @@ class WeaponController:
     def CreateWeapons(self):
         self.weapons = {}
         # key: name   value: [name, isRanged, damage, weaponCooldown, caliber]
-        self.weapons[WeaponType.CROWBAR] = ["crowbar", False, 2, 750, 0]
-        self.weapons[WeaponType.REVOLVER] = ["revolver", True, 3, 800, 1]
-        self.weapons[WeaponType.RIFLE] = ["rifle", True, 1, 115, 1]
-        self.weapons[WeaponType.SNIPER] = ["sniper", True, 8, 2000, 2]
+        self.weapons[WeaponTypes.CROWBAR] = ["crowbar", False, 2, 750, 0]
+        self.weapons[WeaponTypes.REVOLVER] = ["revolver", True, 3, 800, 1]
+        self.weapons[WeaponTypes.RIFLE] = ["rifle", True, 1, 115, 1]
+        self.weapons[WeaponTypes.SNIPER] = ["sniper", True, 8, 2000, 2]
 
     def Attack(self, equippedWeapon, ammo):
         currentTime = pygame.time.get_ticks()
