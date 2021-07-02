@@ -62,6 +62,7 @@ class Monster:
         self.target = gameworld.player.GetPos()
         self.frameCounter = 0
         self.NextFrame()
+        self.UpdateHitbox()
 
     def Damage(self, damage):
         self.health -= damage
@@ -104,7 +105,7 @@ class Monster:
                     self.angle -= TURN_ANGLE
                 elif (self.angle < 90 or self.angle > 270): 
                     self.angle += TURN_ANGLE
-                if(self.gameworld.player.CheckCollisionWithObstacles( 
+                if (self.gameworld.player.CheckCollisionWithObstacles( 
                 Rect(
                     self.posX + self.hitBoxOffestX, 
                     self.posY + self.hitBoxOffestY,
@@ -118,7 +119,7 @@ class Monster:
 
                 elif (self.angle < 270 and self.angle > 90): 
                     self.angle += TURN_ANGLE
-                if(self.gameworld.player.CheckCollisionWithObstacles( 
+                if (self.gameworld.player.CheckCollisionWithObstacles( 
                 Rect(
                     self.posX + self.hitBoxOffestX, 
                     self.posY + self.hitBoxOffestY,
@@ -132,7 +133,7 @@ class Monster:
                     self.angle += TURN_ANGLE
                 elif (self.angle <= 180): 
                     self.angle -= TURN_ANGLE
-                if(self.gameworld.player.CheckCollisionWithObstacles( 
+                if (self.gameworld.player.CheckCollisionWithObstacles( 
                 Rect(
                     self.posX + self.hitBoxOffestX, 
                     self.posY + self.hitBoxOffestY,
@@ -145,13 +146,15 @@ class Monster:
                     self.angle += TURN_ANGLE
                 elif (self.angle >= 180): 
                     self.angle -= TURN_ANGLE
-                if(self.gameworld.player.CheckCollisionWithObstacles( 
+                if (self.gameworld.player.CheckCollisionWithObstacles( 
                 Rect(
                     self.posX + self.hitBoxOffestX, 
                     self.posY + self.hitBoxOffestY,
                     self.hitBoxWidth, self.hitBoxHeight
                     ))):
                     self.posY += self.speed
+
+        self.UpdateHitbox()
 
     def NextFrame(self):
         self.frameCounter = (self.frameCounter + 1) % len(self.animation)
@@ -164,14 +167,12 @@ class Monster:
 
         self.image = pygame.transform.rotate(self.animation[self.frameCounter], int(self.angle))
 
+    def UpdateHitbox(self):
+        spriteRect = self.image.get_rect()
+        self.hitbox = Rect((spriteRect.width / 2) - (self.hitBoxWidth / 2) + self.posX, (spriteRect.height / 2) - (self.hitBoxHeight / 2) + self.posY, self.hitBoxWidth, self.hitBoxHeight)
+
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))
 
-        # Debug info - Uncomment to show hitboxes : 
-        pygame.draw.rect(screen, (255, 0, 0), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight), 2)
-        
-        imageRect = self.image.get_rect(topleft=(self.posX, self.posY)) # Test hitbox
-        pygame.draw.rect(screen, (0, 0, 255), imageRect, 2) # Test hitbox
-
-        # Looking pretty sweet, noice
-        pygame.draw.rect(screen, (0, 255, 0), Rect((imageRect.width / 2) - (self.hitBoxWidth / 2) + self.posX, (imageRect.height / 2) - (self.hitBoxHeight / 2) + self.posY, self.hitBoxWidth, self.hitBoxHeight), 2)
+        '''# Debug info - Uncomment to show hitboxes : 
+        pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2)'''

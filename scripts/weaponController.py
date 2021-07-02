@@ -100,7 +100,7 @@ class WeaponController:
                 for key in list(self.gameworld.monsters): # Check collisions with multiple monsters
                     monster = self.gameworld.monsters[key]
 
-                    if (meleeRect.colliderect(pygame.Rect(monster.posX + monster.hitBoxOffestX, monster.posY + monster.hitBoxOffestY, monster.hitBoxWidth, monster.hitBoxHeight))):
+                    if (meleeRect.colliderect(monster.hitbox)):
                         monster.Stun(self.weapons[equippedWeapon][2] * 200) # More stun than ranged weapons
                         monster.Damage(self.weapons[equippedWeapon][2])
 
@@ -125,7 +125,7 @@ class WeaponController:
                 for key in list(self.gameworld.monsters): # Check collisions with monsters
                     monster = self.gameworld.monsters[key]
 
-                    if (bulletRect.colliderect(pygame.Rect(monster.posX + monster.hitBoxOffestX, monster.posY + monster.hitBoxOffestY, monster.hitBoxWidth, monster.hitBoxHeight))):
+                    if (bulletRect.colliderect(monster.hitbox)):
                         monster.Stun(self.bullets[i][3] * 150)
                         monster.Damage(self.bullets[i][3])
 
