@@ -1,8 +1,7 @@
 import pygame
 from pygame.constants import KEYDOWN, MOUSEBUTTONDOWN, QUIT, VIDEORESIZE
+from utils.constants import DEFAULT_WINDOW_SIZE
 from levelController import LevelController
-
-DEFAULT_WINDOW_SIZE = (1280, 720)
 
 if (__name__ == "__main__"):
     pygame.init()

@@ -2,6 +2,8 @@ import os
 import sys
 from utils.story import STORY
 
+DEFAULT_WINDOW_SIZE = (1280, 720)
+
 TILE_SIZE = 32
 PLAYER_SIZE = [32, 32]
 PLAYER_HITBOX_SIZE = [20, 20]

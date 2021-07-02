@@ -1,6 +1,7 @@
 import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT
-from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE
+import os
+from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE, DEFAULT_WINDOW_SIZE
 from musicController import StartMusicMenu, StartMusicLevel, ProcessMusicEvents, MusicEvents
 from entities.player import Player
 from gameworld import GameWorld
@@ -114,7 +115,7 @@ class Game:
             self.menu.CheckInputs()
 
     def ResizeWindow(self, width, height):
-        self.screenSize = [max(1280, width), max(720, height)]
+        self.screenSize = [max(DEFAULT_WINDOW_SIZE[0], width), max(DEFAULT_WINDOW_SIZE[1], height)]
         self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
         self.TriggerGameOver(False)
 
