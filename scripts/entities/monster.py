@@ -175,4 +175,5 @@ class Monster:
         screen.blit(self.image, (self.posX, self.posY))
 
         '''# Debug info - Uncomment to show hitboxes : 
-        pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2)'''
+        pygame.draw.rect(screen, (0, 0, 255), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight), 2) # Internal hitbox (obstacles)
+        pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2) # External hitbox (bullets, crowbar and player)'''
