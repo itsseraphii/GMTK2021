@@ -1,6 +1,7 @@
 import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_RETURN, QUIT, VIDEORESIZE
 from utils.constants import MENU_BG_COLOR, LEVEL_BG_COLOR, TEXT_COLOR, CREDITS_PAGE, DATA_PATH
+from musicController import StartMusicCredits, ProcessMusicEvents
 from utils.story import STORY
 
 MEDIUM_BTN_SIZE = [300, 75]
@@ -39,6 +40,7 @@ class Menu:
         self.creditsFont = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 45))
         self.creditsFontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 35))
         self.creditsSpace = self.screenSize[1] / 6
+        StartMusicCredits()
 
     def InitSelectLevel(self):
         self.selectLevelInitialized = True
@@ -102,7 +104,7 @@ class Menu:
                 if (self.game.menuPage < -1): # Press any key on title screen, in controls, in select level or in stats to go to the main menu
                     self.game.menuPage = -1
                 elif (self.game.menuPage == CREDITS_PAGE): # Press any key on credits to go to title screen
-                    self.menuScrollY = self.screenSize[1] / 7 + self.screenSize[1] # Reset scroll
+                    self.creditsInitialized = False # Reset credits next time it's displayed
                     self.game.menuPage = -2
 
                 elif (event.key == K_RETURN):
@@ -113,6 +115,9 @@ class Menu:
 
                 elif (event.key == K_ESCAPE):
                     self.game.menuPage = -1
+
+            elif (event.type in self.game.musicEvents):
+                ProcessMusicEvents(event.type)
 
     def Draw(self):
         self.screen.fill(MENU_BG_COLOR)

@@ -3,6 +3,7 @@ from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT
 from gameworld import GameWorld
 from entities.player import Player
 from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE
+from musicController import *
 from menu import Menu
 
 MENU_FPS = 30
@@ -11,11 +12,6 @@ LEVEL_FPS = 100
 LEVEL_TIME = 60000 # 60 seconds
 TIME_OVER_ENEMIES_SPAWN_FREQUENCY = 15 # One spawn each x frames
 PLAYER_CENTER_POS_Y = 358 # When the player is at the center of the screen, this will always be it's position 
-
-MAIN_MUSIC = DATA_PATH + "/music/Main_theme_v2_loopable.mp3"
-# Path for each level
-LEVELS_MUSIC = [DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3", DATA_PATH + "/music/level_theme_v2.mp3"]
-TIME_OVER_MUSIC = DATA_PATH + "/music/everything_goes_to_shit_v1.mp3"
 
 class Game:
     def Init(self, levelController, screen, currentLevel, menuPage):
@@ -28,6 +24,7 @@ class Game:
         self.menuPage = menuPage
         self.currentLevel = currentLevel
         self.levelController = levelController
+        self.musicEvents = list(MusicEvents)
 
         self.levelController.UpdateProgress([self.gameState, self.currentLevel, self.menuPage])
 
@@ -48,7 +45,7 @@ class Game:
 
         self.menu = Menu(self.screen, self)
 
-        self.StartMenuMusic()
+        StartMusicMenu()
 
     def InitLevel(self):
         self.gameworld = GameWorld(self.currentLevel)
@@ -74,30 +71,12 @@ class Game:
         self.fps = LEVEL_FPS
         self.startTime = pygame.time.get_ticks()
 
-        self.StartLevelMusic()
+        StartMusicLevel()
 
         self.screen.fill(LEVEL_BG_COLOR)
         pygame.draw.rect(self.screen, BLACK, self.progressBarBackground)
 
         self.screen.blit(pygame.transform.scale(pygame.image.load(DATA_PATH + "/res/ammoUI.png").convert_alpha(), (48, 48)), (120, self.screenSize[1] - 55))
-
-    def StartMenuMusic(self):
-        pygame.mixer.music.fadeout # Fade out last music
-        pygame.mixer.music.load(MAIN_MUSIC) # Start menu music
-        pygame.mixer.music.set_volume(1)
-        pygame.mixer.music.play(-1) # Loop forever
-
-    def StartLevelMusic(self):
-        pygame.mixer.music.fadeout  # Fade out last music
-        pygame.mixer.music.load(LEVELS_MUSIC[self.currentLevel]) # Start level music
-        pygame.mixer.music.set_volume(0.2)
-        pygame.mixer.music.play() # play once
-
-    def StartTimeOverMusic(self):
-        pygame.mixer.music.fadeout  # Fade out last music
-        pygame.mixer.music.load(TIME_OVER_MUSIC) # Start level music
-        pygame.mixer.music.set_volume(0.2)
-        pygame.mixer.music.play() # play once
 
     def CheckInputs(self):
         if (self.playing):
@@ -122,6 +101,9 @@ class Game:
                         self.player.SwitchWeapon(False)
                     elif event.button == 5: # Mouse wheel down
                         self.player.SwitchWeapon(True)
+                
+                elif (event.type in self.musicEvents):
+                    ProcessMusicEvents(event.type)
 
             self.player.Move(pygame.key.get_pressed())
             self.player.LookAtMouse(pygame.mouse.get_pos())
@@ -215,7 +197,6 @@ class Game:
         if (pygame.time.get_ticks() - self.startTime > LEVEL_TIME):
             self.timeOver = True
             self.screen.blit(self.fontLargeMelted.render("They're here", True, TEXT_COLOR, LEVEL_BG_COLOR), (10, 10))
-            self.StartTimeOverMusic()
 
     def SpawnTimeOverEnemies(self):
         if (self.timeOverEnemySpawned < self.maxTimeOverEnemies): # Check if there are enemies to spawn
