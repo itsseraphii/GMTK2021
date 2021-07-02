@@ -1,6 +1,5 @@
 import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT
-import os
 from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE, DEFAULT_WINDOW_SIZE
 from musicController import StartMusicMenu, StartMusicLevel, ProcessMusicEvents, MusicEvents
 from entities.player import Player
