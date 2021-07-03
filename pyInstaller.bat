@@ -46,7 +46,12 @@
 --add-data="sounds/meatSlap3.mp3;./sounds" ^
 --add-data="sounds/swing.mp3;./sounds" ^
  ^
---name Transgenesis ^
---onefile ^
+--name "Transgenesis" ^
+--noconfirm ^
 --windowed ^
-./scripts/main.py
+--onefile ^
+--clean ^
+scripts/main.py
+
+rmdir /s /q "./build"
+del "./Transgenesis.spec"
