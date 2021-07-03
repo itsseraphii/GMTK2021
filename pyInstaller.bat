@@ -1,6 +1,8 @@
 "%USERPROFILE%\AppData\Local\Programs\Python\Python39\Scripts\pyinstaller.exe" ^
+ ^
 --add-data="fonts/FreeSansBold.ttf;./fonts" ^
 --add-data="fonts/melted.ttf;./fonts" ^
+ ^
 --add-data="levels/level1/background.csv;./levels/level1" ^
 --add-data="levels/level1/foreground.csv;./levels/level1" ^
 --add-data="levels/level2/background.csv;./levels/level2" ^
@@ -9,11 +11,13 @@
 --add-data="levels/level3/foreground.csv;./levels/level3" ^
 --add-data="levels/level4/background.csv;./levels/level4" ^
 --add-data="levels/level4/foreground.csv;./levels/level4" ^
+ ^
 --add-data="music/main.mp3;./music" ^
 --add-data="music/level.mp3;./music" ^
 --add-data="music/jingle.mp3;./music" ^
 --add-data="music/timeOver.mp3;./music" ^
 --add-data="music/credits.mp3;./music" ^
+ ^
 --add-data="res/ammo.png;./res" ^
 --add-data="res/ammoBig.png;./res" ^
 --add-data="res/ammoUI.png;./res" ^
@@ -30,6 +34,7 @@
 --add-data="res/sniper.png;./res" ^
 --add-data="res/Tilesheet.png;./res" ^
 --add-data="res/zombie.png;./res" ^
+ ^
 --add-data="sounds/ammoPickup.mp3;./sounds" ^
 --add-data="sounds/gunPickup.mp3;./sounds" ^
 --add-data="sounds/gunshot.mp3;./sounds" ^
@@ -40,6 +45,7 @@
 --add-data="sounds/meatSlap2.mp3;./sounds" ^
 --add-data="sounds/meatSlap3.mp3;./sounds" ^
 --add-data="sounds/swing.mp3;./sounds" ^
+ ^
 --name Transgenesis ^
 --onefile ^
 --windowed ^

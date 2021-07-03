@@ -115,7 +115,6 @@ class Game:
 
     def ResizeWindow(self, width, height):
         self.screenSize = [max(DEFAULT_WINDOW_SIZE[0], width), max(DEFAULT_WINDOW_SIZE[1], height)]
-        self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
         self.TriggerGameOver(False)
 
     def SetResizeAllowed(self, allowed):

@@ -38,7 +38,7 @@ def StartMusicTimeOver():
 def StartMusicCredits():
     Music.load(CREDITS_MUSIC_PATH)
     Music.set_endevent(MusicEvents.CREDITS_OVER)
-    Music.set_volume(0.5)
+    Music.set_volume(0.6)
     Music.play()
 
 def ProcessMusicEvents(event):
