@@ -104,6 +104,7 @@ class Player:
             self.equippedWeaponIndex = self.equippedWeaponIndex - 1 if (self.equippedWeaponIndex > 0) else len(self.weaponInventory) - 1
 
         self.SetAnimation(self.weaponInventory[self.equippedWeaponIndex])
+        self.weaponController.emptyGunSoundPlayed = False
 
     def AddWeapon(self, ammo, duplicateAmmo, weapon):
         if (weapon not in self.weaponInventory):

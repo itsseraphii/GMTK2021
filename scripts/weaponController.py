@@ -5,6 +5,7 @@ from utils.constants import TILE_SIZE, DATA_PATH, PLAYER_SIZE
 
 SWING_SOUND_FILE = DATA_PATH + "/sounds/swing.mp3"
 GUNSHOT_SOUND_FILE = DATA_PATH + "/sounds/gunshot.mp3"
+EMPTY_GUN_SOUND_FILE = DATA_PATH + "/sounds/emptyGun.mp3"
 BULLET_IMAGE_PATH = DATA_PATH + "/res/bullet.png"
 BULLET_SPEED = 20
 BULLET_SIZE = 3
@@ -28,6 +29,7 @@ class WeaponController:
 
         self.swingSound = pygame.mixer.Sound(SWING_SOUND_FILE)
         self.gunshotSound = pygame.mixer.Sound(GUNSHOT_SOUND_FILE)
+        self.emptyGunSound = pygame.mixer.Sound(EMPTY_GUN_SOUND_FILE)
 
         self.CreateWeapons()
         self.lastAttackTime = 0
@@ -46,16 +48,23 @@ class WeaponController:
         if (currentTime >= self.lastAttackTime + self.weapons[equippedWeapon][3]): # Attack if cooldown has passed
             self.lastAttackTime = currentTime
 
-            if (self.weapons[equippedWeapon][1] and ammo > 0): # Ranged weapon with ammo
-                playerPos = self.player.GetPos()
-                angle = -math.radians(self.player.angle)
+            if (self.weapons[equippedWeapon][1]): # Ranged weapon
+                if (ammo > 0):
+                    self.emptyGunSoundPlayed = False
+                    playerPos = self.player.GetPos()
+                    angle = -math.radians(self.player.angle)
 
-                # [posX, posY, angle, damage, caliber]
-                self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angle, self.weapons[equippedWeapon][2], self.weapons[equippedWeapon][4]])
+                    # [posX, posY, angle, damage, caliber]
+                    self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angle, self.weapons[equippedWeapon][2], self.weapons[equippedWeapon][4]])
 
-                self.gunshotSound.play()
+                    self.gunshotSound.play()
 
-                return True # Decrement ammo
+                    return True # Decrement ammo
+                
+                elif (not self.emptyGunSoundPlayed):
+                    self.emptyGunSoundPlayed = True
+                    self.emptyGunSound.play()
+                    return False
 
             # TODO Cleanup ce elif
             elif (not self.weapons[equippedWeapon][1]): # Melee Weapon 
