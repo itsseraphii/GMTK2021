@@ -24,6 +24,7 @@
 --add-data="res/bullet.png;./res" ^
 --add-data="res/crowbar.png;./res" ^
 --add-data="res/goal.png;./res" ^
+--add-data="res/icon.png;./res" ^
 --add-data="res/monster.png;./res" ^
 --add-data="res/playerPistol.png;./res" ^
 --add-data="res/playerRifle.png;./res" ^
@@ -48,6 +49,7 @@
 --add-data="sounds/swing.mp3;./sounds" ^
  ^
 --name "Transgenesis" ^
+--icon "res/icon.ico" ^
 --noconfirm ^
 --windowed ^
 --onefile ^
