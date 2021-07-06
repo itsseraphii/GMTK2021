@@ -36,6 +36,7 @@
 --add-data="res/zombie.png;./res" ^
  ^
 --add-data="sounds/ammoPickup.mp3;./sounds" ^
+--add-data="sounds/emptyGun.mp3;./sounds" ^
 --add-data="sounds/gunPickup.mp3;./sounds" ^
 --add-data="sounds/gunshot.mp3;./sounds" ^
 --add-data="sounds/levelComplete.mp3;./sounds" ^
