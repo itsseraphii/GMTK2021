@@ -89,6 +89,8 @@ class Player:
             self.currentAnimation = self.sniperFrames
         else:
             self.currentAnimation = self.walkingFrames
+
+        self.NextFrame() # Start new animation
     
     def NextFrame(self): # Switch to the animation's next frame
         self.frameCounter = (self.frameCounter + 1) % len(self.currentAnimation)
