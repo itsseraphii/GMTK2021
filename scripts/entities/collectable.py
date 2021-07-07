@@ -45,7 +45,7 @@ class Collectable:
             self.size = DEFAULT_SIZE
 
         elif (self.type == CollectableTypes.GOAL):
-            imageName = "goal"
+            imageName = "empty"
             soundName = "levelComplete"
             self.size = DEFAULT_SIZE
 

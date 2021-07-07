@@ -23,7 +23,7 @@
 --add-data="res/ammoUI.png;./res" ^
 --add-data="res/bullet.png;./res" ^
 --add-data="res/crowbar.png;./res" ^
---add-data="res/goal.png;./res" ^
+--add-data="res/empty.png;./res" ^
 --add-data="res/icon.png;./res" ^
 --add-data="res/monster.png;./res" ^
 --add-data="res/playerPistol.png;./res" ^
