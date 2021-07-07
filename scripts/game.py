@@ -1,5 +1,5 @@
 import pygame
-from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT
+from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT, VIDEORESIZE
 from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE, DEFAULT_WINDOW_SIZE
 from musicController import StartMusicMenu, StartMusicLevel, ProcessMusicEvents, MusicEvents
 from entities.player import Player
@@ -33,7 +33,6 @@ class Game:
         return [self.gameState, self.currentLevel, self.menuPage]
 
     def InitMenu(self):
-        self.SetResizeAllowed(True)
         self.fps = MENU_FPS
 
         self.fontTitle = pygame.font.Font(DATA_PATH + "/fonts/melted.ttf", int(self.screenSize[0] / 8))
@@ -50,8 +49,6 @@ class Game:
         self.gameworld = GameWorld(self.currentLevel)
         self.player = Player(self, self.gameworld)
         self.gameworld.SetPlayer(self.player)
-
-        self.SetResizeAllowed(False)
         
         self.goalPosY = self.gameworld.FindGoalPosY() + 1 # +1 to see the end of the progress bar before touching the goal
         self.startMiddleY = self.gameworld.startMiddleY
@@ -105,6 +102,9 @@ class Game:
                 elif (event.type in self.musicEvents):
                     ProcessMusicEvents(event.type)
 
+                elif (event.type == VIDEORESIZE):
+                    self.ResizeWindow(event.w, event.h)
+
             self.player.Move(pygame.key.get_pressed())
             self.player.LookAtMouse(pygame.mouse.get_pos())
 
@@ -116,13 +116,7 @@ class Game:
     def ResizeWindow(self, width, height):
         self.screenSize = [max(DEFAULT_WINDOW_SIZE[0], width), max(DEFAULT_WINDOW_SIZE[1], height)]
         self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
-        self.TriggerGameOver(False)
-
-    def SetResizeAllowed(self, allowed):
-        if (allowed):
-            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]), pygame.RESIZABLE)
-        else:
-            self.screen = pygame.display.set_mode((self.screenSize[0], self.screenSize[1]))
+        self.TriggerGameOver(False) # Restart level
 
     def DrawTimeLeft(self):
         if (not self.timeOver):

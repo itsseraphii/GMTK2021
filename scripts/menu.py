@@ -59,7 +59,7 @@ class Menu:
             if (event.type == QUIT):
                 self.game.running = False
 
-            elif (event.type == VIDEORESIZE): # Can only resize in menus (between levels)
+            elif (event.type == VIDEORESIZE):
                 self.game.ResizeWindow(event.w, event.h)
 
             elif (self.game.menuPage == -1): # Main menu
