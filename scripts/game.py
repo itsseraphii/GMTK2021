@@ -11,7 +11,6 @@ LEVEL_FPS = 100
 
 LEVEL_TIME = 60000 # 60 seconds
 TIME_OVER_ENEMIES_SPAWN_FREQUENCY = 15 # One spawn each x frames
-PLAYER_CENTER_POS_Y = 358 # When the player is at the center of the screen, this will always be it's position 
 
 class Game:
     def Init(self, levelController, screen, currentLevel, menuPage):
@@ -59,6 +58,7 @@ class Game:
         self.lastProgressHeight = 1000000 # Forces first progress drawing
         self.progressBarBackground = pygame.Rect(self.screenSize[0] - 25, 10, 15, self.screenSize[1] - 20)
         self.progressRatio = (self.screenSize[1] - 20) / -(self.goalPosY - self.startMiddleY)
+        self.playerCenterPosY = self.screenSize[1] / 2 # When the player is at the center of the screen, this will always be it's position 
 
         self.nbTimeOverFrames = -1
         self.maxTimeOverEnemies = -1
@@ -210,15 +210,15 @@ class Game:
                 self.timeOverEnemySpawned += 1
                 
         elif (self.maxTimeOverEnemies < 0): # Generate info required to spawn enemies
-            self.maxTimeOverEnemies = min((self.currentLevel + 1) * 10 + 5, 50)
+            self.maxTimeOverEnemies = min((self.currentLevel + 1) * 5 + 10, 30)
             
             # Can spawn over player
             if (self.gameworld.middleY - self.gameworld.screenNbTilesY > self.startMiddleY - (self.gameworld.backgroundSize[1] / TILE_SIZE) + 7):
-                self.timeOverSpawnsY.append(PLAYER_CENTER_POS_Y - (self.screenSize[1] / 2) - (2 * TILE_SIZE))
+                self.timeOverSpawnsY.append(self.playerCenterPosY - (self.screenSize[1] / 2) - (2 * TILE_SIZE))
             
             # Can spawn under player
             if (self.gameworld.middleY - self.startMiddleY + (self.gameworld.screenNbTilesY / 2) < 0):
-                self.timeOverSpawnsY.append(PLAYER_CENTER_POS_Y + (self.screenSize[1] / 2))
+                self.timeOverSpawnsY.append(self.playerCenterPosY + (self.screenSize[1] / 2))
 
     def TriggerGameOver(self, victory):
         self.gameState = 1 if (victory) else 0
