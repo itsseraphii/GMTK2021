@@ -9,7 +9,7 @@ from menu import Menu
 MENU_FPS = 30
 LEVEL_FPS = 100
 
-LEVEL_TIME = 60000 # 60 seconds
+LEVEL_TIME = 3000 # 60 seconds
 TIME_OVER_ENEMIES_SPAWN_FREQUENCY = 15 # One spawn each x frames
 
 class Game:

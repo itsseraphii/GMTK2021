@@ -135,6 +135,7 @@ class Player:
         return False
 
     def CheckCollisionWithMonsters(self, mainRect):
+        return
         for monster in self.gameworld.monsters.values():
             if mainRect.colliderect(monster.hitbox):
                 return True
