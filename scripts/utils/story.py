@@ -5,48 +5,51 @@
 STORY = [
     [
         "The year is 2082, scientists have found a miracle cure to cancer.", 
-        "The treatment modifies DNA, forcing the cancerous cell to regenerate as an healthy cell.", 
+        "The treatment modifies DNA, forcing the cancerous cells to regenerate as healthy cells.", 
         "", 
-        "In hindsight, forcing cells to reboot had some... unforeseen consequences.", 
+        "In hindsight, forcing cells to \"reboot\" might not have been a good idea...", 
         "", 
         "The treatment forces ANY cell it infects to regenerate and then spread the modified DNA,", 
-        "transforming the organism into a melted goo of skin and muscles.", 
+        "transforming the organism into a melted goo of skin and muscles.",
         "", 
-        "Any physical contact with an amalgamates will turn you into one of those monsters.", 
+        "Any physical contact with an amalgamate will turn you into one of them.",
         "", 
+        "They also seem to have developed a better sense of smell, allowing them to detect",
+        "healthy cells from miles away in less than a minute.",
+        "",
         "Be really careful out there survivor."
     ],
     [
-        "Well... that was the last can.", 
+        "Well... those were the last canned beans.", 
         "", 
         "I need to go out for supplies.", 
         "", 
         "There has to be other survivors out there.", 
         "There must be."
     ],
-    [   
+    [
         "--------------------------------ARCHIVE #002184--------------------------------", 
         "July 3rd 2084                                 Agent Marshall", 
         "", 
         "Amalgamated organisms have demonstrated the ability to produce sounds", 
         "that could be described as human speech.", 
         "", 
-        "Different voices can be heard, sometimes alternating, sometimes in unison", 
+        "Different voices can be heard, sometimes alternating, sometimes in unison.", 
         "", 
         "The experience is deeply disturbing and yet, fascinating.", 
         "", 
         "Further investigation is required.", 
         "----------------------------------------------------------------------------------------------"
     ],
-    [   
+    [
         "I almost died today.",
         "",
         "There was a voice, it was... so clearly human... calling for someone else.",
         "",
         "And like a moth to a flame, I ran to meet them.",
     ],
-    [   
-        "They’re outside, I’m stuck here.",
+    [
+        "They’re outside and I’m stuck here.",
         "They won’t stop calling for me.",
         "",
         "Stop... please... please",

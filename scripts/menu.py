@@ -240,7 +240,7 @@ class Menu:
     def DrawParagraph(self, lines):
         for i in range(len(lines)):
             text = self.game.fontMedium.render(lines[i], True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, (self.screenSize[1] / 4) + (i * 30)))
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, (self.screenSize[1] / 5) + (i * 30)))
             self.screen.blit(text, textRect)
 
 class Button:
