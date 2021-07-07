@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="2021.03.23" orientation="orthogonal" renderorder="right-down" width="22" height="148" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="1">
  <editorsettings>
-  <export target="export/x.csv" format="csv"/>
+  <export target="../../../../../../../../Downloads/.csv" format="csv"/>
  </editorsettings>
  <tileset firstgid="1" source="Tilesheet.tsx"/>
  <layer id="1" name="background" width="22" height="148">
@@ -302,7 +302,7 @@
 14,0,18,0,0,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
 14,0,17,0,0,8,0,0,0,0,0,0,196,0,0,0,0,0,0,0,0,14,
 14,0,17,35,36,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
-14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
+14,0,0,0,0,0,0,0,0,0,202,0,0,0,0,0,0,0,0,0,0,14,
 14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
 14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,
 14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14

@@ -10,6 +10,7 @@ class CollectableTypes(IntEnum):
     AMMO = 198
     BIG_AMMO = 199
     GOAL = 200
+    SPAWN = 201
 
 class Collectable:
     def __init__(self, id, collectableType, spawnLocation, gameworld):
@@ -48,6 +49,11 @@ class Collectable:
             imageName = "empty"
             soundName = "levelComplete"
             self.size = DEFAULT_SIZE
+
+        elif (self.type == CollectableTypes.SPAWN):
+            imageName = "empty"
+            soundName = "ammoPickup" # Will not be used
+            self.collected = True # Disable on creation
 
         else:
             imageName = "ammo"

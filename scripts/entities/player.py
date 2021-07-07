@@ -19,7 +19,9 @@ class Player:
         self.game = game
         self.gameworld = gameworld
         self.screenSize = pygame.display.get_window_size()
-        self.posX, self.posY = self.screenSize[0] / 2, self.screenSize[1] / 4 * 3
+
+        spawn = self.gameworld.FindPlayerSpawn()
+        self.posX, self.posY = spawn[0], spawn[1]
 
         self.walkingFrames = GetFramesFromFile(WALKING_ANIMATION, PLAYER_SIZE)
         self.pistolFrames = GetFramesFromFile(PISTOL_ANIMATION, PLAYER_SIZE)
