@@ -57,12 +57,10 @@ STORY = [
         "...",
         "",
         "What if...",
-        "No one’s out there ?",
+        "Those were survivors, out there ?",
         "",
         "I... wouldn’t be alone anymore...",
         "",
-        "...",
-        "",
-        "Goodbye."
+        "..."
     ]
 ]
