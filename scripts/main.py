@@ -4,7 +4,10 @@ from utils.constants import DEFAULT_WINDOW_SIZE, DATA_PATH
 from levelController import LevelController
 
 if (__name__ == "__main__"):
-    pygame.init()
+    pygame.display.init()
+    pygame.mixer.init()
+    pygame.font.init()
+
     pygame.display.set_caption('Transgenesis')
     pygame.event.set_allowed([QUIT, KEYDOWN, MOUSEBUTTONDOWN, VIDEORESIZE])
     
