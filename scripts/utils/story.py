@@ -46,7 +46,7 @@ STORY = [
         "", 
         "I don't know how much longer I'll be able to survive without water.", 
         "", 
-        "Maybe I could taste that dark lake ?", 
+        "Maybe I could taste that dark pond?", 
         "It can't be that bad..."
     ],
     [
@@ -89,6 +89,12 @@ STORY = [
         "----------------------------------------------------------------------------------------------"
     ],
     [
+        "I can't continue... The voices...",
+        "They want me...",
+        "",
+        "No! I need to go to the next bunker."
+    ],
+    [
         "They’re outside, and I’m stuck here.",
         "They won’t stop calling for me.",
         "",
@@ -97,7 +103,7 @@ STORY = [
         "...",
         "",
         "What if...",
-        "Those were survivors, out there ?",
+        "Those were survivors, out there?",
         "",
         "I... wouldn’t be alone anymore...",
         "",

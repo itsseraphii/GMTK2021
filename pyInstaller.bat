@@ -11,6 +11,14 @@
 --add-data="levels/level3/foreground.csv;./levels/level3" ^
 --add-data="levels/level4/background.csv;./levels/level4" ^
 --add-data="levels/level4/foreground.csv;./levels/level4" ^
+--add-data="levels/level5/background.csv;./levels/level5" ^
+--add-data="levels/level5/foreground.csv;./levels/level5" ^
+--add-data="levels/level6/background.csv;./levels/level6" ^
+--add-data="levels/level6/foreground.csv;./levels/level6" ^
+--add-data="levels/level7/background.csv;./levels/level7" ^
+--add-data="levels/level7/foreground.csv;./levels/level7" ^
+--add-data="levels/level8/background.csv;./levels/level8" ^
+--add-data="levels/level8/foreground.csv;./levels/level8" ^
  ^
 --add-data="music/main.mp3;./music" ^
 --add-data="music/level.mp3;./music" ^
