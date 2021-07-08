@@ -52,9 +52,9 @@ class Game:
         
         self.goalPosY = self.gameworld.FindGoalPosY() + 1 # +1 to see the end of the progress bar before touching the goal
         self.startMiddleY = self.gameworld.startMiddleY
-        self.lastProgressHeight = 1000000 # Forces first progress drawing
         self.progressBarBackground = pygame.Rect(self.screenSize[0] - 25, 10, 15, self.screenSize[1] - 20)
         self.progressRatio = (self.screenSize[1] - 20) / -(self.goalPosY - self.startMiddleY)
+        self.lastProgressHeight = int(max(13, (self.gameworld.middleY - self.startMiddleY) * self.progressRatio + self.screenSize[1] - 14)) + 1
         self.playerCenterPosY = self.screenSize[1] / 2 # When the player is at the center of the screen, this will always be it's position 
 
         self.nbTimeOverFrames = -1
@@ -130,9 +130,9 @@ class Game:
         newProgressHeight = int(max(13, currentPos * self.progressRatio + self.screenSize[1] - 14))
 
         if (newProgressHeight < self.lastProgressHeight): # Player has progressed
-            self.lastProgressHeight = newProgressHeight
-            progressBarForeground = pygame.Rect(self.screenSize[0] - 22, newProgressHeight, 9, min(self.screenSize[1] - 26, 1))
+            progressBarForeground = pygame.Rect(self.screenSize[0] - 22, newProgressHeight, 9, min(self.screenSize[1] - 26, self.lastProgressHeight - newProgressHeight))
             pygame.draw.rect(self.screen, TEXT_COLOR, progressBarForeground)
+            self.lastProgressHeight = newProgressHeight
 
     def DrawWeaponUI(self):
         if (self.player.equippedWeaponIndex != self.drawnWeaponIndex): # Draw new equipped weapon

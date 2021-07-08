@@ -38,7 +38,7 @@ class GameWorld:
         self.startOffsetY = (-self.backgroundSize[1] + self.screenSize[1]) / 2
         self.offsetY = self.startOffsetY
         self.startMiddleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
-        self.middleY = -1
+        self.middleY = self.startMiddleY
 
         self.enemyTypes = list(MonsterTypes)
         self.nbEnemyTypes = len(self.enemyTypes)
