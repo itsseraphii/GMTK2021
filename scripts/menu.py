@@ -156,10 +156,18 @@ class Menu:
             textRect = text.get_rect(center = (self.screenSize[0] / 2, 225))
             self.screen.blit(text, textRect)
 
+            bestTotalTimeMs = 0
+
             for key in list(self.game.levelController.savedTimes):
                 level = int(key)
+                bestTotalTimeMs += self.game.levelController.savedTimes[key]
                 text = self.game.fontMedium.render("Level " + str(level + 1) + ": " + str(self.game.levelController.savedTimes[key] / 1000) + "s", True, TEXT_COLOR)
                 textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), int(level / 3) * 50 + 275))
+                self.screen.blit(text, textRect)
+
+            if (len(self.game.levelController.savedTimes) == CREDITS_PAGE - 1):
+                text = self.game.fontMedium.render("Best Total Time : " + str(bestTotalTimeMs / 1000) + "s", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, int(level / 3) * 50 + 375))
                 self.screen.blit(text, textRect)
 
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)

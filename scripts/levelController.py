@@ -1,8 +1,8 @@
 import os
 import json
 from cryptography.fernet import Fernet
-from game import Game
 from utils.constants import SAVE_KEY, SAVE_PATH
+from game import Game
 
 class LevelController:
     def __init__(self, screen):

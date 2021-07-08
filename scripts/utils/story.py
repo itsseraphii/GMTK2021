@@ -12,12 +12,12 @@ STORY = [
         "The treatment forces ANY cell it infects to regenerate and then spread the modified DNA,", 
         "transforming the organism into a melted goo of skin and muscles.",
         "", 
-        "Any physical contact with an amalgamate will turn you into one of them.",
+        "Any physical contact with an amalgam will turn you into one of them.",
         "", 
         "They also seem to have developed a better sense of smell, allowing them to detect",
         "healthy cells from miles away in less than a minute.",
         "",
-        "Be really careful out there survivor."
+        "Be really careful out there, survivor."
     ],
     [
         "Well... those were the last canned beans.", 
@@ -28,8 +28,8 @@ STORY = [
         "There must be."
     ],
     [
-        "--------------------------------ARCHIVE #002184--------------------------------", 
-        "July 3rd 2084                                 Agent Marshall", 
+        "--------------------------------ARCHIVE #000695--------------------------------", 
+        "June 4th 2084                                 Officer Rodriguez", 
         "", 
         "Amalgamated organisms have demonstrated the ability to produce sounds", 
         "that could be described as human speech.", 
@@ -42,6 +42,29 @@ STORY = [
         "----------------------------------------------------------------------------------------------"
     ],
     [
+        "I'm so thirsty...", 
+        "", 
+        "I don't know how much longer I'll be able to survive without water.", 
+        "", 
+        "Maybe I could taste that dark lake ?", 
+        "It can't be that bad..."
+    ],
+    [
+        "--------------------------------ARCHIVE #002184--------------------------------", 
+        "July 3rd 2084                                 Agent Marshall", 
+        "", 
+        "The monsters are usually wandering and attacking on sight, but when they", 
+        "smell something, they become extremely aggressive, and they seem to be",
+        "faster and more resistant.", 
+        "", 
+        "The few who survived an encountered with them in that state say that they also", 
+        "develop an incredible force, allowing them to tear through any obstacle.",
+        "", 
+        "For now, this should be treated as an hypothesis, since those survivors",
+        "clearly have lost a part of their sanity.", 
+        "----------------------------------------------------------------------------------------------"
+    ],
+    [
         "I almost died today.",
         "",
         "There was a voice, it was... so clearly human... calling for someone else.",
@@ -49,7 +72,24 @@ STORY = [
         "And like a moth to a flame, I ran to meet them.",
     ],
     [
-        "They’re outside and I’m stuck here.",
+        "--------------------------------ARCHIVE #017483--------------------------------", 
+        "September 21st 2084                                 Colonel Deschamps", 
+        "", 
+        "Scientists have determined that animals can not be contaminated by the \"cure\",", 
+        "at least not as much as humans.",
+        "", 
+        "There have been a few reports of infected animal corpses, but it is unclear",
+        "what killed them.",
+        "", 
+        "The sense of smell the monsters developed seems to have encouraged them to",
+        "hunt all kinds of animals, killing sometimes for food, sometimes for fun.",
+        "They are greatly threatening the food chain.",
+        "",
+        "One thing is sure: if we survive this ordeal, the world will have changed.",
+        "----------------------------------------------------------------------------------------------"
+    ],
+    [
+        "They’re outside, and I’m stuck here.",
         "They won’t stop calling for me.",
         "",
         "Stop... please... please",
