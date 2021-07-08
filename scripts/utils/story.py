@@ -50,14 +50,14 @@ STORY = [
         "It can't be that bad..."
     ],
     [
-        "--------------------------------ARCHIVE #002184--------------------------------", 
+        "--------------------------------ARCHIVE #002042--------------------------------", 
         "July 3rd 2084                                 Agent Marshall", 
         "", 
         "The monsters are usually wandering and attacking on sight, but when they", 
         "smell something, they become extremely aggressive, and they seem to be",
         "faster and more resistant.", 
         "", 
-        "The few who survived an encountered with them in that state say that they also", 
+        "The few who survived an encounter with them in that state say that they also", 
         "develop an incredible force, allowing them to tear through any obstacle.",
         "", 
         "For now, this should be treated as an hypothesis, since those survivors",
