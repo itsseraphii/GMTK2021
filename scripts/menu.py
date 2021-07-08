@@ -54,6 +54,12 @@ class Menu:
             else:
                 self.selectLevelButtons.append(Button(btnPos[0], btnPos[1], SMALL_BTN_SIZE, MENU_BG_COLOR, LEVEL_BG_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Level " + str(i + 1)))
 
+        offsetButtonCount = len(self.selectLevelButtons) % 3
+
+        if (offsetButtonCount != 0): # Align last row if it has less than 3 buttons 
+            for i in range (len(self.selectLevelButtons) - offsetButtonCount, len(self.selectLevelButtons)):
+                self.selectLevelButtons[i].x += (3 - offsetButtonCount) * 150
+
     def CheckInputs(self):
         for event in pygame.event.get():
             if (event.type == QUIT):
