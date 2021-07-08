@@ -129,7 +129,7 @@ class GameWorld:
             self.collectables[collectableId].posY += offsetY
 
     def FindGoalPosY(self):
-        for y in range(min(20, len(self.tileLayoutFG))):
+        for y in range(min(20, len(self.tileLayoutFG)), 0, -1):
             for x in range(len(self.tileLayoutFG[y])):
                 if (self.tileLayoutFG[y][x] == CollectableTypes.GOAL):
                     return y
@@ -137,7 +137,7 @@ class GameWorld:
         print("LEVEL ERROR - The goal is too far from the top of the map")
 
     def FindPlayerSpawn(self):
-        for y in range(max(0, len(self.tileLayoutFG) - 20), len(self.tileLayoutFG)):
+        for y in range(len(self.tileLayoutFG) - 1, max(0, len(self.tileLayoutFG) - 20), -1):
             for x in range(len(self.tileLayoutFG[y])):
                 if (self.tileLayoutFG[y][x] == CollectableTypes.SPAWN):
                     spawnX = (x * TILE_SIZE) + (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2)
