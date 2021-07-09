@@ -169,13 +169,15 @@ class GameWorld:
                             self.obstacles.append(Obstacle(resistance, posX, posY, customHitbox))
 
                             '''# Debug info - Uncomment to show hitboxes : 
-                            pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(posX + customHitbox[2], posY + customHitbox[3], customHitbox[0], customHitbox[1]), 2)'''
+                            color = (255, 255, 255) if (resistance == 0) else (255, 0, 0) if (resistance == 1) else (0, 255, 0) if (resistance == 2) else (0, 0, 255)
+                            pygame.draw.rect(screen, color, pygame.Rect(posX + customHitbox[2], posY + customHitbox[3], customHitbox[0], customHitbox[1]), 2) #'''
                             
                         else: # Use the default hitbox
                             self.obstacles.append(Obstacle(resistance, posX, posY, [TILE_SIZE, TILE_SIZE, 0, 0]))
 
                             '''# Debug info - Uncomment to show hitboxes :  
-                            pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(posX, posY, TILE_SIZE, TILE_SIZE), 2)'''
+                            color = (255, 255, 255) if (resistance == 0) else (255, 0, 0) if (resistance == 1) else (0, 255, 0) if (resistance == 2) else (0, 0, 255)
+                            pygame.draw.rect(screen, color, pygame.Rect(posX, posY, TILE_SIZE, TILE_SIZE), 2) #'''
                     
                     else:
                         tileId = y * self.screenNbTilesY + x
