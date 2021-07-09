@@ -14,6 +14,7 @@ class Menu:
         self.screenSize = game.screenSize
 
         self.menuInitialized = False
+        self.statsInitialized = False
         self.creditsInitialized = False
         self.selectLevelInitialized = False
 
@@ -34,6 +35,12 @@ class Menu:
         else:
             self.menuButtons["continueDisabled"] = Button(buttonBasePos[0] - 320, buttonBasePos[1], MEDIUM_BTN_SIZE, MENU_BG_COLOR, LEVEL_BG_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Continue")
         
+    def InitStats(self):
+        self.statsInitialized = True
+        self.resetConfirmed = False
+        self.resetReleased = False
+        self.btnResetStats = Button(self.screenSize[0] - 135, self.screenSize[1] - 45, (130, 40), LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Reset")
+
     def InitCredits(self):
         self.creditsInitialized = True
         self.menuScrollY = self.screenSize[1] / 7 + self.screenSize[1]
@@ -108,7 +115,10 @@ class Menu:
                         break
 
             elif (event.type == KEYDOWN):
-                if (self.game.menuPage < -1): # Press any key on title screen, in controls, in select level or in stats to go to the main menu
+                if (self.game.menuPage == -4): # Stats
+                    self.statsInitialized = False
+                    self.game.menuPage = -1
+                elif (self.game.menuPage < -1): # Press any key on title screen, in controls, in select level or in stats to go to the main menu
                     self.game.menuPage = -1
                 elif (self.game.menuPage == CREDITS_PAGE): # Press any key on credits to go to title screen
                     self.creditsInitialized = False # Reset credits next time it's displayed
@@ -122,6 +132,23 @@ class Menu:
 
                 elif (event.key == K_ESCAPE):
                     self.game.menuPage = -1
+
+            elif (self.game.menuPage == -4): # Stats
+                if (not self.statsInitialized):
+                    self.InitStats()
+
+                mousePos = pygame.mouse.get_pos()
+                mouseLeftClick = pygame.mouse.get_pressed()[0]
+                self.resetReleased = self.resetReleased or self.resetConfirmed and not mouseLeftClick
+
+                if (self.btnResetStats.IsMouseOver(mousePos) and mouseLeftClick):
+                    if (self.resetConfirmed and self.resetReleased):
+                        self.game.levelController.ResetStats()
+                        self.btnResetStats.hoverColor = LEVEL_BG_COLOR
+                        self.btnResetStats.text = "Done"
+                    else:
+                        self.resetConfirmed = True
+                        self.btnResetStats.text = "Confirm?"
 
             elif (event.type in self.game.musicEvents):
                 ProcessMusicEvents(event.type)
@@ -147,6 +174,9 @@ class Menu:
             self.screen.blit(text, textRect)
 
         elif (self.game.menuPage == -4): # Stats
+            if (not self.statsInitialized):
+                self.InitStats()
+
             text = self.game.fontLarge.render("Stats", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, 40))
             self.screen.blit(text, textRect)
@@ -196,6 +226,8 @@ class Menu:
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
+
+            self.btnResetStats.Draw(self.screen, self.btnResetStats.IsMouseOver(pygame.mouse.get_pos()))
 
         elif (self.game.menuPage == -3): # Controls
             text = self.game.fontLarge.render("Controls", True, TEXT_COLOR)

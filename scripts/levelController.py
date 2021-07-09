@@ -85,3 +85,12 @@ class LevelController:
 
         except:
             return None
+
+    def ResetStats(self):
+        self.savedKills = 0
+        self.savedDeaths = 0
+        self.savedRoundsFired = 0
+        self.savedRoundsHit = 0
+        self.savedPickups = 0
+        self.savedCompletions = 0
+        self.savedTimes = {}
