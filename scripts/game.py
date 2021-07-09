@@ -91,7 +91,7 @@ class Game:
 
                     '''# Debug info - Uncomment to allow level skipping
                     elif (event.key == K_n):
-                        self.TriggerGameOver(True)'''
+                        self.TriggerGameOver(True) #'''
 
                 elif (event.type == MOUSEBUTTONDOWN):
                     if (event.button == 4): # Mouse wheel up
@@ -162,7 +162,7 @@ class Game:
         else:
             fpsColor = (0, 255, 0)
 
-        self.screen.blit(self.fontMedium.render("FPS: " + str(fps), True, fpsColor, LEVEL_BG_COLOR), (10, self.screenSize[1] / 2))'''
+        self.screen.blit(self.fontMedium.render("FPS: " + str(fps), True, fpsColor, LEVEL_BG_COLOR), (10, self.screenSize[1] / 2)) #'''
 
     def Draw(self):
         if (self.playing):
@@ -219,6 +219,7 @@ class Game:
 
         if (victory): # Check if this level's best time has been beaten
             self.levelController.VerifyLevelTime(self.currentLevel, pygame.time.get_ticks() - self.startTime)
+            self.levelController.savedCompletions += 1
 
         self.running = False
 

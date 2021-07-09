@@ -61,6 +61,7 @@ class WeaponController:
 
                     self.gunshotSound.play()
                     self.emptyGunSoundPlayed = False
+                    self.player.game.levelController.savedRoundsFired += 1
 
                     return True # Decrement ammo
                 
@@ -110,6 +111,7 @@ class WeaponController:
                     if (bulletRect.colliderect(monster.hitbox)):
                         monster.Stun(self.bullets[i][3] * BULLET_STUN_MULTIPLIER)
                         monster.Damage(self.bullets[i][3])
+                        self.player.game.levelController.savedRoundsHit += 1
 
                         if (self.bullets[i][4] < 2 or key not in self.gameworld.deadMonsters): # If the weapon uses high caliber and the monster dies, don't destroy the bullet
                             self.bullets.pop(i)

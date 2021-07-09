@@ -7,9 +7,6 @@ from game import Game
 class LevelController:
     def __init__(self, screen):
         gameState = [0, 0, -2] # [-1: exit  0: restart level  1: next level, currentLevel, menuPage]
-        self.savedTimes = {}
-        self.savedKills = 0
-        self.savedDeaths = 0
         self.savedProgress = self.LoadData()
         game = Game()
 
@@ -45,6 +42,10 @@ class LevelController:
             "menu": self.savedProgress[1],
             "deaths": self.savedDeaths,
             "kills": self.savedKills,
+            "roundsFired": self.savedRoundsFired,
+            "roundsHit": self.savedRoundsHit,
+            "pickups": self.savedPickups,
+            "completions": self.savedCompletions, 
             "times": self.savedTimes
         }
 
@@ -57,6 +58,14 @@ class LevelController:
             file.write(saveData)
 
     def LoadData(self):
+        self.savedKills = 0
+        self.savedDeaths = 0
+        self.savedRoundsFired = 0
+        self.savedRoundsHit = 0
+        self.savedPickups = 0
+        self.savedCompletions = 0
+        self.savedTimes = {}
+
         try:
             with open(SAVE_PATH, "r") as file:
                 saveData = file.read()
@@ -66,6 +75,10 @@ class LevelController:
 
             self.savedKills = saveData["kills"]
             self.savedDeaths = saveData["deaths"]
+            self.savedRoundsFired = saveData["roundsFired"]
+            self.savedRoundsHit = saveData["roundsHit"]
+            self.savedPickups = saveData["pickups"]
+            self.savedCompletions = saveData["completions"]
             self.savedTimes = saveData["times"]
 
             return [int(saveData["level"]), int(saveData["menu"])]

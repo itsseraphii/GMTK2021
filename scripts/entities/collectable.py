@@ -67,6 +67,12 @@ class Collectable:
         self.collected = True
         self.pickupSound.play()
 
+        if (self.type != CollectableTypes.GOAL):
+            self.gameworld.player.game.levelController.savedPickups += 1
+        else:
+            self.gameworld.player.game.TriggerGameOver(True)
+            return
+
         if (self.type == CollectableTypes.PISTOL):
             self.gameworld.player.AddWeapon(5, 8, WeaponTypes.REVOLVER)
 
@@ -78,9 +84,6 @@ class Collectable:
 
         elif (self.type == CollectableTypes.BIG_AMMO):
             self.gameworld.player.ammo += 10
-
-        elif (self.type == CollectableTypes.GOAL):
-            self.gameworld.player.game.TriggerGameOver(True)
 
         else: # Small ammo pickup
             self.gameworld.player.ammo += 4

@@ -40,6 +40,7 @@ class Menu:
         self.creditsFont = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 45))
         self.creditsFontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 35))
         self.creditsSpace = self.screenSize[1] / 6
+        self.game.levelController.UpdateProgress([self.game.gameState, self.game.currentLevel, self.game.menuPage])
         StartMusicCredits()
 
     def InitSelectLevel(self):
@@ -151,15 +152,31 @@ class Menu:
             self.screen.blit(text, textRect)
 
             text = self.game.fontMedium.render("Kills: " + str(self.game.levelController.savedKills), True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2 - 125, 125))
+            textRect = text.get_rect(center = (self.screenSize[0] / 2 - 200, 125))
             self.screen.blit(text, textRect)
 
             text = self.game.fontMedium.render("Deaths: " + str(self.game.levelController.savedDeaths), True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2 + 125, 125))
+            textRect = text.get_rect(center = (self.screenSize[0] / 2 + 200, 125))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("Rounds Fired: " + str(self.game.levelController.savedRoundsFired), True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2 - 200, 175))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("Rounds Hit: " + str(self.game.levelController.savedRoundsHit), True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2 + 200, 175))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("Items Picked Up: " + str(self.game.levelController.savedPickups), True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2 - 200, 225))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("Levels Completed: " + str(self.game.levelController.savedCompletions), True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2 + 200, 225))
             self.screen.blit(text, textRect)
 
             text = self.game.fontMedium.render("Best Times", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, 225))
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 325))
             self.screen.blit(text, textRect)
 
             bestTotalTimeMs = 0
@@ -168,12 +185,12 @@ class Menu:
                 level = int(key)
                 bestTotalTimeMs += self.game.levelController.savedTimes[key]
                 text = self.game.fontMedium.render("Level " + str(level + 1) + ": " + str(self.game.levelController.savedTimes[key] / 1000) + "s", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), int(level / 3) * 50 + 275))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), int(level / 3) * 50 + 375))
                 self.screen.blit(text, textRect)
 
             if (len(self.game.levelController.savedTimes) == CREDITS_PAGE - 1):
-                text = self.game.fontMedium.render("Best Total Time : " + str(bestTotalTimeMs / 1000) + "s", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, int(level / 3) * 50 + 375))
+                text = self.game.fontMedium.render("Best Total Time: " + str(bestTotalTimeMs / 1000) + "s", True, TEXT_COLOR)
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, int(level / 3) * 50 + 475))
                 self.screen.blit(text, textRect)
 
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
