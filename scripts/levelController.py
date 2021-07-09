@@ -58,13 +58,7 @@ class LevelController:
             file.write(saveData)
 
     def LoadData(self):
-        self.savedKills = 0
-        self.savedDeaths = 0
-        self.savedRoundsFired = 0
-        self.savedRoundsHit = 0
-        self.savedPickups = 0
-        self.savedCompletions = 0
-        self.savedTimes = {}
+        self.ResetStats() # Init stats
 
         try:
             with open(SAVE_PATH, "r") as file:
