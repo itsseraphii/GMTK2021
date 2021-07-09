@@ -10,9 +10,11 @@ BULLET_IMAGE_PATH = DATA_PATH + "/res/bullet.png"
 
 BULLET_SPEED = 20
 BULLET_SIZE = 3
+BULLET_STUN_MULTIPLIER = 150
 
-MELEE_SIZE = [TILE_SIZE * 1.5] * 2
 MELEE_REACH = 15
+MELEE_SIZE = [TILE_SIZE * 1.5] * 2
+MELEE_STUN_MULTIPLIER = 200
 
 class WeaponTypes(IntEnum):
     CROWBAR = 0
@@ -51,7 +53,6 @@ class WeaponController:
 
             if (self.weapons[equippedWeapon][1]): # Ranged weapon
                 if (ammo > 0):
-                    self.emptyGunSoundPlayed = False
                     playerPos = self.player.GetPos()
                     angleRad = -math.radians(self.player.angle)
 
@@ -59,6 +60,7 @@ class WeaponController:
                     self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angleRad, self.weapons[equippedWeapon][2], self.weapons[equippedWeapon][4]])
 
                     self.gunshotSound.play()
+                    self.emptyGunSoundPlayed = False
 
                     return True # Decrement ammo
                 
@@ -81,10 +83,10 @@ class WeaponController:
                     monster = self.gameworld.monsters[key]
 
                     if (meleeRect.colliderect(monster.hitbox)):
-                        monster.Stun(self.weapons[equippedWeapon][2] * 200) # More stun than ranged weapons
+                        monster.Stun(self.weapons[equippedWeapon][2] * MELEE_STUN_MULTIPLIER)
                         monster.Damage(self.weapons[equippedWeapon][2])
 
-        return False
+        return False # Don't decrement ammo
 
     def GetNextBulletPos(self, oldX, oldY, angle):
         newX = oldX + (BULLET_SPEED * math.cos(angle))
@@ -106,7 +108,7 @@ class WeaponController:
                     monster = self.gameworld.monsters[key]
 
                     if (bulletRect.colliderect(monster.hitbox)):
-                        monster.Stun(self.bullets[i][3] * 150)
+                        monster.Stun(self.bullets[i][3] * BULLET_STUN_MULTIPLIER)
                         monster.Damage(self.bullets[i][3])
 
                         if (self.bullets[i][4] < 2 or key not in self.gameworld.deadMonsters): # If the weapon uses high caliber and the monster dies, don't destroy the bullet
