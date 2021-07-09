@@ -7,11 +7,12 @@ SWING_SOUND_FILE = DATA_PATH + "/sounds/swing.mp3"
 GUNSHOT_SOUND_FILE = DATA_PATH + "/sounds/gunshot.mp3"
 EMPTY_GUN_SOUND_FILE = DATA_PATH + "/sounds/emptyGun.mp3"
 BULLET_IMAGE_PATH = DATA_PATH + "/res/bullet.png"
+
 BULLET_SPEED = 20
 BULLET_SIZE = 3
 
-MELEE_OFFSET_XY = -(TILE_SIZE / 2)
 MELEE_SIZE = [TILE_SIZE * 1.5] * 2
+MELEE_REACH = 15
 
 class WeaponTypes(IntEnum):
     CROWBAR = 0
@@ -52,10 +53,10 @@ class WeaponController:
                 if (ammo > 0):
                     self.emptyGunSoundPlayed = False
                     playerPos = self.player.GetPos()
-                    angle = -math.radians(self.player.angle)
+                    angleRad = -math.radians(self.player.angle)
 
                     # [posX, posY, angle, damage, caliber]
-                    self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angle, self.weapons[equippedWeapon][2], self.weapons[equippedWeapon][4]])
+                    self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angleRad, self.weapons[equippedWeapon][2], self.weapons[equippedWeapon][4]])
 
                     self.gunshotSound.play()
 
@@ -64,49 +65,19 @@ class WeaponController:
                 elif (not self.emptyGunSoundPlayed):
                     self.emptyGunSoundPlayed = True
                     self.emptyGunSound.play()
-                    return False
 
-            # TODO Cleanup ce elif
-            elif (not self.weapons[equippedWeapon][1]): # Melee Weapon 
-                ### Rect hitbox generation of crowbar
-                # translate l'angle en full 360
-                NB_SEPARATORS = 8
-                MELEE_REACH = 20
-                angle = self.player.angle
-                if(angle < 0): angle = 360 + angle
-                
-                # Décalage des quadrants
-                angle += (360 / NB_SEPARATORS) / 2
-                angle %= 360
-
-                for i in range(NB_SEPARATORS) :
-                    if angle >= 360 / NB_SEPARATORS * i and angle < 360 / NB_SEPARATORS * (i + 1):
-                        break
-
-                meleePos = 0
+            elif (not self.weapons[equippedWeapon][1]): # Melee Weapon
                 playerPos = self.player.GetPos()
-                if   i == 0:
-                    meleePos = [playerPos[0] + MELEE_REACH, playerPos[1]]
-                elif i == 1:
-                    meleePos = [playerPos[0] + MELEE_REACH / 2, playerPos[1] - MELEE_REACH / 2]
-                elif i == 2:
-                    meleePos = [playerPos[0], playerPos[1] - MELEE_REACH]
-                elif i == 3:
-                    meleePos = [playerPos[0] - MELEE_REACH / 2, playerPos[1] - MELEE_REACH / 2]
-                elif i == 4:
-                    meleePos = [playerPos[0] - MELEE_REACH, playerPos[1]]
-                elif i == 5:
-                    meleePos = [playerPos[0] - MELEE_REACH / 2, playerPos[1] + MELEE_REACH / 2]
-                elif i == 6:
-                    meleePos = [playerPos[0], playerPos[1] + MELEE_REACH]
-                elif i == 7:
-                    meleePos = [playerPos[0] + MELEE_REACH / 2, playerPos[1] + MELEE_REACH / 2]                
+                angleRad = -math.radians(self.player.angle)
+
+                meleeCenterX = playerPos[0] + (MELEE_REACH * math.cos(angleRad))
+                meleeCenterY = playerPos[1] + (MELEE_REACH * math.sin(angleRad))
+
+                meleeRect = pygame.Rect(((PLAYER_SIZE[0] / 2) + meleeCenterX - (MELEE_SIZE[0] / 2), (PLAYER_SIZE[1] / 2) + meleeCenterY - (MELEE_SIZE[1] / 2)), MELEE_SIZE)
 
                 self.swingSound.play()
-
-                meleeRect = pygame.Rect((meleePos[0], meleePos[1]), MELEE_SIZE)
                 
-                for key in list(self.gameworld.monsters): # Check collisions with multiple monsters
+                for key in list(self.gameworld.monsters): # Check collisions with all monsters
                     monster = self.gameworld.monsters[key]
 
                     if (meleeRect.colliderect(monster.hitbox)):
@@ -160,6 +131,6 @@ class WeaponController:
         for bullet in self.bullets:
             screen.blit(self.bulletImage, (bullet[0], bullet[1]))
 
-        '''# Debug info - Uncomment to show crowbar hitbox : (Brisé pour optimisiations, sorry)
+        '''# Debug info - Uncomment to show crowbar hitbox : (Brisé pour optimisations, sorry)
         if (self.meleeRect is not None):
             pygame.draw.rect(screen, (255, 0, 0), self.meleeRect, 2)'''
