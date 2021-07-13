@@ -17,6 +17,6 @@ All you have to do is run `main.py` using your Python interpreter.
 ## Contributions
  - Seraphii - Developer, Assets Artist
  - Hypstersaurus - Developer, Texture Artist
- - Psycho - Developer, Software Architect
+ - Psycho - Developer, Software Architect, Level Designer, Writer, Texture Artist
  - Parazyte - Composer, Level Designer, Writer
  - Nemesis - Enemy Designer, Writer
