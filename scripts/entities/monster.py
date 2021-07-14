@@ -78,24 +78,23 @@ class Monster:
     def Stun(self, timeMS):
         self.lastHitTime = pygame.time.get_ticks() + timeMS
 
-    def Move(self): # TODO optimiser et cleanup
+    def Move(self):
         currentTime = pygame.time.get_ticks()
 
-        if currentTime > self.lastTargetUpdate + self.targetCooldown :
+        if (currentTime > self.lastTargetUpdate + self.targetCooldown): # Update target pos
             self.lastTargetUpdate = currentTime
-            playerLocation = self.gameworld.player.GetPos()
+            playerPos = self.gameworld.player.GetPos()
 
-            # Faraway
-            if abs(playerLocation[0]) - abs(self.posX) > 100 or abs(playerLocation[1]) - abs(self.posY) > 100 :
-                # Draws a zone around the player, choosing a random angle to select a target
+            if (math.sqrt((self.posX - playerPos[0]) ** 2 + (self.posY - playerPos[1]) ** 2) > 160): # Far from the player
+                # Draws a zone around the player, choosing a random angle to select a target # TODO clean
                 targetAngle = math.degrees(random.uniform(0, 6.29))
-                self.target[0] = playerLocation[0] + (self.accuracy * TILE_SIZE) * math.sin(targetAngle)
-                self.target[1] = playerLocation[1] + (self.accuracy * TILE_SIZE) * math.cos(targetAngle)
-            else: # straight to the player
-                self.target = playerLocation
+                self.target[0] = playerPos[0] + (self.accuracy * TILE_SIZE) * math.sin(targetAngle)
+                self.target[1] = playerPos[1] + (self.accuracy * TILE_SIZE) * math.cos(targetAngle)
+            else: # Target exact player pos
+                self.target = playerPos
 
-        if (self.lastHitTime < pygame.time.get_ticks()):
-            if (currentTime >= self.lastFrameTime + self.animationSpeed ):
+        if (self.lastHitTime < currentTime):
+            if (currentTime > self.lastFrameTime + self.animationSpeed ):
                 self.lastFrameTime = currentTime
                 self.NextFrame()
 
@@ -162,14 +161,8 @@ class Monster:
         self.UpdateHitbox()
 
     def NextFrame(self):
+        self.angle = (self.angle + 360) % 360
         self.frameCounter = (self.frameCounter + 1) % len(self.animation)
-
-        # Update l'angle s'il va plus que 360 ou moins que 0 après calculs
-        if (self.angle < 0):
-            self.angle = 360 + self.angle
-        else: 
-            self.angle %= 360
-
         self.image = pygame.transform.rotate(self.animation[self.frameCounter], int(self.angle))
 
     def UpdateHitbox(self):
