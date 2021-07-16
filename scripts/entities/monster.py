@@ -1,9 +1,9 @@
 import pygame
 from pygame import Rect
-import random
+from random import randint as RandInt, uniform as RandFloat
 import math
 from enum import IntEnum
-from utils.constants import TILE_SIZE
+from utils.constants import PLAYER_HITBOX_SIZE, TILE_SIZE
 
 TURN_ANGLE = 2
 
@@ -13,11 +13,11 @@ class MonsterTypes(IntEnum):
 
 class Monster:
     def __init__(self, id, monsterType, spawnLocation, gameworld):
-        self.gameworld = gameworld
         self.id = id
         self.type = monsterType
-        self.posX = spawnLocation[0]
-        self.posY = spawnLocation[1]
+        self.gameworld = gameworld
+        self.posX, self.posY = spawnLocation[0], spawnLocation[1]
+        self.nextTargetUpdate = -9999
         self.lastHitTime = 0
         self.angle = 0
 
@@ -57,7 +57,7 @@ class Monster:
         self.deathSound = self.gameworld.entitySounds[deathSoundName]
 
         self.animation = self.gameworld.entityImages[imageName]
-        self.lastFrameTime = 0
+        self.nextFrameTime = 0
         self.lastTargetUpdate = 0
         self.target = gameworld.player.GetPos()
         self.frameCounter = 0
@@ -68,7 +68,7 @@ class Monster:
         self.health -= damage
 
         if (self.health > 0):
-            self.hitSounds[random.randint(0, 2)].play()
+            self.hitSounds[RandInt(0, 2)].play()
         else:
             self.gameworld.deadMonsters.append(self.id) # Prevents respawn
             self.gameworld.monsters.pop(self.id)
@@ -80,22 +80,24 @@ class Monster:
 
     def Move(self):
         currentTime = pygame.time.get_ticks()
+        timeOver = self.gameworld.player.game.timeOver
 
-        if (currentTime > self.lastTargetUpdate + self.targetCooldown): # Update target pos
-            self.lastTargetUpdate = currentTime
+        if (self.nextTargetUpdate < currentTime): # Update target pos
+            self.nextTargetUpdate = currentTime + self.targetCooldown
             playerPos = self.gameworld.player.GetPos()
 
-            if (math.sqrt((self.posX - playerPos[0]) ** 2 + (self.posY - playerPos[1]) ** 2) > 160): # Far from the player
-                # Draws a zone around the player, choosing a random angle to select a target # TODO clean
-                targetAngle = math.degrees(random.uniform(0, 6.29))
-                self.target[0] = playerPos[0] + (self.accuracy * TILE_SIZE) * math.sin(targetAngle)
-                self.target[1] = playerPos[1] + (self.accuracy * TILE_SIZE) * math.cos(targetAngle)
-            else: # Target exact player pos
+            print(playerPos)
+
+            if (timeOver or math.sqrt((self.posX - playerPos[0]) ** 2 + (self.posY - playerPos[1]) ** 2) < 160): # Close to the player
                 self.target = playerPos
+            else: # Choose a random target in a circle around the player
+                targetAngle = RandFloat(0, 6.29) # 0 - 360 in radians
+                self.target[0] = self.accuracy * TILE_SIZE * math.sin(targetAngle) + (PLAYER_HITBOX_SIZE[0] / 2) + playerPos[0]
+                self.target[1] = self.accuracy * TILE_SIZE * math.cos(targetAngle) + (PLAYER_HITBOX_SIZE[1] / 2) + playerPos[1]
 
         if (self.lastHitTime < currentTime):
-            if (currentTime > self.lastFrameTime + self.animationSpeed ):
-                self.lastFrameTime = currentTime
+            if (self.nextFrameTime < currentTime):
+                self.nextFrameTime = currentTime + self.animationSpeed
                 self.NextFrame()
 
             if self.target[0] > self.posX:
@@ -186,4 +188,4 @@ class Monster:
 
         '''# Debug info - Uncomment to show hitboxes : 
         pygame.draw.rect(screen, (0, 0, 255), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight), 2) # Internal hitbox (obstacles)
-        pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2) # External hitbox (bullets, crowbar and player)'''
+        pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2) # External hitbox (bullets, crowbar and player) #'''
