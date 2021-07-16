@@ -1,11 +1,9 @@
 import pygame
 from pygame import Rect
 from random import randint as RandInt, uniform as RandFloat
-from math import sqrt, sin, cos
+from math import sqrt, sin, cos, atan2, degrees
 from enum import IntEnum
 from utils.constants import PLAYER_HITBOX_SIZE, TILE_SIZE
-
-TURN_ANGLE = 2
 
 class MonsterTypes(IntEnum):
     ZOMBIE = 165
@@ -17,13 +15,10 @@ class Monster:
         self.type = monsterType
         self.gameworld = gameworld
         self.posX, self.posY = spawnLocation[0], spawnLocation[1]
-        self.nextTargetUpdate = -9999
-        self.lastHitTime = 0
-        self.angle = 0
 
         if (monsterType == MonsterTypes.FATBOI):
             self.speed = 1
-            self.animationSpeed = 150
+            self.animationSpeed = 150 #ms
             self.accuracy = 2
             self.targetCooldown = 1750 #ms
             self.size = [64, 64]
@@ -39,7 +34,7 @@ class Monster:
 
         else:
             self.speed = 1.5
-            self.animationSpeed = 84
+            self.animationSpeed = 84 #ms
             self.accuracy = 3 # Range of target, lower is better
             self.targetCooldown = 1250 #ms
             self.size = [32, 32]
@@ -57,10 +52,14 @@ class Monster:
         self.deathSound = self.gameworld.entitySounds[deathSoundName]
 
         self.animation = self.gameworld.entityImages[imageName]
-        self.nextFrameTime = 0
-        self.lastTargetUpdate = 0
         self.target = gameworld.player.GetPos()
+        self.obstacleSpeed = self.speed * 0.15
+        self.nextTargetUpdate = -9999
+        self.nextFrameTime = 0
         self.frameCounter = 0
+        self.lastHitTime = 0
+        self.angle = 0
+
         self.NextFrame()
         self.UpdateHitbox()
 
@@ -86,8 +85,6 @@ class Monster:
             self.nextTargetUpdate = currentTime + self.targetCooldown
             playerPos = self.gameworld.player.GetPos()
 
-            print(playerPos)
-
             if (timeOver or sqrt((self.posX - playerPos[0]) ** 2 + (self.posY - playerPos[1]) ** 2) < 160): # Close to the player
                 self.target = playerPos
             else: # Choose a random target in a circle around the player
@@ -98,80 +95,61 @@ class Monster:
         if (self.lastHitTime < currentTime):
             if (self.nextFrameTime < currentTime):
                 self.nextFrameTime = currentTime + self.animationSpeed
+                self.UpdateAngle(self.gameworld.player.GetPos())
                 self.NextFrame()
 
-            if self.target[0] > self.posX:
-                self.posX += self.speed
-                if (self.angle > 90 and self.angle <= 270): 
-                    self.angle -= TURN_ANGLE
-                elif (self.angle < 90 or self.angle > 270): 
-                    self.angle += TURN_ANGLE
+            if (self.target[0] > self.posX):
+                obstacleHitbox = Rect(self.posX + self.speed + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight)
+                collisionType = self.GetObstacleCollision(obstacleHitbox)
 
-                collisionType = self.CheckCollisionWithObstacles(Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight))
+                if (collisionType == 0): # No obstacle
+                    self.posX += self.speed
+                elif (timeOver and collisionType != 2): # 60 seconds are over and the obstacle is not the map border
+                    self.posX += self.obstacleSpeed # Slow movement
 
-                if (collisionType != 0):
-                    if (self.gameworld.player.game.timeOver and collisionType != 2): # 60 seconds are over and the obstacle is not the map border
-                        self.posX -= (self.speed * 0.85) # Slow down instead of stopping
-                    else:
-                        self.posX -= self.speed
+            elif (self.target[0] < self.posX):
+                obstacleHitbox = Rect(self.posX - self.speed + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight)
+                collisionType = self.GetObstacleCollision(obstacleHitbox)
 
-            elif self.target[0] < self.posX:
-                self.posX -= self.speed
-                if (self.angle > 270 or self.angle <= 90): 
-                    self.angle -= TURN_ANGLE
-                elif (self.angle < 270 and self.angle > 90): 
-                    self.angle += TURN_ANGLE
-
-                collisionType = self.CheckCollisionWithObstacles(Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight))
-                
-                if (collisionType != 0):
-                    if (self.gameworld.player.game.timeOver and collisionType != 2):
-                        self.posX += (self.speed * 0.85)
-                    else:
-                        self.posX += self.speed
+                if (collisionType == 0):
+                    self.posX -= self.speed
+                elif (timeOver and collisionType != 2):
+                    self.posX -= self.obstacleSpeed
             
-            if self.target[1] > self.posY:
-                self.posY += self.speed
-                if (self.angle > 180):
-                    self.angle += TURN_ANGLE
-                elif (self.angle <= 180): 
-                    self.angle -= TURN_ANGLE
+            if (self.target[1] > self.posY):
+                obstacleHitbox = Rect(self.posX + self.hitBoxOffestX, self.posY + self.speed + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight)
+                collisionType = self.GetObstacleCollision(obstacleHitbox)
 
-                collisionType = self.CheckCollisionWithObstacles(Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight))
-                
-                if (collisionType != 0):
-                    if (self.gameworld.player.game.timeOver and collisionType != 2):
-                        self.posY -= (self.speed * 0.85)
-                    else:
-                        self.posY -= self.speed
+                if (collisionType == 0):
+                    self.posY += self.speed
+                elif (timeOver and collisionType != 2):
+                    self.posY += self.obstacleSpeed
 
-            elif self.target[1] < self.posY:
-                self.posY -= self.speed
-                if (self.angle < 180):
-                    self.angle += TURN_ANGLE
-                elif (self.angle >= 180): 
-                    self.angle -= TURN_ANGLE
+            elif (self.target[1] < self.posY):
+                obstacleHitbox = Rect(self.posX + self.hitBoxOffestX, self.posY - self.speed + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight)
+                collisionType = self.GetObstacleCollision(obstacleHitbox)
 
-                collisionType = self.CheckCollisionWithObstacles(Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight))
-                
-                if (collisionType != 0):
-                    if (self.gameworld.player.game.timeOver and collisionType != 2):
-                        self.posY += (self.speed * 0.85)
-                    else:
-                        self.posY += self.speed
+                if (collisionType == 0):
+                    self.posY -= self.speed
+                elif (timeOver and collisionType != 2):
+                    self.posY -= self.obstacleSpeed
 
         self.UpdateHitbox()
 
     def NextFrame(self):
-        self.angle = (self.angle + 360) % 360
         self.frameCounter = (self.frameCounter + 1) % len(self.animation)
-        self.image = pygame.transform.rotate(self.animation[self.frameCounter], int(self.angle))
+        self.image = pygame.transform.rotate(self.animation[self.frameCounter], int(-degrees(self.angle)))
+
+    def UpdateAngle(self, playerPos):
+        diffX = playerPos[0] - self.posX
+        diffY = playerPos[1] - self.posY
+        self.angle = atan2(diffY, diffX)
 
     def UpdateHitbox(self):
         spriteRect = self.image.get_rect()
         self.hitbox = Rect((spriteRect.width / 2) - (self.hitBoxWidth / 2) + self.posX, (spriteRect.height / 2) - (self.hitBoxHeight / 2) + self.posY, self.hitBoxWidth, self.hitBoxHeight)
 
-    def CheckCollisionWithObstacles(self, mainRect):
+    def GetObstacleCollision(self, mainRect):
         collisionType = 0
 
         for obstacle in self.gameworld.obstacles:
