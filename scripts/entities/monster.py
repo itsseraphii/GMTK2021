@@ -98,7 +98,7 @@ class Monster:
                 self.UpdateAngle(self.gameworld.player.GetPos())
                 self.NextFrame()
 
-            if (self.target[0] > self.posX):
+            if (self.target[0] > self.posX + 1):
                 obstacleHitbox = Rect(self.posX + self.speed + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight)
                 collisionType = self.GetObstacleCollision(obstacleHitbox)
 
@@ -107,7 +107,7 @@ class Monster:
                 elif (timeOver and collisionType != 2): # 60 seconds are over and the obstacle is not the map border
                     self.posX += self.obstacleSpeed # Slow movement
 
-            elif (self.target[0] < self.posX):
+            elif (self.target[0] < self.posX - 1):
                 obstacleHitbox = Rect(self.posX - self.speed + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight)
                 collisionType = self.GetObstacleCollision(obstacleHitbox)
 
@@ -116,7 +116,7 @@ class Monster:
                 elif (timeOver and collisionType != 2):
                     self.posX -= self.obstacleSpeed
             
-            if (self.target[1] > self.posY):
+            if (self.target[1] > self.posY + 1):
                 obstacleHitbox = Rect(self.posX + self.hitBoxOffestX, self.posY + self.speed + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight)
                 collisionType = self.GetObstacleCollision(obstacleHitbox)
 
@@ -125,7 +125,7 @@ class Monster:
                 elif (timeOver and collisionType != 2):
                     self.posY += self.obstacleSpeed
 
-            elif (self.target[1] < self.posY):
+            elif (self.target[1] < self.posY - 1):
                 obstacleHitbox = Rect(self.posX + self.hitBoxOffestX, self.posY - self.speed + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight)
                 collisionType = self.GetObstacleCollision(obstacleHitbox)
 
