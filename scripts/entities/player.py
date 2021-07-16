@@ -6,11 +6,6 @@ from weaponController import WeaponController, WeaponTypes
 from utils.spriteUtils import GetFramesFromFile
 from utils.constants import PLAYER_SIZE, PLAYER_HITBOX_SIZE
 
-PISTOL_ANIMATION = "playerPistol.png"
-RIFLE_ANIMATION = "playerRifle.png"
-SNIPER_ANIMATION = "playerSniper.png"
-WALKING_ANIMATION = "playerUnarmed.png"
-
 SPEED = 2
 ANIMATION_SPEED = 84 # ms
 
@@ -23,10 +18,10 @@ class Player:
         spawn = self.gameworld.FindPlayerSpawn()
         self.posX, self.posY = spawn[0], spawn[1]
 
-        self.walkingFrames = GetFramesFromFile(WALKING_ANIMATION, PLAYER_SIZE)
-        self.pistolFrames = GetFramesFromFile(PISTOL_ANIMATION, PLAYER_SIZE)
-        self.rifleFrames = GetFramesFromFile(RIFLE_ANIMATION, PLAYER_SIZE)
-        self.sniperFrames = GetFramesFromFile(SNIPER_ANIMATION, PLAYER_SIZE)
+        self.walkingFrames = GetFramesFromFile("playerUnarmed.png", PLAYER_SIZE)
+        self.pistolFrames = GetFramesFromFile("playerPistol.png", PLAYER_SIZE)
+        self.rifleFrames = GetFramesFromFile("playerRifle.png", PLAYER_SIZE)
+        self.sniperFrames = GetFramesFromFile("playerSniper.png", PLAYER_SIZE)
         self.frameCounter = 0
         self.nextFrameTime = 0
 
@@ -155,5 +150,4 @@ class Player:
         screen.blit(self.rotatedImage, (self.posX, self.posY))
 
         '''# Debug info - Uncomment to show hitboxes : 
-        pygame.draw.rect(screen, (255, 0, 0), Rect(PLAYER_HITBOX_SIZE[0] / 2 + self.posX, PLAYER_HITBOX_SIZE[1] / 2 + self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]), 2)
-        #pygame.draw.circle(screen, (255, 0, 0), (self.posX + PLAYER_SIZE[0] / 2, self.posY + PLAYER_SIZE[0] / 2), PLAYER_SIZE[0] / 2, 4)'''
+        pygame.draw.rect(screen, (255, 0, 0), Rect(PLAYER_HITBOX_SIZE[0] / 2 + self.posX, PLAYER_HITBOX_SIZE[1] / 2 + self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]), 2) #'''

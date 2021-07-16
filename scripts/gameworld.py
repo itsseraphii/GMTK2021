@@ -17,8 +17,6 @@ COLLECTABLES_LAST_ID = 225 # Ids < than this and >= ENTITIES_LAST_ID are collect
 CSV_PATH_BG = [DATA_PATH + "/levels/level", "/background.csv"]
 CSV_PATH_FG = [DATA_PATH + "/levels/level", "/foreground.csv"]
 
-OBSTACLES = []
-
 class GameWorld:
     def __init__(self, currentLevel):
         self.screenSize = pygame.display.get_window_size()
