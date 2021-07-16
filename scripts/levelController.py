@@ -1,5 +1,6 @@
-import os
-import json
+from os import makedirs as MakeDirs
+from os.path import dirname as DirName
+from json import dumps as Dumps, loads as Loads
 from cryptography.fernet import Fernet
 from utils.constants import SAVE_KEY, SAVE_PATH
 from game import Game
@@ -49,10 +50,10 @@ class LevelController:
             "times": self.savedTimes
         }
 
-        saveData = json.dumps(saveData)
+        saveData = Dumps(saveData)
         saveData = Fernet(SAVE_KEY).encrypt(saveData.encode()).decode()
 
-        os.makedirs(os.path.dirname(SAVE_PATH), exist_ok=True)
+        MakeDirs(DirName(SAVE_PATH), exist_ok=True)
 
         with open(SAVE_PATH, "w") as file:
             file.write(saveData)
@@ -65,7 +66,7 @@ class LevelController:
                 saveData = file.read()
 
             saveData = Fernet(SAVE_KEY).decrypt(saveData.encode()).decode()
-            saveData = json.loads(saveData)
+            saveData = Loads(saveData)
 
             self.savedKills = saveData["kills"]
             self.savedDeaths = saveData["deaths"]

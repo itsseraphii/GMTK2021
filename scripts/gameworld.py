@@ -1,5 +1,5 @@
 import pygame
-import random
+from random import randrange as RandRange
 from entities.collectable import Collectable, CollectableTypes
 from entities.monster import Monster, MonsterTypes
 from entities.obstacle import HITBOX_SIZES, Obstacle, RESISTANCES
@@ -114,8 +114,8 @@ class GameWorld:
         self.player = player
 
     def SpawnTimeOverEnemy(self, id, spawnY):
-        spawnX = (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2) + random.randrange(2 * TILE_SIZE, self.backgroundSize[0] - (4 * TILE_SIZE))
-        self.monsters[id] = Monster(id, self.enemyTypes[random.randrange(0, self.nbEnemyTypes)], [spawnX, spawnY], self)
+        spawnX = (self.screenSize[0] / 2) - (self.backgroundSize[0] / 2) + RandRange(2 * TILE_SIZE, self.backgroundSize[0] - (4 * TILE_SIZE))
+        self.monsters[id] = Monster(id, self.enemyTypes[RandRange(0, self.nbEnemyTypes)], [spawnX, spawnY], self)
         self.monsters[id].health *= 1.5
         self.monsters[id].speed *= 1.25
 

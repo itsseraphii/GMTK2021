@@ -1,6 +1,6 @@
 import pygame
 from enum import IntEnum
-import math
+from math import radians, cos, sin
 from utils.constants import TILE_SIZE, DATA_PATH, PLAYER_SIZE
 
 SWING_SOUND_FILE = DATA_PATH + "/sounds/swing.mp3"
@@ -54,7 +54,7 @@ class WeaponController:
             if (self.weapons[equippedWeapon][1]): # Ranged weapon
                 if (ammo > 0):
                     playerPos = self.player.GetPos()
-                    angleRad = -math.radians(self.player.angle)
+                    angleRad = -radians(self.player.angle)
 
                     # [posX, posY, angle, damage, caliber]
                     self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angleRad, self.weapons[equippedWeapon][2], self.weapons[equippedWeapon][4]])
@@ -71,10 +71,10 @@ class WeaponController:
 
             elif (not self.weapons[equippedWeapon][1]): # Melee Weapon
                 playerPos = self.player.GetPos()
-                angleRad = -math.radians(self.player.angle)
+                angleRad = -radians(self.player.angle)
 
-                meleeCenterX = playerPos[0] + (MELEE_REACH * math.cos(angleRad))
-                meleeCenterY = playerPos[1] + (MELEE_REACH * math.sin(angleRad))
+                meleeCenterX = playerPos[0] + (MELEE_REACH * cos(angleRad))
+                meleeCenterY = playerPos[1] + (MELEE_REACH * sin(angleRad))
 
                 meleeRect = pygame.Rect(((PLAYER_SIZE[0] / 2) + meleeCenterX - (MELEE_SIZE[0] / 2), (PLAYER_SIZE[1] / 2) + meleeCenterY - (MELEE_SIZE[1] / 2)), MELEE_SIZE)
 
@@ -90,8 +90,8 @@ class WeaponController:
         return False # Don't decrement ammo
 
     def GetNextBulletPos(self, oldX, oldY, angle):
-        newX = oldX + (BULLET_SPEED * math.cos(angle))
-        newY = oldY + (BULLET_SPEED * math.sin(angle))
+        newX = oldX + (BULLET_SPEED * cos(angle))
+        newY = oldY + (BULLET_SPEED * sin(angle))
         return [newX, newY]
 
     def UpdateBullets(self):

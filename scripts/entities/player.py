@@ -1,7 +1,7 @@
 import pygame
 from pygame.constants import K_a, K_d, K_s, K_w
 from pygame import Rect
-import math
+from math import pi, atan2
 from weaponController import WeaponController, WeaponTypes
 from utils.spriteUtils import GetFramesFromFile
 from utils.constants import PLAYER_SIZE, PLAYER_HITBOX_SIZE
@@ -28,7 +28,7 @@ class Player:
         self.rifleFrames = GetFramesFromFile(RIFLE_ANIMATION, [48, 32])
         self.sniperFrames = GetFramesFromFile(SNIPER_ANIMATION, [48, 32])
         self.frameCounter = 0
-        self.lastFrameTime = 0
+        self.nextFrameTime = 0
 
         self.image = self.walkingFrames[0]
         self.rotatedImage = self.image
@@ -68,8 +68,8 @@ class Player:
 
         currentTime = pygame.time.get_ticks()
 
-        if (currentTime >= self.lastFrameTime + ANIMATION_SPEED and self.isMoving):
-            self.lastFrameTime = currentTime
+        if (currentTime >= self.nextFrameTime and self.isMoving):
+            self.nextFrameTime = currentTime + ANIMATION_SPEED
             self.NextFrame()
 
         currentHitbox = Rect(PLAYER_HITBOX_SIZE[0] / 2 + self.posX, PLAYER_HITBOX_SIZE[1] / 2 + self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1])
@@ -98,7 +98,7 @@ class Player:
 
     def LookAtMouse(self, mousePos):
         relativeX, relativeY = mousePos[0] - (PLAYER_SIZE[0] / 2 + self.posX), mousePos[1] - (PLAYER_SIZE[1] / 2 + self.posY)
-        self.angle = (180 / math.pi) * -math.atan2(relativeY, relativeX)
+        self.angle = (180 / pi) * -atan2(relativeY, relativeX)
         self.rotatedImage = pygame.transform.rotate(self.image, int(self.angle))
     
     def SwitchWeapon(self, nextWeapon):

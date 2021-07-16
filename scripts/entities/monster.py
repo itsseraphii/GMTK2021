@@ -1,7 +1,7 @@
 import pygame
 from pygame import Rect
 from random import randint as RandInt, uniform as RandFloat
-import math
+from math import sqrt, sin, cos
 from enum import IntEnum
 from utils.constants import PLAYER_HITBOX_SIZE, TILE_SIZE
 
@@ -88,12 +88,12 @@ class Monster:
 
             print(playerPos)
 
-            if (timeOver or math.sqrt((self.posX - playerPos[0]) ** 2 + (self.posY - playerPos[1]) ** 2) < 160): # Close to the player
+            if (timeOver or sqrt((self.posX - playerPos[0]) ** 2 + (self.posY - playerPos[1]) ** 2) < 160): # Close to the player
                 self.target = playerPos
             else: # Choose a random target in a circle around the player
                 targetAngle = RandFloat(0, 6.29) # 0 - 360 in radians
-                self.target[0] = self.accuracy * TILE_SIZE * math.sin(targetAngle) + (PLAYER_HITBOX_SIZE[0] / 2) + playerPos[0]
-                self.target[1] = self.accuracy * TILE_SIZE * math.cos(targetAngle) + (PLAYER_HITBOX_SIZE[1] / 2) + playerPos[1]
+                self.target[0] = self.accuracy * TILE_SIZE * sin(targetAngle) + (PLAYER_HITBOX_SIZE[0] / 2) + playerPos[0]
+                self.target[1] = self.accuracy * TILE_SIZE * cos(targetAngle) + (PLAYER_HITBOX_SIZE[1] / 2) + playerPos[1]
 
         if (self.lastHitTime < currentTime):
             if (self.nextFrameTime < currentTime):

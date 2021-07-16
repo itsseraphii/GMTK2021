@@ -1,10 +1,11 @@
-import pygame
+from pygame import Surface
+from pygame.image import load as LoadImage
 from utils.constants import DATA_PATH
 
 # Returns an array of all frames from a file
 def GetFramesFromFile(filename, frameSize):
     try:
-        spriteSheet = pygame.image.load(DATA_PATH + "/res/" + filename).convert()
+        spriteSheet = LoadImage(DATA_PATH + "/res/" + filename).convert()
     except:
         print("Error while fetching " + filename)
 
@@ -26,7 +27,7 @@ def GetFramesFromImage(spriteSheet, frameSize):
 
 def GetSingleFrame(spriteSheet, frameSize, frameNumber):
     # Create a new blank image
-    frame = pygame.Surface(frameSize).convert()
+    frame = Surface(frameSize).convert()
 
     # Copy the sprite from the large sheet onto the smaller image
     frame.blit(spriteSheet, (0, 0), (frameNumber * frameSize[0], 0, frameSize[0], frameSize[1]))
