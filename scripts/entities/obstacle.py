@@ -1,3 +1,4 @@
+from pygame import Rect
 
 HITBOX_SIZES = { # Defaults to 32x32 with 0x0 offset
     28: [16, 16, 7, 7],
@@ -73,7 +74,4 @@ class Obstacle:
         self.resistance = resistance # 0: blocks bodies  1: blocks low caliber  2: blocks high caliber  3: blocks everything
         self.posX = posX
         self.posY = posY
-        self.width = hitbox[0]
-        self.height = hitbox[1]
-        self.offsetX = hitbox[2]
-        self.offsetY = hitbox[3]
+        self.hitbox = Rect(posX + hitbox[2], posY + hitbox[3], hitbox[0], hitbox[1])

@@ -153,11 +153,14 @@ class Monster:
         collisionType = 0
 
         for obstacle in self.gameworld.obstacles:
-            if mainRect.colliderect(Rect(obstacle.posX + obstacle.offsetX, obstacle.posY + obstacle.offsetY, obstacle.width, obstacle.height)):
-                if (obstacle.resistance < 3):
-                    collisionType = 1
-                else:
-                    return 2
+            if (obstacle.posY < 2 * TILE_SIZE + self.posY):
+                if mainRect.colliderect(obstacle.hitbox):
+                    if (obstacle.resistance < 3):
+                        collisionType = 1
+                    else:
+                        return 2
+            else:                
+                return collisionType
 
         return collisionType
 

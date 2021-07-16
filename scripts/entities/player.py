@@ -126,7 +126,7 @@ class Player:
     
     def CheckCollisionWithObstacles(self, mainRect):
         for obstacle in self.gameworld.obstacles:
-            if mainRect.colliderect(Rect(obstacle.posX + obstacle.offsetX, obstacle.posY + obstacle.offsetY, obstacle.width, obstacle.height)):
+            if mainRect.colliderect(obstacle.hitbox):
                 return True
 
         return False
