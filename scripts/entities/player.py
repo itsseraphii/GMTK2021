@@ -154,6 +154,6 @@ class Player:
         self.weaponController.Draw(screen)
         screen.blit(self.rotatedImage, (self.posX, self.posY))
 
-        # Debug info - Uncomment to show hitboxes : 
+        '''# Debug info - Uncomment to show hitboxes : 
         pygame.draw.rect(screen, (255, 0, 0), Rect(PLAYER_HITBOX_SIZE[0] / 2 + self.posX, PLAYER_HITBOX_SIZE[1] / 2 + self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1]), 2)
         #pygame.draw.circle(screen, (255, 0, 0), (self.posX + PLAYER_SIZE[0] / 2, self.posY + PLAYER_SIZE[0] / 2), PLAYER_SIZE[0] / 2, 4)'''

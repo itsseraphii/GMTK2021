@@ -18,9 +18,9 @@ class Monster:
 
         if (monsterType == MonsterTypes.FATBOI):
             self.speed = 1
-            self.animationSpeed = 150 #ms
-            self.accuracy = 2
-            self.targetCooldown = 1750 #ms
+            self.animationSpeed = 150 # ms
+            self.targetAccuracy = 2 # Distance from target, lower is better
+            self.targetCooldown = 1750 # ms
             self.size = [64, 64]
             self.health = 9
             imageName = "monster"
@@ -34,9 +34,9 @@ class Monster:
 
         else:
             self.speed = 1.5
-            self.animationSpeed = 84 #ms
-            self.accuracy = 3 # Range of target, lower is better
-            self.targetCooldown = 1250 #ms
+            self.animationSpeed = 84
+            self.targetAccuracy = 3
+            self.targetCooldown = 1250
             self.size = [32, 32]
             self.health = 6
             imageName = "zombie"
@@ -89,8 +89,8 @@ class Monster:
                 self.target = playerPos
             else: # Choose a random target in a circle around the player
                 targetAngle = RandFloat(0, 6.29) # 0 - 360 in radians
-                self.target[0] = self.accuracy * TILE_SIZE * sin(targetAngle) + (PLAYER_HITBOX_SIZE[0] / 2) + playerPos[0]
-                self.target[1] = self.accuracy * TILE_SIZE * cos(targetAngle) + (PLAYER_HITBOX_SIZE[1] / 2) + playerPos[1]
+                self.target[0] = self.targetAccuracy * TILE_SIZE * sin(targetAngle) + (PLAYER_HITBOX_SIZE[0] / 2) + playerPos[0]
+                self.target[1] = self.targetAccuracy * TILE_SIZE * cos(targetAngle) + (PLAYER_HITBOX_SIZE[1] / 2) + playerPos[1]
 
         if (self.lastHitTime < currentTime):
             if (self.nextFrameTime < currentTime):
