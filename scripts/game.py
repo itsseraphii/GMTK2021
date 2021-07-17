@@ -155,14 +155,7 @@ class Game:
 
         '''# Debug info - Uncomment to show fps average over the last 10 frames
         fps = round(self.clock.get_fps(), 2)
-
-        if (fps < 80):
-            fpsColor = (255, 0, 0)
-        elif (fps < 90):
-            fpsColor = (255, 255, 0)
-        else:
-            fpsColor = (0, 255, 0)
-
+        fpsColor = (255, 0, 0) if (fps < 80) else (255, 255, 0) if (fps < 90) else (0, 255, 0)
         self.screen.blit(self.fontMedium.render("FPS: " + str(fps), True, fpsColor, LEVEL_BG_COLOR), (10, self.screenSize[1] / 2)) #'''
 
     def Draw(self):
