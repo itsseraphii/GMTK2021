@@ -1,3 +1,4 @@
+from math import floor
 from os import makedirs as MakeDirs
 from os.path import dirname as DirName
 from json import dumps as Dumps, loads as Loads
@@ -20,7 +21,7 @@ class LevelController:
         key = str(level)
         
         if (key in self.savedTimes):
-            if (newTime < int(self.savedTimes[key])):
+            if (newTime < floor(self.savedTimes[key])):
                 self.savedTimes[key] = newTime
         else:
             self.savedTimes[key] = newTime

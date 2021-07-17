@@ -1,5 +1,6 @@
 import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT, VIDEORESIZE
+from math import floor
 from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE, DEFAULT_WINDOW_SIZE
 from musicController import StartMusicMenu, StartMusicLevel, ProcessMusicEvents, MusicEvents
 from entities.player import Player
@@ -35,7 +36,7 @@ class Game:
     def InitMenu(self):
         self.fps = MENU_FPS
 
-        self.fontTitle = pygame.font.Font(DATA_PATH + "/fonts/melted.ttf", int(self.screenSize[0] / 8))
+        self.fontTitle = pygame.font.Font(DATA_PATH + "/fonts/melted.ttf", floor(self.screenSize[0] / 8))
         self.fontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", 45)
         self.fontLargeMelted = pygame.font.Font(DATA_PATH + "/fonts/melted.ttf", 48)
         self.fontMedium = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", 25)
@@ -54,7 +55,7 @@ class Game:
         self.startMiddleY = self.gameworld.startMiddleY
         self.progressBarBackground = pygame.Rect(self.screenSize[0] - 25, 10, 15, self.screenSize[1] - 20)
         self.progressRatio = (self.screenSize[1] - 20) / -(self.goalPosY - self.startMiddleY)
-        self.lastProgressHeight = int(max(13, (self.gameworld.middleY - self.startMiddleY) * self.progressRatio + self.screenSize[1] - 14)) + 1
+        self.lastProgressHeight = floor(max(13, (self.gameworld.middleY - self.startMiddleY) * self.progressRatio + self.screenSize[1] - 14)) + 1
         self.playerCenterPosY = self.screenSize[1] / 2 # When the player is at the center of the screen, this will always be it's position 
 
         self.nbTimeOverFrames = -1
@@ -127,7 +128,7 @@ class Game:
 
     def DrawProgress(self):
         currentPos = self.gameworld.middleY - self.startMiddleY
-        newProgressHeight = int(max(13, currentPos * self.progressRatio + self.screenSize[1] - 14))
+        newProgressHeight = floor(max(13, currentPos * self.progressRatio + self.screenSize[1] - 14))
 
         if (newProgressHeight < self.lastProgressHeight): # Player has progressed
             progressBarForeground = pygame.Rect(self.screenSize[0] - 22, newProgressHeight, 9, min(self.screenSize[1] - 26, self.lastProgressHeight - newProgressHeight))
@@ -152,7 +153,7 @@ class Game:
         self.DrawProgress()
         self.DrawWeaponUI()
 
-        # Debug info - Uncomment to show fps average over the last 10 frames
+        '''# Debug info - Uncomment to show fps average over the last 10 frames
         fps = round(self.clock.get_fps(), 2)
 
         if (fps < 80):

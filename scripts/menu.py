@@ -1,5 +1,6 @@
 import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_RETURN, QUIT, VIDEORESIZE
+from math import floor
 from utils.constants import MENU_BG_COLOR, LEVEL_BG_COLOR, TEXT_COLOR, CREDITS_PAGE, DATA_PATH
 from musicController import StartMusicCredits, ProcessMusicEvents
 from utils.story import STORY
@@ -44,9 +45,9 @@ class Menu:
     def InitCredits(self):
         self.creditsInitialized = True
         self.menuScrollY = self.screenSize[1] / 7 + self.screenSize[1]
-        self.creditsFontSmall = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 52))
-        self.creditsFontMedium = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 42))
-        self.creditsFontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", int(self.screenSize[0] / 35))
+        self.creditsFontSmall = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", floor(self.screenSize[0] / 52))
+        self.creditsFontMedium = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", floor(self.screenSize[0] / 42))
+        self.creditsFontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", floor(self.screenSize[0] / 35))
         self.creditsSpace = max(self.screenSize[0] / 10.7, self.screenSize[1] / 6)
         self.game.levelController.UpdateProgress([self.game.gameState, self.game.currentLevel, self.game.menuPage])
         StartMusicCredits()
@@ -56,7 +57,7 @@ class Menu:
         self.selectLevelButtons = []
 
         for i in range(CREDITS_PAGE - 1):
-            btnPos = [(self.screenSize[0] / 2 - 300) + (i % 3 * 300) - (SMALL_BTN_SIZE[0] / 2), int(i / 3) * 100 + 100]
+            btnPos = [(self.screenSize[0] / 2 - 300) + (i % 3 * 300) - (SMALL_BTN_SIZE[0] / 2), floor(i / 3) * 100 + 100]
 
             if (i <= self.game.levelController.savedProgress[0]):
                 self.selectLevelButtons.append(Button(btnPos[0], btnPos[1], SMALL_BTN_SIZE, LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Level " + str(i + 1)))
@@ -216,12 +217,12 @@ class Menu:
                 level = int(key)
                 bestTotalTimeMs += self.game.levelController.savedTimes[key]
                 text = self.game.fontMedium.render("Level " + str(level + 1) + ": " + str(self.game.levelController.savedTimes[key] / 1000) + "s", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), int(level / 3) * 50 + 375))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), floor(level / 3) * 50 + 375))
                 self.screen.blit(text, textRect)
 
             if (len(self.game.levelController.savedTimes) == CREDITS_PAGE - 1):
                 text = self.game.fontMedium.render("Best Total Time: " + str(bestTotalTimeMs / 1000) + "s", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, int(level / 3) * 50 + 475))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, floor(level / 3) * 50 + 475))
                 self.screen.blit(text, textRect)
 
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
@@ -272,31 +273,31 @@ class Menu:
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, 4 * self.creditsSpace + self.menuScrollY))
                 self.screen.blit(text, textRect)
                 text = self.creditsFontSmall.render("Developer, Software Architect, Level Designer, Writer, Texture Artist", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, 4 * self.creditsSpace + self.menuScrollY + int(self.screenSize[0] / 40)))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 4 * self.creditsSpace + self.menuScrollY + floor(self.screenSize[0] / 40)))
                 self.screen.blit(text, textRect)
                 text = self.creditsFontMedium.render("Seraphii", True, TEXT_COLOR)
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, 5 * self.creditsSpace + self.menuScrollY))
                 self.screen.blit(text, textRect)
                 text = self.creditsFontSmall.render("Developer, Assets Artist", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, 5 * self.creditsSpace + self.menuScrollY + int(self.screenSize[0] / 40)))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 5 * self.creditsSpace + self.menuScrollY + floor(self.screenSize[0] / 40)))
                 self.screen.blit(text, textRect)
                 text = self.creditsFontMedium.render("Hypstersaurus", True, TEXT_COLOR)
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, 6 * self.creditsSpace + self.menuScrollY))
                 self.screen.blit(text, textRect)
                 text = self.creditsFontSmall.render("Developer, Texture Artist", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, 6 * self.creditsSpace + self.menuScrollY + int(self.screenSize[0] / 40)))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 6 * self.creditsSpace + self.menuScrollY + floor(self.screenSize[0] / 40)))
                 self.screen.blit(text, textRect)
                 text = self.creditsFontMedium.render("Parazyte", True, TEXT_COLOR)
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, 7 * self.creditsSpace + self.menuScrollY))
                 self.screen.blit(text, textRect)
                 text = self.creditsFontSmall.render("Composer, Level Designer, Writer", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, 7 * self.creditsSpace + self.menuScrollY + int(self.screenSize[0] / 40)))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 7 * self.creditsSpace + self.menuScrollY + floor(self.screenSize[0] / 40)))
                 self.screen.blit(text, textRect)
                 text = self.creditsFontMedium.render("Nemesis", True, TEXT_COLOR)
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, 8 * self.creditsSpace + self.menuScrollY))
                 self.screen.blit(text, textRect)
                 text = self.creditsFontSmall.render("Enemy Designer, Writer", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, 8 * self.creditsSpace + self.menuScrollY + int(self.screenSize[0] / 40)))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, 8 * self.creditsSpace + self.menuScrollY + floor(self.screenSize[0] / 40)))
                 self.screen.blit(text, textRect)
 
                 text = self.creditsFontLarge.render("Thank you for playing!", True, TEXT_COLOR)

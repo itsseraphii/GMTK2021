@@ -15,7 +15,6 @@ class Monster:
         self.type = monsterType
         self.gameworld = gameworld
         self.posX, self.posY = spawnLocation[0], spawnLocation[1]
-        self.test = [] # TODO rmv
 
         if (monsterType == MonsterTypes.FATBOI):
             self.speed = 1
@@ -81,7 +80,6 @@ class Monster:
     def Move(self):
         currentTime = pygame.time.get_ticks()
         timeOver = self.gameworld.player.game.timeOver
-        self.test = [] # TODO rmv
 
         if (self.nextTargetUpdate < currentTime): # Update target pos
             self.nextTargetUpdate = currentTime + self.targetCooldown
@@ -140,7 +138,7 @@ class Monster:
 
     def NextFrame(self):
         self.frameCounter = (self.frameCounter + 1) % len(self.animation)
-        self.image = pygame.transform.rotate(self.animation[self.frameCounter], int(-degrees(self.angle)))
+        self.image = pygame.transform.rotate(self.animation[self.frameCounter], floor(-degrees(self.angle)))
 
     def UpdateAngle(self, playerPos):
         diffX = playerPos[0] - self.posX
@@ -158,9 +156,6 @@ class Monster:
         for y in range(-2, 3): # Only checks obstacles in a 5x5 square around the monster
             for x in range(-2, 3):
                 checkedTileId = y * TILES_COUNT_X + x + monsterTileId
-
-                if (checkedTileId in self.gameworld.obstacles): # TODO rmv
-                    self.test.append(self.gameworld.obstacles[checkedTileId].hitbox) # TODO rmv
                     
                 if (checkedTileId in self.gameworld.obstacles and mainRect.colliderect(self.gameworld.obstacles[checkedTileId].hitbox)):
                     if (self.gameworld.obstacles[checkedTileId].resistance < 3):
@@ -172,9 +167,6 @@ class Monster:
 
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))
-
-        for rect in self.test: # TODO rmv
-            pygame.draw.rect(screen, (0, 0, 255), rect, 2) # TODO rmv
 
         '''# Debug info - Uncomment to show hitboxes : 
         pygame.draw.rect(screen, (0, 0, 255), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight), 2) # Internal hitbox (obstacles)

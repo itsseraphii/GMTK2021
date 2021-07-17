@@ -1,7 +1,7 @@
 import pygame
 from pygame.constants import K_a, K_d, K_s, K_w
 from pygame import Rect
-from math import pi, atan2
+from math import pi, atan2, floor
 from weaponController import WeaponController, WeaponTypes
 from utils.spriteUtils import GetFramesFromFile
 from utils.constants import PLAYER_SIZE, PLAYER_HITBOX_SIZE
@@ -94,7 +94,7 @@ class Player:
     def LookAtMouse(self, mousePos):
         relativeX, relativeY = mousePos[0] - (PLAYER_SIZE[0] / 2 + self.posX), mousePos[1] - (PLAYER_SIZE[1] / 2 + self.posY)
         self.angle = (180 / pi) * -atan2(relativeY, relativeX)
-        self.rotatedImage = pygame.transform.rotate(self.image, int(self.angle))
+        self.rotatedImage = pygame.transform.rotate(self.image, floor(self.angle))
     
     def SwitchWeapon(self, nextWeapon):
         if (nextWeapon): # Switch to next weapon
@@ -132,7 +132,6 @@ class Player:
         return False
 
     def CheckCollisionWithMonsters(self, mainRect):
-        return False
         for monster in self.gameworld.monsters.values():
             if mainRect.colliderect(monster.hitbox):
                 return True
