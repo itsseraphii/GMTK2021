@@ -1,4 +1,5 @@
 import pygame
+from math import floor
 from random import randrange as RandRange
 from entities.collectable import Collectable, CollectableTypes
 from entities.monster import Monster, MonsterTypes
@@ -159,8 +160,8 @@ class GameWorld:
                 if (self.tileLayoutFG[y][x] != -1): # Draw foreground (obstacles, entities and collectables)
                     if (self.tileLayoutFG[y][x] < OBSTACLES_LAST_ID): # Id is an obstacle
                         screen.blit(self.tileImages[self.tileLayoutFG[y][x]], (posX, posY))
-
-                        tileId = (TILES_COUNT_X * int(posY / TILE_SIZE)) + (int(posX / TILE_SIZE))
+                        
+                        tileId = (TILES_COUNT_X * floor(posY / TILE_SIZE)) + (floor(posX / TILE_SIZE))
                         resistance = RESISTANCES[self.tileLayoutFG[y][x]] if (self.tileLayoutFG[y][x] in RESISTANCES) else 2
                         hitbox = HITBOX_SIZES[self.tileLayoutFG[y][x]] if (self.tileLayoutFG[y][x] in HITBOX_SIZES) else [TILE_SIZE, TILE_SIZE, 0, 0]
 

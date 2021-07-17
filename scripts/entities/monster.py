@@ -1,7 +1,7 @@
 import pygame
 from pygame import Rect
 from random import randint as RandInt, uniform as RandFloat
-from math import sqrt, sin, cos, atan2, degrees
+from math import floor, sqrt, sin, cos, atan2, degrees
 from enum import IntEnum
 from utils.constants import PLAYER_HITBOX_SIZE, TILES_COUNT_X, TILE_SIZE
 
@@ -152,7 +152,7 @@ class Monster:
         self.hitbox = Rect((spriteRect.width / 2) - (self.hitBoxWidth / 2) + self.posX, (spriteRect.height / 2) - (self.hitBoxHeight / 2) + self.posY, self.hitBoxWidth, self.hitBoxHeight)
 
     def GetObstacleCollision(self, mainRect):
-        monsterTileId = (TILES_COUNT_X * int(self.posY / TILE_SIZE)) + (int(self.posX / TILE_SIZE))
+        monsterTileId = (TILES_COUNT_X * floor(self.posY / TILE_SIZE)) + (floor(self.posX / TILE_SIZE))
         collisionType = 0
 
         for y in range(-2, 3): # Only checks obstacles in a 5x5 square around the monster
