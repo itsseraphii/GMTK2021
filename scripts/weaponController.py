@@ -119,7 +119,7 @@ class WeaponController:
                             break
 
                 if (not isDestroyed): # Check collisions with obstacles
-                    for obstacle in self.gameworld.obstacles: # Check collisions with obstacles
+                    for obstacle in self.gameworld.obstacles.values(): # Check collisions with obstacles
                         if (obstacle.resistance >= self.bullets[i][4] and bulletRect.colliderect(obstacle.hitbox)):
                             self.bullets.pop(i)
                             isDestroyed = True

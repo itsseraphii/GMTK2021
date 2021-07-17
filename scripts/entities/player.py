@@ -125,13 +125,14 @@ class Player:
         return self.weaponController.weapons[self.weaponInventory[self.equippedWeaponIndex]][0]
     
     def CheckCollisionWithObstacles(self, mainRect):
-        for obstacle in self.gameworld.obstacles:
+        for obstacle in self.gameworld.obstacles.values():
             if mainRect.colliderect(obstacle.hitbox):
                 return True
 
         return False
 
     def CheckCollisionWithMonsters(self, mainRect):
+        return False
         for monster in self.gameworld.monsters.values():
             if mainRect.colliderect(monster.hitbox):
                 return True

@@ -3,7 +3,7 @@ from pygame import Rect
 from random import randint as RandInt, uniform as RandFloat
 from math import sqrt, sin, cos, atan2, degrees
 from enum import IntEnum
-from utils.constants import PLAYER_HITBOX_SIZE, TILE_SIZE
+from utils.constants import PLAYER_HITBOX_SIZE, TILES_COUNT_X, TILE_SIZE
 
 class MonsterTypes(IntEnum):
     ZOMBIE = 165
@@ -15,6 +15,7 @@ class Monster:
         self.type = monsterType
         self.gameworld = gameworld
         self.posX, self.posY = spawnLocation[0], spawnLocation[1]
+        self.test = [] # TODO rmv
 
         if (monsterType == MonsterTypes.FATBOI):
             self.speed = 1
@@ -80,6 +81,7 @@ class Monster:
     def Move(self):
         currentTime = pygame.time.get_ticks()
         timeOver = self.gameworld.player.game.timeOver
+        self.test = [] # TODO rmv
 
         if (self.nextTargetUpdate < currentTime): # Update target pos
             self.nextTargetUpdate = currentTime + self.targetCooldown
@@ -150,22 +152,29 @@ class Monster:
         self.hitbox = Rect((spriteRect.width / 2) - (self.hitBoxWidth / 2) + self.posX, (spriteRect.height / 2) - (self.hitBoxHeight / 2) + self.posY, self.hitBoxWidth, self.hitBoxHeight)
 
     def GetObstacleCollision(self, mainRect):
+        monsterTileId = (TILES_COUNT_X * int(self.posY / TILE_SIZE)) + (int(self.posX / TILE_SIZE))
         collisionType = 0
 
-        for obstacle in self.gameworld.obstacles:
-            if (obstacle.posY < 2 * TILE_SIZE + self.posY):
-                if mainRect.colliderect(obstacle.hitbox):
-                    if (obstacle.resistance < 3):
+        for y in range(-2, 3): # Only checks obstacles in a 5x5 square around the monster
+            for x in range(-2, 3):
+                checkedTileId = y * TILES_COUNT_X + x + monsterTileId
+
+                if (checkedTileId in self.gameworld.obstacles): # TODO rmv
+                    self.test.append(self.gameworld.obstacles[checkedTileId].hitbox) # TODO rmv
+                    
+                if (checkedTileId in self.gameworld.obstacles and mainRect.colliderect(self.gameworld.obstacles[checkedTileId].hitbox)):
+                    if (self.gameworld.obstacles[checkedTileId].resistance < 3):
                         collisionType = 1
                     else:
-                        return 2
-            else:                
-                return collisionType
+                        return 2 # Resistance can't be higher than 3
 
         return collisionType
 
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))
+
+        for rect in self.test: # TODO rmv
+            pygame.draw.rect(screen, (0, 0, 255), rect, 2) # TODO rmv
 
         '''# Debug info - Uncomment to show hitboxes : 
         pygame.draw.rect(screen, (0, 0, 255), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight), 2) # Internal hitbox (obstacles)

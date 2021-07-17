@@ -152,7 +152,7 @@ class Game:
         self.DrawProgress()
         self.DrawWeaponUI()
 
-        '''# Debug info - Uncomment to show fps average over the last 10 frames
+        # Debug info - Uncomment to show fps average over the last 10 frames
         fps = round(self.clock.get_fps(), 2)
 
         if (fps < 80):

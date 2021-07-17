@@ -4,7 +4,7 @@ from entities.collectable import Collectable, CollectableTypes
 from entities.monster import Monster, MonsterTypes
 from entities.obstacle import HITBOX_SIZES, Obstacle, RESISTANCES
 from utils.spriteUtils import GetFramesFromFile
-from utils.constants import TILE_SIZE, DATA_PATH
+from utils.constants import TILES_COUNT_X, TILE_SIZE, DATA_PATH
 
 TILESHEET_SIZE = (15, 15)
 TILESHEET_PIXEL_SIZE = (TILESHEET_SIZE[0] * 16, TILESHEET_SIZE[1] * 16)
@@ -26,7 +26,7 @@ class GameWorld:
         self.currentLevel = currentLevel if (currentLevel > -1) else 0 
         
         self.monsters = {}
-        self.obstacles = []
+        self.obstacles = {}
         self.collectables = {}
         self.LoadTileCSV()
         self.LoadObstacleRessources()
@@ -146,7 +146,7 @@ class GameWorld:
 
     def Draw(self, screen):
         self.middleY = (self.backgroundSize[1] - (self.offsetY - self.startOffsetY) - (self.screenSize[1] / 2)) / TILE_SIZE
-        self.obstacles = []
+        self.obstacles = {}
 
         for y in range(int(max(0, self.middleY - (self.screenNbTilesY / 2))), int(min(len(self.tileLayoutBG), self.middleY + (self.screenNbTilesY / 2) + 1))):
             for x in range(len(self.tileLayoutBG[y])):
@@ -160,29 +160,22 @@ class GameWorld:
                     if (self.tileLayoutFG[y][x] < OBSTACLES_LAST_ID): # Id is an obstacle
                         screen.blit(self.tileImages[self.tileLayoutFG[y][x]], (posX, posY))
 
+                        tileId = (TILES_COUNT_X * int(posY / TILE_SIZE)) + (int(posX / TILE_SIZE))
                         resistance = RESISTANCES[self.tileLayoutFG[y][x]] if (self.tileLayoutFG[y][x] in RESISTANCES) else 2
+                        hitbox = HITBOX_SIZES[self.tileLayoutFG[y][x]] if (self.tileLayoutFG[y][x] in HITBOX_SIZES) else [TILE_SIZE, TILE_SIZE, 0, 0]
 
-                        if (self.tileLayoutFG[y][x] in HITBOX_SIZES): # The obstacle has a custom hitbox 
-                            customHitbox = HITBOX_SIZES.get(self.tileLayoutFG[y][x])
-                            self.obstacles.append(Obstacle(resistance, posX, posY, customHitbox))
+                        self.obstacles[tileId] = Obstacle(resistance, posX, posY, hitbox)
 
-                            '''# Debug info - Uncomment to show hitboxes : 
-                            color = (255, 255, 255) if (resistance == 0) else (255, 0, 0) if (resistance == 1) else (0, 255, 0) if (resistance == 2) else (0, 0, 255)
-                            pygame.draw.rect(screen, color, pygame.Rect(posX + customHitbox[2], posY + customHitbox[3], customHitbox[0], customHitbox[1]), 2) #'''
-                            
-                        else: # Use the default hitbox
-                            self.obstacles.append(Obstacle(resistance, posX, posY, [TILE_SIZE, TILE_SIZE, 0, 0]))
+                        '''# Debug info - Uncomment to show hitboxes : 
+                        color = (255, 255, 255) if (resistance == 0) else (255, 0, 0) if (resistance == 1) else (0, 255, 0) if (resistance == 2) else (0, 0, 255)
+                        pygame.draw.rect(screen, color, pygame.Rect(posX + hitbox[2], posY + hitbox[3], hitbox[0], hitbox[1]), 2) #'''
 
-                            '''# Debug info - Uncomment to show hitboxes :  
-                            color = (255, 255, 255) if (resistance == 0) else (255, 0, 0) if (resistance == 1) else (0, 255, 0) if (resistance == 2) else (0, 0, 255)
-                            pygame.draw.rect(screen, color, pygame.Rect(posX, posY, TILE_SIZE, TILE_SIZE), 2) #'''
-                    
                     else:
                         tileId = y * self.screenNbTilesY + x
                         
                         if (self.tileLayoutFG[y][x] < ENTITIES_LAST_ID): # Id is an entity
-                            if (tileId not in self.monsters and tileId not in self.deadMonsters): # It has not spawned or died
-                                self.monsters[tileId] = Monster(tileId, (self.tileLayoutFG[y][x]), [posX, posY], self)
+                            if (tileId not in self.monsters and tileId not in self.deadMonsters): # Entity has not spawned or died
+                                self.monsters[tileId] = Monster(tileId, self.tileLayoutFG[y][x], [posX, posY], self)
 
                         elif (tileId not in self.collectables): # Id is a collectable that has not spawned
-                            self.collectables[tileId] = Collectable(tileId, (self.tileLayoutFG[y][x]), [posX, posY], self)
+                            self.collectables[tileId] = Collectable(tileId, self.tileLayoutFG[y][x], [posX, posY], self)
