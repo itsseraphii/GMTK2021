@@ -15,9 +15,6 @@ class Monster:
         self.type = monsterType
         self.gameworld = gameworld
         self.posX, self.posY = spawnLocation[0], spawnLocation[1]
-        self.test = Rect(0, 0, 0, 0) # TODO rmv
-        self.checked = [] # TODO rmv
-        self.obstacles = [] # TODO rmv
 
         if (monsterType == MonsterTypes.FATBOI):
             self.speed = 1
@@ -155,9 +152,6 @@ class Monster:
 
     def GetObstacleCollision(self, mainRect):
         monsterTileId = (TILES_COUNT_X * floor(self.posY / TILE_SIZE)) + (floor(self.posX / TILE_SIZE))
-        self.test = Rect(floor(self.posX / TILE_SIZE) * 32, floor(self.posY / TILE_SIZE) * 32, 32, 32) # TODO rmv
-        self.checked = [] # TODO rmv
-        self.obstacles = [] # TODO rmv
         collisionType = 0
 
         for y in range(-1, self.obstacleCheckRange): # Only checks obstacles in a square around the monster
@@ -165,9 +159,6 @@ class Monster:
                 checkedTileId = y * TILES_COUNT_X + x + monsterTileId
 
                 self.checked.append(Rect(floor(self.posX / TILE_SIZE + x) * 32, floor(self.posY / TILE_SIZE + y) * 32, 32, 32))
-
-                if (checkedTileId in self.gameworld.obstacles): # TODO rmv
-                    self.obstacles.append(self.gameworld.obstacles[checkedTileId].hitbox) # TODO rmv
                     
                 if (checkedTileId in self.gameworld.obstacles and mainRect.colliderect(self.gameworld.obstacles[checkedTileId].hitbox)):
                     if (self.gameworld.obstacles[checkedTileId].resistance < 3):
@@ -180,14 +171,6 @@ class Monster:
     def Draw(self, screen):
         screen.blit(self.image, (self.posX, self.posY))
 
-        #for ob in self.checked: # TODO rmv 
-        #    pygame.draw.rect(screen, (0, 255, 0), ob, 2) # TODO rmv
-
-        for ob in self.obstacles: # TODO rmv 
-            pygame.draw.rect(screen, (0, 0, 255), ob, 2) # TODO rmv
-
-        #pygame.draw.rect(screen, (255, 0, 0), self.test, 2) # TODO rmv '''
-
-        # Debug info - Uncomment to show hitboxes : 
+        '''# Debug info - Uncomment to show hitboxes : 
         pygame.draw.rect(screen, (0, 0, 255), Rect(self.posX + self.hitBoxOffestX, self.posY + self.hitBoxOffestY, self.hitBoxWidth, self.hitBoxHeight), 2) # Internal hitbox (obstacles)
         pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 2) # External hitbox (bullets, crowbar and player) #'''
