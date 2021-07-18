@@ -4,7 +4,7 @@ from pygame import Rect
 from math import pi, atan2, floor
 from weaponController import WeaponController, WeaponTypes
 from utils.spriteUtils import GetFramesFromFile
-from utils.constants import PLAYER_SIZE, PLAYER_HITBOX_SIZE
+from utils.constants import PLAYER_SIZE, PLAYER_HITBOX_SIZE, TILES_COUNT_X, TILE_SIZE
 
 SPEED = 2
 ANIMATION_SPEED = 84 # ms
@@ -125,9 +125,14 @@ class Player:
         return self.weaponController.weapons[self.weaponInventory[self.equippedWeaponIndex]][0]
     
     def CheckCollisionWithObstacles(self, mainRect):
-        for obstacle in self.gameworld.obstacles.values():
-            if mainRect.colliderect(obstacle.hitbox):
-                return True
+        playerTileId = (TILES_COUNT_X * floor(self.posY / TILE_SIZE)) + (floor(self.posX / TILE_SIZE))
+
+        for y in range(-1, 3): # Only checks obstacles in a 4x4 square around the player
+            for x in range(-1, 3):
+                checkedTileId = y * TILES_COUNT_X + x + playerTileId
+
+                if (checkedTileId in self.gameworld.obstacles and mainRect.colliderect(self.gameworld.obstacles[checkedTileId].hitbox)):
+                    return True
 
         return False
 
