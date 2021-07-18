@@ -1,7 +1,7 @@
 import pygame
 from enum import IntEnum
-from math import radians, cos, sin
-from utils.constants import TILE_SIZE, DATA_PATH, PLAYER_SIZE
+from math import floor, radians, cos, sin
+from utils.constants import TILES_COUNT_X, TILE_SIZE, DATA_PATH, PLAYER_SIZE
 
 SWING_SOUND_FILE = DATA_PATH + "/sounds/swing.mp3"
 GUNSHOT_SOUND_FILE = DATA_PATH + "/sounds/gunshot.mp3"
@@ -101,33 +101,39 @@ class WeaponController:
             if (self.bullets[i][1] > self.screenSize[1] / 2 + playerPos[1] or self.bullets[i][1] < -self.screenSize[1] + playerPos[1]):
                 self.bullets.pop(i) # Delete bullet
             else:
-                newPos = self.GetNextBulletPos(self.bullets[i][0], self.bullets[i][1], self.bullets[i][2])
-                bulletRect = pygame.Rect(newPos[0], newPos[1], BULLET_SIZE, BULLET_SIZE)
-                isDestroyed = False
+                self.UpdateBullet(i)
 
-                for key in list(self.gameworld.monsters): # Check collisions with monsters
-                    monster = self.gameworld.monsters[key]
+    def UpdateBullet(self, id):
+        newPos = self.GetNextBulletPos(self.bullets[id][0], self.bullets[id][1], self.bullets[id][2])
+        bulletRect = pygame.Rect(newPos[0], newPos[1], BULLET_SIZE, BULLET_SIZE)
 
-                    if (bulletRect.colliderect(monster.hitbox)):
-                        monster.Stun(self.bullets[i][3] * BULLET_STUN_MULTIPLIER)
-                        monster.Damage(self.bullets[i][3])
-                        self.player.game.levelController.savedRoundsHit += 1
+        for key in list(self.gameworld.monsters): # Check collisions with monsters
+            monster = self.gameworld.monsters[key]
 
-                        if (self.bullets[i][4] < 2 or key not in self.gameworld.deadMonsters): # If the weapon uses high caliber and the monster dies, don't destroy the bullet
-                            self.bullets.pop(i)
-                            isDestroyed = True
-                            break
+            if (bulletRect.colliderect(monster.hitbox)):
+                monster.Stun(self.bullets[id][3] * BULLET_STUN_MULTIPLIER)
+                monster.Damage(self.bullets[id][3])
+                self.player.game.levelController.savedRoundsHit += 1
 
-                if (not isDestroyed): # Check collisions with obstacles
-                    for obstacle in self.gameworld.obstacles.values(): # Check collisions with obstacles
-                        if (obstacle.resistance >= self.bullets[i][4] and bulletRect.colliderect(obstacle.hitbox)):
-                            self.bullets.pop(i)
-                            isDestroyed = True
-                            break
-                
-                if (not isDestroyed): # Continue moving bullet
-                    self.bullets[i][0] = newPos[0]
-                    self.bullets[i][1] = newPos[1]
+                # If the weapon uses high caliber and the monster dies, don't destroy the bullet
+                if (self.bullets[id][4] < 2 or key not in self.gameworld.deadMonsters):
+                    self.bullets.pop(id)
+                    return
+        
+        # Check collisions with obstacles if the bullet is not destroyed
+        bulletTileId = (TILES_COUNT_X * floor(newPos[1] / TILE_SIZE)) + (floor(newPos[0] / TILE_SIZE))
+
+        for y in range(-1, 2): # Only checks obstacles in a 3x3 square around the bullet
+            for x in range(-1, 2):
+                checkedTileId = y * TILES_COUNT_X + x + bulletTileId
+
+                if (checkedTileId in self.gameworld.obstacles and self.gameworld.obstacles[checkedTileId].resistance >= self.bullets[id][4] and bulletRect.colliderect(self.gameworld.obstacles[checkedTileId].hitbox)):
+                    self.bullets.pop(id)
+                    return
+        
+        # Continue moving bullet if it's not destroyed
+        self.bullets[id][0] = newPos[0]
+        self.bullets[id][1] = newPos[1]
 
     def Draw(self, screen):
         self.UpdateBullets()
@@ -135,6 +141,10 @@ class WeaponController:
         for bullet in self.bullets:
             screen.blit(self.bulletImage, (bullet[0], bullet[1]))
 
-        '''# Debug info - Uncomment to show crowbar hitbox : (Brisé pour optimisations, sorry)
+        '''# Debug info - Uncomment to show bullet hitboxes :
+        for bullet in self.bullets:
+            pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(bullet[0], bullet[1], BULLET_SIZE, BULLET_SIZE)) #'''
+
+        '''# Debug info - Uncomment to show crowbar hitbox : (Currently broken)
         if (self.meleeRect is not None):
-            pygame.draw.rect(screen, (255, 0, 0), self.meleeRect, 2)'''
+            pygame.draw.rect(screen, (255, 0, 0), self.meleeRect, 2) #'''
