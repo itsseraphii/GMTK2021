@@ -157,8 +157,6 @@ class Monster:
         for y in range(-1, self.obstacleCheckRange): # Only checks obstacles in a square around the monster
             for x in range(-1, self.obstacleCheckRange):
                 checkedTileId = y * TILES_COUNT_X + x + monsterTileId
-
-                self.checked.append(Rect(floor(self.posX / TILE_SIZE + x) * 32, floor(self.posY / TILE_SIZE + y) * 32, 32, 32))
                     
                 if (checkedTileId in self.gameworld.obstacles and mainRect.colliderect(self.gameworld.obstacles[checkedTileId].hitbox)):
                     if (self.gameworld.obstacles[checkedTileId].resistance < 3):

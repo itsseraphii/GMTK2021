@@ -22,7 +22,7 @@ class Player:
         self.pistolFrames = GetFramesFromFile("playerPistol.png", PLAYER_SIZE)
         self.rifleFrames = GetFramesFromFile("playerRifle.png", PLAYER_SIZE)
         self.sniperFrames = GetFramesFromFile("playerSniper.png", PLAYER_SIZE)
-        self.frameCounter = 0
+        self.animFrameCounter = 0
         self.nextFrameTime = 0
 
         self.image = self.walkingFrames[0]
@@ -69,10 +69,10 @@ class Player:
 
         currentHitbox = Rect(PLAYER_HITBOX_SIZE[0] / 2 + self.posX, PLAYER_HITBOX_SIZE[1] / 2 + self.posY, PLAYER_HITBOX_SIZE[0], PLAYER_HITBOX_SIZE[1])
 
-        if (self.CheckCollisionWithMonsters(currentHitbox)):
+        if (self.game.frameCounter % 2 == 0 and self.CheckCollisionWithMonsters(currentHitbox)): # Check collisions with monsters on even frames
             self.game.levelController.savedDeaths += 1
             self.game.TriggerGameOver(False)
-        else:
+        elif (self.game.frameCounter % 2 == 1): # Check collisions with collectables on odd frames
             self.CheckCollisionWithCollectables(currentHitbox)
 
     def SetAnimation(self, currentWeapon): # Change animations based on weapon held
@@ -88,8 +88,8 @@ class Player:
         self.NextFrame() # Start new animation
     
     def NextFrame(self): # Switch to the animation's next frame
-        self.frameCounter = (self.frameCounter + 1) % len(self.currentAnimation)
-        self.image = self.currentAnimation[self.frameCounter]
+        self.animFrameCounter = (self.animFrameCounter + 1) % len(self.currentAnimation)
+        self.image = self.currentAnimation[self.animFrameCounter]
 
     def LookAtMouse(self, mousePos):
         relativeX, relativeY = mousePos[0] - (PLAYER_SIZE[0] / 2 + self.posX), mousePos[1] - (PLAYER_SIZE[1] / 2 + self.posY)

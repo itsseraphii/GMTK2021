@@ -63,11 +63,12 @@ class Game:
         self.timeOverEnemySpawned = 0
         self.timeOverSpawnsY = []
 
-        self.playing = True
         self.drawnAmmo = -1
         self.drawnWeaponIndex = -1
+        self.frameCounter = 0
         self.fps = LEVEL_FPS
         self.startTime = pygame.time.get_ticks()
+        self.playing = True
 
         StartMusicLevel()
 
@@ -228,6 +229,7 @@ class Game:
 
             if (self.playing):
                 self.UpdateAI()
+                self.frameCounter += 1
 
             if (self.timeOver):
                 self.SpawnTimeOverEnemies()
