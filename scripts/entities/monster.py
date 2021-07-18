@@ -18,15 +18,15 @@ class Monster:
 
         if (monsterType == MonsterTypes.FATBOI):
             self.speed = 1
+            self.health = 9
+            self.size = [64, 64]
             self.animationSpeed = 150 # ms
             self.targetAccuracy = 2 # Distance from target, lower is better
             self.targetCooldown = 1750 # ms
-            self.size = [64, 64]
-            self.health = 9
+            
             imageName = "monster"
             deathSoundName = "meatDeath2"
 
-            # Hitbox Info
             self.hitBoxWidth = 40
             self.hitBoxHeight = 40
             self.hitBoxOffestX = 12
@@ -34,15 +34,15 @@ class Monster:
 
         else:
             self.speed = 1.5
+            self.health = 6
+            self.size = [32, 32]
             self.animationSpeed = 84
             self.targetAccuracy = 3
             self.targetCooldown = 1250
-            self.size = [32, 32]
-            self.health = 6
+            
             imageName = "zombie"
             deathSoundName = "meatDeath1"
 
-            # Hitbox Info
             self.hitBoxWidth = 22
             self.hitBoxHeight = 22
             self.hitBoxOffestX = 5
