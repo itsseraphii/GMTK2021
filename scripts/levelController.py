@@ -95,5 +95,5 @@ class LevelController:
         self.savedPickups = 0
         self.savedCompletions = 0
         self.savedSecrets = {}
-        self.savedPlayTime = 0
+        self.savedPlayTime = -GetTicks() # Do not count time before reset
         self.savedTimes = {}
