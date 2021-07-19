@@ -42,8 +42,9 @@ class Menu:
         self.secretInitialized = False
         self.resetConfirmed = False
         self.resetReleased = False
+        self.secretHovered = False
         self.secretColor = TEXT_COLOR
-        self.secretUnlocked = len(self.game.levelController.savedSecrets) > 0 # == CREDITS_PAGE - 1
+        self.secretUnlocked = len(self.game.levelController.savedSecrets) == CREDITS_PAGE - 1
         self.btnResetStats = Button(self.screenSize[0] - 135, self.screenSize[1] - 45, (130, 40), LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Reset")
 
     def InitSecret(self):
@@ -51,10 +52,10 @@ class Menu:
         self.secretColor = TEXT_COLOR
         self.pickleBoy = pygame.transform.scale(pygame.image.load("res/pickleBoy.png"), (256, 256))
         self.pickleFriends = [
-            pygame.transform.scale(pygame.image.load("res/pickleChest.png"), (64, 64)),
-            pygame.transform.scale(pygame.image.load("res/pickleScreen.png"), (64, 64)),
-            pygame.transform.scale(pygame.image.load("res/pickleWall.png"), (64, 64)),
-            pygame.transform.scale(pygame.image.load("res/pickleWire.png"), (64, 64))
+            pygame.transform.scale(pygame.image.load("res/pickleChest.png"), (96, 96)),
+            pygame.transform.scale(pygame.image.load("res/pickleScreen.png"), (96, 96)),
+            pygame.transform.scale(pygame.image.load("res/pickleWall.png"), (96, 96)),
+            pygame.transform.scale(pygame.image.load("res/pickleWire.png"), (96, 96))
         ]
         StartMusicBoss()
 
@@ -115,6 +116,7 @@ class Menu:
                         elif (key == "controls"):
                             self.game.menuPage = -3
                         elif (key == "stats"):
+                            self.statsInitialized = False
                             self.game.menuPage = -4
                         elif (key == "exit"):
                             self.game.running = False
@@ -133,10 +135,7 @@ class Menu:
                         break
 
             elif (event.type == KEYDOWN):
-                if (self.game.menuPage == -4): # Stats
-                    self.statsInitialized = False
-                    self.game.menuPage = -1
-                elif (self.game.menuPage < -1): # Press any key on title screen, in controls, in select level or in stats to go to the main menu
+                if (self.game.menuPage < -1): # Press any key on title screen, in controls, in select level or in stats to go to the main menu
                     self.game.menuPage = -1
                 elif (self.game.menuPage == CREDITS_PAGE): # Press any key on credits to go to title screen
                     self.creditsInitialized = False # Reset credits next time it's displayed
@@ -159,8 +158,10 @@ class Menu:
                 mouseLeftClick = pygame.mouse.get_pressed()[0]
                 
                 self.resetReleased = self.resetReleased or self.resetConfirmed and not mouseLeftClick
-                self.secretHovered = mousePos[0] > self.screenSize[0] / 2 - 320 and mousePos[0] < self.screenSize[0] / 2 - 80 and mousePos[1] > 265 and mousePos[1] < 289
-                self.secretColor = LEVEL_BG_COLOR if (self.secretUnlocked and self.secretHovered) else TEXT_COLOR
+
+                if (self.secretUnlocked):
+                    self.secretHovered = mousePos[0] > self.screenSize[0] / 2 - 320 and mousePos[0] < self.screenSize[0] / 2 - 80 and mousePos[1] > 265 and mousePos[1] < 289
+                    self.secretColor = LEVEL_BG_COLOR if (self.secretHovered) else TEXT_COLOR
 
                 if (mouseLeftClick):
                     if (self.btnResetStats.IsMouseOver(mousePos)):
@@ -172,7 +173,7 @@ class Menu:
                             self.resetConfirmed = True
                             self.btnResetStats.text = "Confirm?"
 
-                    elif (self.secretHovered):
+                    elif (self.secretHovered and self.secretUnlocked):
                         self.game.menuPage = -6
 
             elif (event.type in self.game.musicEvents):
@@ -277,7 +278,7 @@ class Menu:
             self.screen.blit(self.pickleBoy, (self.screenSize[0] / 2 - 128, 160))
 
             for i in range(len(self.pickleFriends)):
-                self.screen.blit(self.pickleFriends[i], (self.screenSize[0] / 2 - 256 + (i % 4 * 128) + 32, 500))
+                self.screen.blit(self.pickleFriends[i], (self.screenSize[0] / 2 - 384 + (i % 4 * 192) + 48, 500))
 
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
