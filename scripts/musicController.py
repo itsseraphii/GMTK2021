@@ -6,12 +6,13 @@ MAIN_MUSIC_PATH = DATA_PATH + "/music/main.mp3"
 LEVEL_MUSIC_PATH = DATA_PATH + "/music/level.mp3"
 JINGLE_PATH = DATA_PATH + "/music/jingle.mp3"
 TIME_OVER_MUSIC_PATH = DATA_PATH + "/music/timeOver.mp3"
+BOSS_MUSIC_PATH = DATA_PATH + "/music/boss.mp3"
 CREDITS_MUSIC_PATH = DATA_PATH + "/music/credits.mp3"
 
 class MusicEvents(IntEnum):
-    LEVEL_OVER = 1
-    JINGLE_OVER = 2
-    CREDITS_OVER = 3
+    START_JINGLE = 1
+    START_TIME_OVER = 2
+    START_MENU = 3
 
 def StartMusicMenu():
     Music.load(MAIN_MUSIC_PATH)
@@ -20,13 +21,13 @@ def StartMusicMenu():
 
 def StartMusicLevel():
     Music.load(LEVEL_MUSIC_PATH)
-    Music.set_endevent(MusicEvents.LEVEL_OVER)
+    Music.set_endevent(MusicEvents.START_JINGLE)
     Music.set_volume(0.5)
     Music.play() # Play once
 
 def StartMusicJingle():
     Music.load(JINGLE_PATH)
-    Music.set_endevent(MusicEvents.JINGLE_OVER)
+    Music.set_endevent(MusicEvents.START_TIME_OVER)
     Music.set_volume(0.5)
     Music.play()
 
@@ -35,18 +36,24 @@ def StartMusicTimeOver():
     Music.set_volume(0.5)
     Music.play(-1)
 
+def StartMusicBoss():
+    Music.load(BOSS_MUSIC_PATH)
+    Music.set_endevent(MusicEvents.START_MENU)
+    Music.set_volume(0.7)
+    Music.play()
+
 def StartMusicCredits():
     Music.load(CREDITS_MUSIC_PATH)
-    Music.set_endevent(MusicEvents.CREDITS_OVER)
+    Music.set_endevent(MusicEvents.START_MENU)
     Music.set_volume(0.6)
     Music.play()
 
 def ProcessMusicEvents(event):
     Music.set_endevent() # Reset triggered event
 
-    if (event == MusicEvents.LEVEL_OVER):
+    if (event == MusicEvents.START_JINGLE):
         StartMusicJingle()
-    elif (event == MusicEvents.JINGLE_OVER):
+    elif (event == MusicEvents.START_TIME_OVER):
         StartMusicTimeOver()
-    elif (event == MusicEvents.CREDITS_OVER):
+    elif (event == MusicEvents.START_MENU):
         StartMusicMenu()

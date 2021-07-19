@@ -20,11 +20,12 @@
 --add-data="levels/level8/background.csv;./levels/level8" ^
 --add-data="levels/level8/foreground.csv;./levels/level8" ^
  ^
+--add-data="music/boss.mp3;./music" ^
 --add-data="music/main.mp3;./music" ^
 --add-data="music/level.mp3;./music" ^
 --add-data="music/jingle.mp3;./music" ^
---add-data="music/timeOver.mp3;./music" ^
 --add-data="music/credits.mp3;./music" ^
+--add-data="music/timeOver.mp3;./music" ^
  ^
 --add-data="res/ammo.png;./res" ^
 --add-data="res/ammoBig.png;./res" ^
