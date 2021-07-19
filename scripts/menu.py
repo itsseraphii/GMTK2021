@@ -40,6 +40,7 @@ class Menu:
         self.statsInitialized = True
         self.resetConfirmed = False
         self.resetReleased = False
+        self.fontSmall = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", 20)
         self.btnResetStats = Button(self.screenSize[0] - 135, self.screenSize[1] - 45, (130, 40), LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Reset")
 
     def InitCredits(self):
@@ -207,8 +208,16 @@ class Menu:
             textRect = text.get_rect(center = (self.screenSize[0] / 2 + 200, 225))
             self.screen.blit(text, textRect)
 
+            text = self.game.fontMedium.render("Secrets Found: " + str(len(self.game.levelController.savedSecrets)) + " / " + str(CREDITS_PAGE - 1), True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2 - 200, 275))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("Play Time: " + self.GetTimeString(self.game.levelController.savedPlayTime + pygame.time.get_ticks()), True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2 + 200, 275))
+            self.screen.blit(text, textRect)
+
             text = self.game.fontMedium.render("Best Times", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, 325))
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 375))
             self.screen.blit(text, textRect)
 
             bestTotalTimeMs = 0
@@ -217,15 +226,15 @@ class Menu:
                 level = int(key)
                 bestTotalTimeMs += self.game.levelController.savedTimes[key]
                 text = self.game.fontMedium.render("Level " + str(level + 1) + ": " + str(self.game.levelController.savedTimes[key] / 1000) + "s", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), floor(level / 3) * 50 + 375))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2 - 300 + (level % 3 * 300), floor(level / 3) * 50 + 425))
                 self.screen.blit(text, textRect)
 
             if (len(self.game.levelController.savedTimes) == CREDITS_PAGE - 1):
                 text = self.game.fontMedium.render("Best Total Time: " + str(bestTotalTimeMs / 1000) + "s", True, TEXT_COLOR)
-                textRect = text.get_rect(center = (self.screenSize[0] / 2, floor(level / 3) * 50 + 475))
+                textRect = text.get_rect(center = (self.screenSize[0] / 2, floor(level / 3) * 50 + 525))
                 self.screen.blit(text, textRect)
 
-            text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
+            text = self.fontSmall.render("Press any key to go back", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
 
@@ -326,6 +335,20 @@ class Menu:
             text = self.game.fontMedium.render(lines[i], True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, (self.screenSize[1] / 5) + (i * 30)))
             self.screen.blit(text, textRect)
+
+    def GetTimeString(self, milliseconds):
+        seconds, milliseconds = divmod(milliseconds, 1000) 
+        minutes, seconds = divmod(seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        days, hours = divmod(hours, 24)
+        seconds = floor(seconds + milliseconds / 1000)
+
+        strDays = "" if (days < 1) else str(days) + ":"
+        strHours = "0" + str(hours) if (hours < 10) else str(hours)
+        strMinutes = "0" + str(minutes) if (minutes < 10) else str(minutes)
+        strSeconds = "0" + str(seconds) if (seconds < 10) else str(seconds)
+
+        return strDays + strHours + ":" + strMinutes + ":" + strSeconds
 
 class Button:
     def __init__(self, x, y, size, bgColor, textColor, hoverColor, font, text):

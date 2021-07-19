@@ -92,9 +92,9 @@ class Collectable:
         self.pickupSound.play()
 
         if (self.type != CollectableTypes.GOAL):
-            self.gameworld.player.game.levelController.savedPickups += 1
+            self.gameworld.game.levelController.savedPickups += 1
         else:
-            self.gameworld.player.game.TriggerGameOver(True)
+            self.gameworld.game.TriggerGameOver(True)
             return
 
         if (self.type == CollectableTypes.PISTOL):
@@ -111,8 +111,7 @@ class Collectable:
 
         elif (self.type == CollectableTypes.PICKLE_WIRE or self.type == CollectableTypes.PICKLE_WALL or 
         self.type == CollectableTypes.PICKLE_CHEST or self.type == CollectableTypes.PICKLE_SCREEN):
-            # TODO save secret found
-            pass
+            self.gameworld.game.levelController.savedSecrets[self.gameworld.game.currentLevel] = 1
 
         else: # Small ammo pickup
             self.gameworld.player.ammo += 4

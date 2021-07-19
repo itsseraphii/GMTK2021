@@ -19,7 +19,8 @@ CSV_PATH_BG = [DATA_PATH + "/levels/level", "/background.csv"]
 CSV_PATH_FG = [DATA_PATH + "/levels/level", "/foreground.csv"]
 
 class GameWorld:
-    def __init__(self, currentLevel):
+    def __init__(self, game, currentLevel):
+        self.game = game
         self.screenSize = pygame.display.get_window_size()
         self.tileSheet = pygame.image.load(TILESHEET_PATH).convert_alpha()
         self.tileSheet = pygame.transform.scale(self.tileSheet, (TILESHEET_PIXEL_SIZE[0] * 2, TILESHEET_PIXEL_SIZE[1] * 2)) # Scale tilesheet 2x

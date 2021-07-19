@@ -47,7 +47,7 @@ class Game:
         StartMusicMenu()
 
     def InitLevel(self):
-        self.gameworld = GameWorld(self.currentLevel)
+        self.gameworld = GameWorld(self, self.currentLevel)
         self.player = Player(self, self.gameworld)
         self.gameworld.SetPlayer(self.player)
         
@@ -91,7 +91,7 @@ class Game:
                     elif (event.key == K_r):
                         self.TriggerGameOver(False)
 
-                    '''# Debug info - Uncomment to allow level skipping
+                    # Debug info - Uncomment to allow level skipping
                     elif (event.key == K_n):
                         self.TriggerGameOver(True) #'''
 

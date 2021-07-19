@@ -73,14 +73,14 @@ class Monster:
             self.gameworld.deadMonsters.append(self.id) # Prevents respawn
             self.gameworld.monsters.pop(self.id)
             self.deathSound.play()
-            self.gameworld.player.game.levelController.savedKills += 1
+            self.gameworld.game.levelController.savedKills += 1
 
     def Stun(self, timeMS):
         self.lastHitTime = pygame.time.get_ticks() + timeMS
 
     def Move(self):
         currentTime = pygame.time.get_ticks()
-        timeOver = self.gameworld.player.game.timeOver
+        timeOver = self.gameworld.game.timeOver
 
         if (self.nextTargetUpdate < currentTime): # Update target pos
             self.nextTargetUpdate = currentTime + self.targetCooldown

@@ -1,3 +1,4 @@
+from pygame.time import get_ticks as GetTicks
 from math import floor
 from os import makedirs as MakeDirs
 from os.path import dirname as DirName
@@ -48,6 +49,8 @@ class LevelController:
             "roundsHit": self.savedRoundsHit,
             "pickups": self.savedPickups,
             "completions": self.savedCompletions, 
+            "secrets": self.savedSecrets,
+            "playTime": self.savedPlayTime + GetTicks(),
             "times": self.savedTimes
         }
 
@@ -75,6 +78,8 @@ class LevelController:
             self.savedRoundsHit = saveData["roundsHit"]
             self.savedPickups = saveData["pickups"]
             self.savedCompletions = saveData["completions"]
+            self.savedSecrets = saveData["secrets"]
+            self.savedPlayTime = saveData["playTime"]
             self.savedTimes = saveData["times"]
 
             return [int(saveData["level"]), int(saveData["menu"])]
@@ -89,4 +94,6 @@ class LevelController:
         self.savedRoundsHit = 0
         self.savedPickups = 0
         self.savedCompletions = 0
+        self.savedSecrets = {}
+        self.savedPlayTime = 0
         self.savedTimes = {}
