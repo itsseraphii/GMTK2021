@@ -48,7 +48,7 @@ class LevelController:
             "roundsFired": self.savedRoundsFired,
             "roundsHit": self.savedRoundsHit,
             "pickups": self.savedPickups,
-            "completions": self.savedCompletions, 
+            "completions": self.savedCompletions,
             "secrets": self.savedSecrets,
             "playTime": self.savedPlayTime + GetTicks(),
             "times": self.savedTimes

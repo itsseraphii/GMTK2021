@@ -2,7 +2,7 @@ import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_RETURN, QUIT, VIDEORESIZE
 from math import floor
 from utils.constants import MENU_BG_COLOR, LEVEL_BG_COLOR, TEXT_COLOR, CREDITS_PAGE, DATA_PATH
-from musicController import StartMusicCredits, ProcessMusicEvents
+from musicController import StartMusicBoss, StartMusicCredits, ProcessMusicEvents
 from utils.story import STORY
 
 MEDIUM_BTN_SIZE = [300, 75]
@@ -16,6 +16,7 @@ class Menu:
 
         self.menuInitialized = False
         self.statsInitialized = False
+        self.secretInitialized = False
         self.creditsInitialized = False
         self.selectLevelInitialized = False
 
@@ -38,10 +39,24 @@ class Menu:
         
     def InitStats(self):
         self.statsInitialized = True
+        self.secretInitialized = False
         self.resetConfirmed = False
         self.resetReleased = False
-        self.fontSmall = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", 20)
+        self.secretColor = TEXT_COLOR
+        self.secretUnlocked = len(self.game.levelController.savedSecrets) > 0 # == CREDITS_PAGE - 1
         self.btnResetStats = Button(self.screenSize[0] - 135, self.screenSize[1] - 45, (130, 40), LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Reset")
+
+    def InitSecret(self):
+        self.secretInitialized = True
+        self.secretColor = TEXT_COLOR
+        self.pickleBoy = pygame.transform.scale(pygame.image.load("res/pickleBoy.png"), (256, 256))
+        self.pickleFriends = [
+            pygame.transform.scale(pygame.image.load("res/pickleChest.png"), (64, 64)),
+            pygame.transform.scale(pygame.image.load("res/pickleScreen.png"), (64, 64)),
+            pygame.transform.scale(pygame.image.load("res/pickleWall.png"), (64, 64)),
+            pygame.transform.scale(pygame.image.load("res/pickleWire.png"), (64, 64))
+        ]
+        StartMusicBoss()
 
     def InitCredits(self):
         self.creditsInitialized = True
@@ -142,16 +157,23 @@ class Menu:
 
                 mousePos = pygame.mouse.get_pos()
                 mouseLeftClick = pygame.mouse.get_pressed()[0]
+                
                 self.resetReleased = self.resetReleased or self.resetConfirmed and not mouseLeftClick
+                self.secretHovered = mousePos[0] > self.screenSize[0] / 2 - 320 and mousePos[0] < self.screenSize[0] / 2 - 80 and mousePos[1] > 265 and mousePos[1] < 289
+                self.secretColor = LEVEL_BG_COLOR if (self.secretUnlocked and self.secretHovered) else TEXT_COLOR
 
-                if (self.btnResetStats.IsMouseOver(mousePos) and mouseLeftClick):
-                    if (self.resetConfirmed and self.resetReleased):
-                        self.game.levelController.ResetStats()
-                        self.btnResetStats.hoverColor = LEVEL_BG_COLOR
-                        self.btnResetStats.text = "Done"
-                    else:
-                        self.resetConfirmed = True
-                        self.btnResetStats.text = "Confirm?"
+                if (mouseLeftClick):
+                    if (self.btnResetStats.IsMouseOver(mousePos)):
+                        if (self.resetConfirmed and self.resetReleased):
+                            self.game.levelController.ResetStats()
+                            self.btnResetStats.hoverColor = LEVEL_BG_COLOR
+                            self.btnResetStats.text = "Done"
+                        else:
+                            self.resetConfirmed = True
+                            self.btnResetStats.text = "Confirm?"
+
+                    elif (self.secretHovered):
+                        self.game.menuPage = -6
 
             elif (event.type in self.game.musicEvents):
                 ProcessMusicEvents(event.type)
@@ -208,7 +230,7 @@ class Menu:
             textRect = text.get_rect(center = (self.screenSize[0] / 2 + 200, 225))
             self.screen.blit(text, textRect)
 
-            text = self.game.fontMedium.render("Secrets Found: " + str(len(self.game.levelController.savedSecrets)) + " / " + str(CREDITS_PAGE - 1), True, TEXT_COLOR)
+            text = self.game.fontMedium.render("Secrets Found: " + str(len(self.game.levelController.savedSecrets)) + " / " + str(CREDITS_PAGE - 1), True, self.secretColor)
             textRect = text.get_rect(center = (self.screenSize[0] / 2 - 200, 275))
             self.screen.blit(text, textRect)
 
@@ -234,11 +256,32 @@ class Menu:
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, floor(level / 3) * 50 + 525))
                 self.screen.blit(text, textRect)
 
-            text = self.fontSmall.render("Press any key to go back", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
+            text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
+            textRect = text.get_rect(topleft = (8, self.screenSize[1] - 40))
             self.screen.blit(text, textRect)
 
             self.btnResetStats.Draw(self.screen, self.btnResetStats.IsMouseOver(pygame.mouse.get_pos()))
+
+        elif (self.game.menuPage == -6): # Secret
+            if (not self.secretInitialized):
+                self.InitSecret()
+
+            text = self.game.fontLarge.render("Pickle Boy - The Return", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 40))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("You found all secrets!", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 80))
+            self.screen.blit(text, textRect)
+
+            self.screen.blit(self.pickleBoy, (self.screenSize[0] / 2 - 128, 160))
+
+            for i in range(len(self.pickleFriends)):
+                self.screen.blit(self.pickleFriends[i], (self.screenSize[0] / 2 - 256 + (i % 4 * 128) + 32, 500))
+
+            text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
+            self.screen.blit(text, textRect)
 
         elif (self.game.menuPage == -3): # Controls
             text = self.game.fontLarge.render("Controls", True, TEXT_COLOR)
