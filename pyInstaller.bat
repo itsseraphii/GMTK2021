@@ -35,6 +35,11 @@
 --add-data="res/empty.png;./res" ^
 --add-data="res/icon.png;./res" ^
 --add-data="res/monster.png;./res" ^
+--add-data="res/pickleBoy.png;./res" ^
+--add-data="res/pickleChest.png;./res" ^
+--add-data="res/pickleScreen.png;./res" ^
+--add-data="res/pickleWall.png;./res" ^
+--add-data="res/pickleWire.png;./res" ^
 --add-data="res/playerPistol.png;./res" ^
 --add-data="res/playerRifle.png;./res" ^
 --add-data="res/playerSniper.png;./res" ^
@@ -55,6 +60,7 @@
 --add-data="sounds/meatSlap1.mp3;./sounds" ^
 --add-data="sounds/meatSlap2.mp3;./sounds" ^
 --add-data="sounds/meatSlap3.mp3;./sounds" ^
+--add-data="sounds/secret.mp3;./sounds" ^
 --add-data="sounds/swing.mp3;./sounds" ^
  ^
 --name "Transgenesis" ^

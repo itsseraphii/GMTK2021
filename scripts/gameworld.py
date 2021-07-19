@@ -30,7 +30,7 @@ class GameWorld:
         self.obstacles = {}
         self.collectables = {}
         self.LoadTileCSV()
-        self.LoadObstacleRessources()
+        self.LoadCollectableRessources()
         self.LoadEntityRessources()
 
         self.screenNbTilesY = floor(self.screenSize[1] / TILE_SIZE) + 2
@@ -82,9 +82,9 @@ class GameWorld:
             
         self.backgroundSize = (len(self.tileLayoutBG[0]) * TILE_SIZE, len(self.tileLayoutBG) * TILE_SIZE)
 
-    def LoadObstacleRessources(self):
-        soundNames = ["ammoPickup", "gunPickup", "levelComplete"]
-        imageNames = ["crowbar", "revolver", "rifle", "sniper", "ammoBig", "empty", "ammo"]
+    def LoadCollectableRessources(self):
+        soundNames = ["ammoPickup", "gunPickup", "levelComplete", "secret"]
+        imageNames = ["crowbar", "revolver", "rifle", "sniper", "ammoBig", "empty", "ammo", "pickleChest", "pickleScreen", "pickleWall", "pickleWire"]
 
         self.collectableSounds = dict.fromkeys(soundNames)
         self.collectableImages = dict.fromkeys(imageNames)

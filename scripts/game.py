@@ -2,7 +2,7 @@ import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT, VIDEORESIZE
 from math import floor
 from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE, DEFAULT_WINDOW_SIZE
-from musicController import StartMusicBoss, StartMusicMenu, StartMusicLevel, ProcessMusicEvents, MusicEvents
+from musicController import StartMusicMenu, StartMusicLevel, ProcessMusicEvents, MusicEvents
 from entities.player import Player
 from gameworld import GameWorld
 from menu import Menu
@@ -44,7 +44,7 @@ class Game:
 
         self.menu = Menu(self.screen, self)
 
-        StartMusicBoss()
+        StartMusicMenu()
 
     def InitLevel(self):
         self.gameworld = GameWorld(self.currentLevel)
