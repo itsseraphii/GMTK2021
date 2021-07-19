@@ -44,11 +44,11 @@ class Menu:
 
     def InitCredits(self):
         self.creditsInitialized = True
-        self.menuScrollY = self.screenSize[1] / 7 + self.screenSize[1]
+        self.menuScrollY = self.screenSize[1] + floor(self.screenSize[0] / 15)
         self.creditsFontSmall = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", floor(self.screenSize[0] / 52))
         self.creditsFontMedium = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", floor(self.screenSize[0] / 42))
         self.creditsFontLarge = pygame.font.Font(DATA_PATH + "/fonts/FreeSansBold.ttf", floor(self.screenSize[0] / 35))
-        self.creditsSpace = max(self.screenSize[0] / 10.7, self.screenSize[1] / 6)
+        self.creditsSpace = floor(self.screenSize[0] / 10)
         self.game.levelController.UpdateProgress([self.game.gameState, self.game.currentLevel, self.game.menuPage])
         StartMusicCredits()
 
@@ -304,11 +304,15 @@ class Menu:
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, 12 * self.creditsSpace + self.menuScrollY))
                 self.screen.blit(text, textRect)
 
-                self.menuScrollY -= 1
-            else:
+            elif (13 * self.creditsSpace + self.menuScrollY > -950):
                 text = self.game.fontMedium.render("Press any key", True, TEXT_COLOR)
                 textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
                 self.screen.blit(text, textRect)
+
+            elif (13 * self.creditsSpace + self.menuScrollY < -1000):
+                self.menuScrollY = self.screenSize[1] + floor(self.screenSize[0] / 15)
+
+            self.menuScrollY -= 1
 
         else: # Levels
             message = "Press Enter to start level " + str(self.game.currentLevel + 1) if (self.game.menuPage != CREDITS_PAGE - 1) else "Press Enter to continue"
