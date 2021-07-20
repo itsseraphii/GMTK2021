@@ -85,7 +85,11 @@ class GameWorld:
 
     def LoadCollectableRessources(self):
         soundNames = ["ammoPickup", "gunPickup", "levelComplete", "secret"]
-        imageNames = ["crowbar", "revolver", "rifle", "sniper", "ammoBig", "empty", "ammo", "pickleChest", "pickleScreen", "pickleWall", "pickleWire"]
+        imageNames = [
+            "crowbar", "revolver", "rifle", "sniper", "ammoBig", "empty", "ammo", 
+            "pickles/pickleChest", "pickles/pickleScreen", "pickles/pickleWall", 
+            "pickles/pickleWire", "pickles/pickleBlood"
+        ]
 
         self.collectableSounds = dict.fromkeys(soundNames)
         self.collectableImages = dict.fromkeys(imageNames)

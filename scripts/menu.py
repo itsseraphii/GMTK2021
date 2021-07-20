@@ -50,12 +50,13 @@ class Menu:
     def InitSecret(self):
         self.secretInitialized = True
         self.secretColor = TEXT_COLOR
-        self.pickleBoy = pygame.transform.scale(pygame.image.load("res/pickleBoy.png"), (256, 256))
+        self.pickleBoy = pygame.transform.scale(pygame.image.load("res/pickles/pickleBoy.png"), (256, 256))
         self.pickleFriends = [
-            pygame.transform.scale(pygame.image.load("res/pickleChest.png"), (96, 96)),
-            pygame.transform.scale(pygame.image.load("res/pickleScreen.png"), (96, 96)),
-            pygame.transform.scale(pygame.image.load("res/pickleWall.png"), (96, 96)),
-            pygame.transform.scale(pygame.image.load("res/pickleWire.png"), (96, 96))
+            pygame.transform.scale(pygame.image.load("res/pickles/pickleBlood.png"), (96, 96)),
+            pygame.transform.scale(pygame.image.load("res/pickles/pickleChest.png"), (96, 96)),
+            pygame.transform.scale(pygame.image.load("res/pickles/pickleScreen.png"), (96, 96)),
+            pygame.transform.scale(pygame.image.load("res/pickles/pickleWall.png"), (96, 96)),
+            pygame.transform.scale(pygame.image.load("res/pickles/pickleWire.png"), (96, 96))
         ]
         StartMusicBoss()
 

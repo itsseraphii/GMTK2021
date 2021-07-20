@@ -35,11 +35,12 @@
 --add-data="res/empty.png;./res" ^
 --add-data="res/icon.png;./res" ^
 --add-data="res/monster.png;./res" ^
---add-data="res/pickleBoy.png;./res" ^
---add-data="res/pickleChest.png;./res" ^
---add-data="res/pickleScreen.png;./res" ^
---add-data="res/pickleWall.png;./res" ^
---add-data="res/pickleWire.png;./res" ^
+--add-data="res/pickles/pickleBlood.png;./res/pickles" ^
+--add-data="res/pickles/pickleBoy.png;./res/pickles" ^
+--add-data="res/pickles/pickleChest.png;./res/pickles" ^
+--add-data="res/pickles/pickleScreen.png;./res/pickles" ^
+--add-data="res/pickles/pickleWall.png;./res/pickles" ^
+--add-data="res/pickles/pickleWire.png;./res/pickles" ^
 --add-data="res/playerPistol.png;./res" ^
 --add-data="res/playerRifle.png;./res" ^
 --add-data="res/playerSniper.png;./res" ^

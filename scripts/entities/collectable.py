@@ -15,6 +15,7 @@ class CollectableTypes(IntEnum):
     PICKLE_WALL = 203
     PICKLE_CHEST = 204
     PICKLE_SCREEN = 205
+    PICKLE_BLOOD = 206
 
 class Collectable:
     def __init__(self, id, collectableType, spawnLocation, gameworld):
@@ -60,24 +61,29 @@ class Collectable:
             self.collected = True # Disable on creation
 
         elif (self.type == CollectableTypes.PICKLE_WIRE):
-            imageName = "pickleWire"
+            imageName = "pickles/pickleWire"
             soundName = "secret"
             self.size = [30, 32]
 
         elif (self.type == CollectableTypes.PICKLE_WALL):
-            imageName = "pickleWall"
+            imageName = "pickles/pickleWall"
             soundName = "secret"
             self.size = [24, 32]
 
         elif (self.type == CollectableTypes.PICKLE_CHEST):
-            imageName = "pickleChest"
+            imageName = "pickles/pickleChest"
             soundName = "secret"
             self.size = [30, 30]
 
         elif (self.type == CollectableTypes.PICKLE_SCREEN):
-            imageName = "pickleScreen"
+            imageName = "pickles/pickleScreen"
             soundName = "secret"
             self.size = [30, 30]
+
+        elif (self.type == CollectableTypes.PICKLE_BLOOD):
+            imageName = "pickles/pickleBlood"
+            soundName = "secret"
+            self.size = DEFAULT_SIZE
 
         else:
             imageName = "ammo"
@@ -110,7 +116,8 @@ class Collectable:
             self.gameworld.player.ammo += 10
 
         elif (self.type == CollectableTypes.PICKLE_WIRE or self.type == CollectableTypes.PICKLE_WALL or 
-        self.type == CollectableTypes.PICKLE_CHEST or self.type == CollectableTypes.PICKLE_SCREEN):
+        self.type == CollectableTypes.PICKLE_CHEST or self.type == CollectableTypes.PICKLE_SCREEN or
+        self.type == CollectableTypes.PICKLE_BLOOD):
             self.gameworld.game.secretFound = True
 
         else: # Small ammo pickup
