@@ -52,10 +52,10 @@ class Menu:
         self.secretColor = TEXT_COLOR
         self.pickleBoy = pygame.transform.scale(pygame.image.load("res/pickles/pickleBoy.png"), (256, 256))
         self.pickleFriends = [
-            pygame.transform.scale(pygame.image.load("res/pickles/pickleBlood.png"), (96, 96)),
             pygame.transform.scale(pygame.image.load("res/pickles/pickleChest.png"), (96, 96)),
             pygame.transform.scale(pygame.image.load("res/pickles/pickleScreen.png"), (96, 96)),
             pygame.transform.scale(pygame.image.load("res/pickles/pickleWall.png"), (96, 96)),
+            pygame.transform.scale(pygame.image.load("res/pickles/pickleBlood.png"), (96, 96)),
             pygame.transform.scale(pygame.image.load("res/pickles/pickleWire.png"), (96, 96))
         ]
         StartMusicBoss()
@@ -279,7 +279,7 @@ class Menu:
             self.screen.blit(self.pickleBoy, (self.screenSize[0] / 2 - 128, 160))
 
             for i in range(len(self.pickleFriends)):
-                self.screen.blit(self.pickleFriends[i], (self.screenSize[0] / 2 - 384 + (i % 4 * 192) + 48, 500))
+                self.screen.blit(self.pickleFriends[i], (self.screenSize[0] / 2 - 344 + (i * 148), 500))
 
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
