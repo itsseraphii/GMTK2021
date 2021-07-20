@@ -111,7 +111,7 @@ class Collectable:
 
         elif (self.type == CollectableTypes.PICKLE_WIRE or self.type == CollectableTypes.PICKLE_WALL or 
         self.type == CollectableTypes.PICKLE_CHEST or self.type == CollectableTypes.PICKLE_SCREEN):
-            self.gameworld.game.levelController.savedSecrets[str(self.gameworld.game.currentLevel)] = 1
+            self.gameworld.game.secretFound = True
 
         else: # Small ammo pickup
             self.gameworld.player.ammo += 4

@@ -63,6 +63,7 @@ class Game:
         self.timeOverEnemySpawned = 0
         self.timeOverSpawnsY = []
 
+        self.secretFound = False
         self.drawnAmmo = -1
         self.drawnWeaponIndex = -1
         self.frameCounter = 0
@@ -91,7 +92,7 @@ class Game:
                     elif (event.key == K_r):
                         self.TriggerGameOver(False)
 
-                    # Debug info - Uncomment to allow level skipping
+                    '''# Debug info - Uncomment to allow level skipping
                     elif (event.key == K_n):
                         self.TriggerGameOver(True) #'''
 
@@ -215,6 +216,9 @@ class Game:
         if (victory): # Check if this level's best time has been beaten
             self.levelController.VerifyLevelTime(self.currentLevel, pygame.time.get_ticks() - self.startTime)
             self.levelController.savedCompletions += 1
+
+            if (self.secretFound):
+                self.levelController.savedSecrets[str(self.currentLevel)] = 1
 
         self.running = False
 
