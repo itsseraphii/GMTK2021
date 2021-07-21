@@ -2,7 +2,7 @@ from pygame.mixer import music as Music
 from enum import IntEnum
 from utils.constants import DATA_PATH
 
-BASE_VOLUME = 0
+BASE_VOLUME = 1
 MAIN_MUSIC_PATH = DATA_PATH + "/music/main.mp3"
 LEVEL_MUSIC_PATH = DATA_PATH + "/music/level.mp3"
 JINGLE_PATH = DATA_PATH + "/music/jingle.mp3"

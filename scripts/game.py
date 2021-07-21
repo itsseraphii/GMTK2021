@@ -82,11 +82,11 @@ class Game:
         if (self.playing):
             for event in pygame.event.get():
                 if (event.type == QUIT):
-                    self.running =  False
+                    self.running = False
 
                 elif (event.type == KEYDOWN):
                     if (event.key == K_ESCAPE):
-                        self.menuPage = -1
+                        self.menu.ShowMenu()
                         self.TriggerGameOver(False)
 
                     elif (event.key == K_r):

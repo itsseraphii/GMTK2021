@@ -30,6 +30,8 @@ class Menu:
 
     def InitMainMenu(self):
         self.menuInitialized = True
+        self.newGameReleased = False
+        self.newGameConfirmed = False
         buttonBasePos = [self.screenSize[0] / 2, (self.screenSize[1] / 2 - 75) + (self.screenSize[0] / 16)]
 
         self.menuButtons = {
@@ -97,6 +99,16 @@ class Menu:
             for i in range (len(self.selectLevelButtons) - offsetButtonCount, len(self.selectLevelButtons)):
                 self.selectLevelButtons[i].x += (3 - offsetButtonCount) * 150
 
+    def ShowMenu(self):
+        if (not self.menuInitialized):
+            self.InitMainMenu()
+        elif (self.newGameConfirmed):
+            self.newGameReleased = False
+            self.newGameConfirmed = False
+            self.menuButtons["newGame"].text = "New Game"
+
+        self.game.menuPage = -1
+
     def CheckInputs(self):
         for event in pygame.event.get():
             if (event.type == QUIT):
@@ -111,6 +123,7 @@ class Menu:
 
                 mousePos = pygame.mouse.get_pos()
                 mouseLeftClick = pygame.mouse.get_pressed()[0]
+                self.newGameReleased = self.newGameReleased or self.newGameConfirmed and not mouseLeftClick
 
                 for key in list(self.menuButtons):
                     if (self.menuButtons[key].IsMouseOver(mousePos) and mouseLeftClick):
@@ -120,9 +133,14 @@ class Menu:
                         elif (key == "select"):
                             self.game.menuPage = -5
                         elif (key == "newGame"):
-                            self.game.currentLevel = 0
-                            self.game.menuPage = 0
-                            self.game.levelController.savedProgress = [0, 0]
+                            if (self.newGameConfirmed and self.newGameReleased):
+                                self.game.currentLevel = 0
+                                self.game.menuPage = 0
+                                self.game.levelController.savedProgress = [0, 0]
+                            else:
+                                self.newGameConfirmed = True
+                                self.menuButtons[key].text = "Confirm?"
+                            
                         elif (key == "controls"):
                             self.game.menuPage = -3
                         elif (key == "stats"):
@@ -146,7 +164,8 @@ class Menu:
 
             elif (event.type == KEYDOWN):
                 if (self.game.menuPage < -1): # Press any key on title screen, in controls, in select level or in stats to go to the main menu
-                    self.game.menuPage = -1
+                    self.ShowMenu()
+
                 elif (self.game.menuPage == CREDITS_PAGE): # Press any key on credits to go to title screen
                     self.creditsInitialized = False # Reset credits next time it's displayed
                     self.game.menuPage = -2
@@ -158,7 +177,7 @@ class Menu:
                         self.game.InitLevel()
 
                 elif (event.key == K_ESCAPE):
-                    self.game.menuPage = -1
+                    self.ShowMenu()
 
             elif (self.game.menuPage == -4): # Stats
                 if (not self.statsInitialized):
@@ -166,7 +185,6 @@ class Menu:
 
                 mousePos = pygame.mouse.get_pos()
                 mouseLeftClick = pygame.mouse.get_pressed()[0]
-                
                 self.resetReleased = self.resetReleased or self.resetConfirmed and not mouseLeftClick
 
                 if (self.secretUnlocked):
@@ -192,7 +210,35 @@ class Menu:
     def Draw(self):
         self.screen.fill(MENU_BG_COLOR)
 
-        if (self.game.menuPage == -5): # Select Level
+        if (self.game.menuPage == -6): # Secret
+            if (not self.secretInitialized):
+                self.InitSecret()
+
+            text = self.game.fontLarge.render("Pickle Boy - The Return", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 40))
+            self.screen.blit(text, textRect)
+
+            text = self.game.fontMedium.render("You found all secrets!", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, 80))
+            self.screen.blit(text, textRect)
+
+            mousePos = pygame.mouse.get_pos()
+            bigPickleIndex = len(self.pickleSmall)
+
+            for i in range(len(PICKLE_FRIENDS)):
+                self.screen.blit(self.pickleSmall[i][0], (self.pickleSmall[i][1], self.pickleSmall[i][2]))
+
+                if (mousePos[0] > self.pickleSmall[i][1] and mousePos[0] < self.pickleSmall[i][1] + SMALL_PICKLE_SIZE and 
+                mousePos[1] > self.pickleSmall[i][2] and mousePos[1] < self.pickleSmall[i][2] + SMALL_PICKLE_SIZE):
+                    bigPickleIndex = i
+
+            self.screen.blit(self.pickleBig[bigPickleIndex][0], (self.pickleBig[bigPickleIndex][1], self.pickleBig[bigPickleIndex][2]))
+
+            text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
+            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
+            self.screen.blit(text, textRect)
+
+        elif (self.game.menuPage == -5): # Select Level
             if (not self.selectLevelInitialized):
                 self.InitSelectLevel()
 
@@ -272,34 +318,6 @@ class Menu:
             self.screen.blit(text, textRect)
 
             self.btnResetStats.Draw(self.screen, self.btnResetStats.IsMouseOver(pygame.mouse.get_pos()))
-
-        elif (self.game.menuPage == -6): # Secret
-            if (not self.secretInitialized):
-                self.InitSecret()
-
-            text = self.game.fontLarge.render("Pickle Boy - The Return", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, 40))
-            self.screen.blit(text, textRect)
-
-            text = self.game.fontMedium.render("You found all secrets!", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, 80))
-            self.screen.blit(text, textRect)
-
-            mousePos = pygame.mouse.get_pos()
-            bigPickleIndex = len(self.pickleSmall)
-
-            for i in range(len(PICKLE_FRIENDS)):
-                self.screen.blit(self.pickleSmall[i][0], (self.pickleSmall[i][1], self.pickleSmall[i][2]))
-
-                if (mousePos[0] > self.pickleSmall[i][1] and mousePos[0] < self.pickleSmall[i][1] + SMALL_PICKLE_SIZE and 
-                mousePos[1] > self.pickleSmall[i][2] and mousePos[1] < self.pickleSmall[i][2] + SMALL_PICKLE_SIZE):
-                    bigPickleIndex = i
-
-            self.screen.blit(self.pickleBig[bigPickleIndex][0], (self.pickleBig[bigPickleIndex][1], self.pickleBig[bigPickleIndex][2]))
-
-            text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
-            textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
-            self.screen.blit(text, textRect)
 
         elif (self.game.menuPage == -3): # Controls
             text = self.game.fontLarge.render("Controls", True, TEXT_COLOR)
