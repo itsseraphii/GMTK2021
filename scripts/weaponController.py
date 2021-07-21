@@ -21,6 +21,7 @@ class WeaponTypes(IntEnum):
     REVOLVER = 1
     RIFLE = 2
     SNIPER = 3
+    LMG = 4
 
 class WeaponController:
     def __init__(self, player, gameworld):
@@ -44,6 +45,7 @@ class WeaponController:
         self.weapons[WeaponTypes.REVOLVER] = ["revolver", True, 3, 800, 1]
         self.weapons[WeaponTypes.RIFLE] = ["rifle", True, 1, 115, 1]
         self.weapons[WeaponTypes.SNIPER] = ["sniper", True, 8, 2000, 2]
+        self.weapons[WeaponTypes.LMG] = ["lmg", True, 3, 90, 2]
 
     def Attack(self, equippedWeapon, ammo):
         currentTime = pygame.time.get_ticks()

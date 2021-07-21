@@ -16,6 +16,7 @@ class CollectableTypes(IntEnum):
     PICKLE_CHEST = 204
     PICKLE_SCREEN = 205
     PICKLE_BLOOD = 206
+    LMG = 207
 
 class Collectable:
     def __init__(self, id, collectableType, spawnLocation, gameworld):
@@ -42,6 +43,11 @@ class Collectable:
 
         elif (self.type == CollectableTypes.SNIPER):
             imageName = "sniper"
+            soundName = "gunPickup"
+            self.size = [32, 15]
+
+        elif (self.type == CollectableTypes.LMG):
+            imageName = "lmg"
             soundName = "gunPickup"
             self.size = [32, 15]
 
@@ -111,6 +117,9 @@ class Collectable:
 
         elif (self.type == CollectableTypes.SNIPER):
             self.gameworld.player.AddWeapon(2, 5, WeaponTypes.SNIPER)
+
+        elif (self.type == CollectableTypes.LMG):
+            self.gameworld.player.AddWeapon(10, 25, WeaponTypes.LMG)
 
         elif (self.type == CollectableTypes.BIG_AMMO):
             self.gameworld.player.ammo += 10

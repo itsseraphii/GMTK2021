@@ -86,7 +86,7 @@ class GameWorld:
     def LoadCollectableRessources(self):
         soundNames = ["ammoPickup", "gunPickup", "levelComplete", "secret"]
         imageNames = [
-            "crowbar", "revolver", "rifle", "sniper", "ammoBig", "empty", "ammo", 
+            "crowbar", "revolver", "rifle", "sniper", "lmg", "ammoBig", "empty", "ammo", 
             "pickles/pickleChest", "pickles/pickleScreen", "pickles/pickleWall", 
             "pickles/pickleWire", "pickles/pickleBlood"
         ]
