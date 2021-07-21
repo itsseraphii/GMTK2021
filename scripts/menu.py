@@ -8,6 +8,13 @@ from utils.story import STORY
 MEDIUM_BTN_SIZE = [300, 75]
 SMALL_BTN_SIZE = [200, 50]
 
+SMALL_PICKLE_SIZE = 96
+PICKLE_PATHS = [
+    DATA_PATH + "/res/pickles/pickleChest.png", DATA_PATH + "/res/pickles/pickleWire.png",
+    DATA_PATH + "/res/pickles/pickleWall.png", DATA_PATH + "/res/pickles/pickleBlood.png",
+    DATA_PATH + "/res/pickles/pickleScreen.png"
+]
+
 class Menu:
     def __init__(self, screen, game):
         self.screen = screen
@@ -44,20 +51,21 @@ class Menu:
         self.resetReleased = False
         self.secretHovered = False
         self.secretColor = TEXT_COLOR
-        self.secretUnlocked = len(self.game.levelController.savedSecrets) == CREDITS_PAGE - 1
+        self.secretUnlocked = True #len(self.game.levelController.savedSecrets) == CREDITS_PAGE - 1
         self.btnResetStats = Button(self.screenSize[0] - 135, self.screenSize[1] - 45, (130, 40), LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Reset")
 
     def InitSecret(self):
         self.secretInitialized = True
         self.secretColor = TEXT_COLOR
-        self.pickleBoy = pygame.transform.scale(pygame.image.load("res/pickles/pickleBoy.png"), (256, 256))
-        self.pickleFriends = [
-            pygame.transform.scale(pygame.image.load("res/pickles/pickleChest.png"), (96, 96)),
-            pygame.transform.scale(pygame.image.load("res/pickles/pickleScreen.png"), (96, 96)),
-            pygame.transform.scale(pygame.image.load("res/pickles/pickleWall.png"), (96, 96)),
-            pygame.transform.scale(pygame.image.load("res/pickles/pickleBlood.png"), (96, 96)),
-            pygame.transform.scale(pygame.image.load("res/pickles/pickleWire.png"), (96, 96))
-        ]
+        self.hoveredSize = min(416, 32 * floor(min(self.screenSize[0] / 2.8, self.screenSize[1] / 2.8) / 32))
+        self.pickleSmall = [None] * len(PICKLE_PATHS)
+        self.pickleBig = [None] * (len(PICKLE_PATHS) + 1)
+
+        for i in range(len(PICKLE_PATHS)):
+            self.pickleSmall[i] = [pygame.transform.scale(pygame.image.load(PICKLE_PATHS[i]), (SMALL_PICKLE_SIZE, SMALL_PICKLE_SIZE)), self.screenSize[0] / 2 - 344 + (i * 148), self.hoveredSize * 2]
+            self.pickleBig[i] = [pygame.transform.scale(self.pickleSmall[i][0], (self.hoveredSize, self.hoveredSize)), (self.screenSize[0] / 2) - (self.hoveredSize / 2), int(self.hoveredSize / 1.6)]
+
+        self.pickleBig[-1] = [pygame.transform.scale(pygame.image.load("res/pickles/pickleBoy.png"), (self.hoveredSize, self.hoveredSize)), (self.screenSize[0] / 2) - (self.hoveredSize / 2), int(self.hoveredSize / 1.6)]
         StartMusicBoss()
 
     def InitCredits(self):
@@ -276,10 +284,17 @@ class Menu:
             textRect = text.get_rect(center = (self.screenSize[0] / 2, 80))
             self.screen.blit(text, textRect)
 
-            self.screen.blit(self.pickleBoy, (self.screenSize[0] / 2 - 128, 160))
+            mousePos = pygame.mouse.get_pos()
+            bigPickleIndex = len(self.pickleSmall)
 
-            for i in range(len(self.pickleFriends)):
-                self.screen.blit(self.pickleFriends[i], (self.screenSize[0] / 2 - 344 + (i * 148), 500))
+            for i in range(len(PICKLE_PATHS)):
+                self.screen.blit(self.pickleSmall[i][0], (self.pickleSmall[i][1], self.pickleSmall[i][2]))
+
+                if (mousePos[0] > self.pickleSmall[i][1] and mousePos[0] < self.pickleSmall[i][1] + SMALL_PICKLE_SIZE and 
+                mousePos[1] > self.pickleSmall[i][2] and mousePos[1] < self.pickleSmall[i][2] + SMALL_PICKLE_SIZE):
+                    bigPickleIndex = i
+
+            self.screen.blit(self.pickleBig[bigPickleIndex][0], (self.pickleBig[bigPickleIndex][1], self.pickleBig[bigPickleIndex][2]))
 
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
