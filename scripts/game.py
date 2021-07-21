@@ -92,7 +92,7 @@ class Game:
                     elif (event.key == K_r):
                         self.TriggerGameOver(False)
 
-                    # Debug info - Uncomment to allow level skipping
+                    '''# Debug info - Uncomment to allow level skipping
                     elif (event.key == K_n):
                         self.TriggerGameOver(True) #'''
 
