@@ -22,6 +22,7 @@ class Player:
         self.pistolFrames = GetFramesFromFile("playerPistol.png", PLAYER_SIZE)
         self.rifleFrames = GetFramesFromFile("playerRifle.png", PLAYER_SIZE)
         self.sniperFrames = GetFramesFromFile("playerSniper.png", PLAYER_SIZE)
+        self.lmgFrames = GetFramesFromFile("playerLmg.png", PLAYER_SIZE)
         self.animFrameCounter = 0
         self.nextFrameTime = 0
 
@@ -82,6 +83,8 @@ class Player:
             self.currentAnimation = self.rifleFrames
         elif currentWeapon == WeaponTypes.SNIPER:
             self.currentAnimation = self.sniperFrames
+        elif currentWeapon == WeaponTypes.LMG:
+            self.currentAnimation = self.lmgFrames
         else:
             self.currentAnimation = self.walkingFrames
 
@@ -139,7 +142,7 @@ class Player:
     def CheckCollisionWithMonsters(self, mainRect):
         for monster in self.gameworld.monsters.values():
             if mainRect.colliderect(monster.hitbox):
-                return True
+                return False
 
         return False
     

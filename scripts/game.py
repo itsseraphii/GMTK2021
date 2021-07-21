@@ -92,7 +92,7 @@ class Game:
                     elif (event.key == K_r):
                         self.TriggerGameOver(False)
 
-                    '''# Debug info - Uncomment to allow level skipping
+                    # Debug info - Uncomment to allow level skipping
                     elif (event.key == K_n):
                         self.TriggerGameOver(True) #'''
 
@@ -140,7 +140,7 @@ class Game:
     def DrawWeaponUI(self):
         if (self.player.equippedWeaponIndex != self.drawnWeaponIndex): # Draw new equipped weapon
             self.drawnWeaponIndex = self.player.equippedWeaponIndex
-            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((10, self.screenSize[1] - 56), (92, 53))) # Cover last drawn weapon name
+            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((10, self.screenSize[1] - 56), (93, 53))) # Cover last drawn weapon name
 
             # This scales the image each time which is not good, but it's only when the player changes weapon, so I decided to ignore it
             self.screen.blit(pygame.transform.scale(self.gameworld.collectableImages[self.player.GetEquippedWeaponName()], (WEAPON_IMAGE_SIZE[0] * 3, WEAPON_IMAGE_SIZE[1] * 3)), (10, self.screenSize[1] - 53))
