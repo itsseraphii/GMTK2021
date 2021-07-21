@@ -51,7 +51,7 @@ class Menu:
         self.resetReleased = False
         self.secretHovered = False
         self.secretColor = TEXT_COLOR
-        self.secretUnlocked = True #len(self.game.levelController.savedSecrets) == CREDITS_PAGE - 1
+        self.secretUnlocked = len(self.game.levelController.savedSecrets) == CREDITS_PAGE - 1
         self.btnResetStats = Button(self.screenSize[0] - 135, self.screenSize[1] - 45, (130, 40), LEVEL_BG_COLOR, TEXT_COLOR, MENU_BG_COLOR, self.game.fontMedium, "Reset")
 
     def InitSecret(self):
@@ -65,7 +65,7 @@ class Menu:
             self.pickleSmall[i] = [pygame.transform.scale(pygame.image.load(PICKLE_PATHS[i]), (SMALL_PICKLE_SIZE, SMALL_PICKLE_SIZE)), self.screenSize[0] / 2 - 344 + (i * 148), self.hoveredSize * 2]
             self.pickleBig[i] = [pygame.transform.scale(self.pickleSmall[i][0], (self.hoveredSize, self.hoveredSize)), (self.screenSize[0] / 2) - (self.hoveredSize / 2), int(self.hoveredSize / 1.6)]
 
-        self.pickleBig[-1] = [pygame.transform.scale(pygame.image.load("res/pickles/pickleBoy.png"), (self.hoveredSize, self.hoveredSize)), (self.screenSize[0] / 2) - (self.hoveredSize / 2), int(self.hoveredSize / 1.6)]
+        self.pickleBig[-1] = [pygame.transform.scale(pygame.image.load(DATA_PATH + "/res/pickles/pickleBoy.png"), (self.hoveredSize, self.hoveredSize)), (self.screenSize[0] / 2) - (self.hoveredSize / 2), int(self.hoveredSize / 1.6)]
         StartMusicBoss()
 
     def InitCredits(self):
