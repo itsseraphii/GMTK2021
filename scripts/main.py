@@ -12,7 +12,7 @@ if (__name__ == "__main__"):
     pygame.event.set_allowed([QUIT, KEYDOWN, MOUSEBUTTONDOWN, VIDEORESIZE])
     
     screen = pygame.display.set_mode(DEFAULT_WINDOW_SIZE, pygame.RESIZABLE)
-    pygame.display.set_icon(pygame.image.load(DATA_PATH + "/res/icon.png"))
+    pygame.display.set_icon(pygame.image.load(DATA_PATH + "/res/icon/icon.png"))
     
     LevelController(screen)
 

@@ -76,7 +76,7 @@ class Game:
         self.screen.fill(LEVEL_BG_COLOR)
         pygame.draw.rect(self.screen, BLACK, self.progressBarBackground)
 
-        self.screen.blit(pygame.transform.scale(pygame.image.load(DATA_PATH + "/res/ammoUI.png").convert_alpha(), (48, 48)), (120, self.screenSize[1] - 55))
+        self.screen.blit(pygame.transform.scale(pygame.image.load(DATA_PATH + "/res/other/ammoUI.png").convert_alpha(), (48, 48)), (120, self.screenSize[1] - 55))
 
     def CheckInputs(self):
         if (self.playing):

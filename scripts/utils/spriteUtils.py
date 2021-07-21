@@ -5,7 +5,7 @@ from utils.constants import DATA_PATH
 # Returns an array of all frames from a file
 def GetFramesFromFile(filename, frameSize):
     try:
-        spriteSheet = LoadImage(DATA_PATH + "/res/" + filename).convert()
+        spriteSheet = LoadImage(DATA_PATH + "/res/animations/" + filename).convert()
     except:
         print("Error while fetching " + filename)
 

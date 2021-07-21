@@ -87,8 +87,7 @@ class GameWorld:
         soundNames = ["ammoPickup", "gunPickup", "levelComplete", "secret"]
         imageNames = [
             "crowbar", "revolver", "rifle", "sniper", "lmg", "ammoBig", "empty", "ammo", 
-            "pickles/pickleChest", "pickles/pickleScreen", "pickles/pickleWall", 
-            "pickles/pickleWire", "pickles/pickleBlood"
+            "pickleChest", "pickleScreen", "pickleWall", "pickleWire", "pickleBlood"
         ]
 
         self.collectableSounds = dict.fromkeys(soundNames)
@@ -98,7 +97,7 @@ class GameWorld:
             self.collectableSounds[sound] = pygame.mixer.Sound(DATA_PATH + "/sounds/" + sound + ".mp3")
 
         for image in imageNames:
-            self.collectableImages[image] = pygame.image.load(DATA_PATH + "/res/" + image + ".png").convert_alpha()
+            self.collectableImages[image] = pygame.image.load(DATA_PATH + "/res/collectables/" + image + ".png").convert_alpha()
 
     def LoadEntityRessources(self):
         soundNames = ["meatSlap1", "meatSlap2", "meatSlap3", "meatDeath1", "meatDeath2"]

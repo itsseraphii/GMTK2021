@@ -27,29 +27,31 @@
 --add-data="music/credits.mp3;./music" ^
 --add-data="music/timeOver.mp3;./music" ^
  ^
---add-data="res/ammo.png;./res" ^
---add-data="res/ammoBig.png;./res" ^
---add-data="res/ammoUI.png;./res" ^
---add-data="res/bullet.png;./res" ^
---add-data="res/crowbar.png;./res" ^
---add-data="res/empty.png;./res" ^
---add-data="res/icon.png;./res" ^
---add-data="res/monster.png;./res" ^
---add-data="res/pickles/pickleBlood.png;./res/pickles" ^
---add-data="res/pickles/pickleBoy.png;./res/pickles" ^
---add-data="res/pickles/pickleChest.png;./res/pickles" ^
---add-data="res/pickles/pickleScreen.png;./res/pickles" ^
---add-data="res/pickles/pickleWall.png;./res/pickles" ^
---add-data="res/pickles/pickleWire.png;./res/pickles" ^
---add-data="res/playerPistol.png;./res" ^
---add-data="res/playerRifle.png;./res" ^
---add-data="res/playerSniper.png;./res" ^
---add-data="res/playerUnarmed.png;./res" ^
---add-data="res/revolver.png;./res" ^
---add-data="res/rifle.png;./res" ^
---add-data="res/sniper.png;./res" ^
+--add-data="res/animations/monster.png;./res/animations" ^
+--add-data="res/animations/playerLmg.png;./res/animations" ^
+--add-data="res/animations/playerPistol.png;./res/animations" ^
+--add-data="res/animations/playerRifle.png;./res/animations" ^
+--add-data="res/animations/playerSniper.png;./res/animations" ^
+--add-data="res/animations/playerUnarmed.png;./res/animations" ^
+--add-data="res/animations/zombie.png;./res/animations" ^
+--add-data="res/collectables/ammo.png;./res/collectables" ^
+--add-data="res/collectables/ammoBig.png;./res/collectables" ^
+--add-data="res/collectables/crowbar.png;./res/collectables" ^
+--add-data="res/collectables/empty.png;./res/collectables" ^
+--add-data="res/collectables/lmg.png;./res/collectables" ^
+--add-data="res/collectables/pickleBlood.png;./res/collectables" ^
+--add-data="res/collectables/pickleChest.png;./res/collectables" ^
+--add-data="res/collectables/pickleScreen.png;./res/collectables" ^
+--add-data="res/collectables/pickleWall.png;./res/collectables" ^
+--add-data="res/collectables/pickleWire.png;./res/collectables" ^
+--add-data="res/collectables/revolver.png;./res/collectables" ^
+--add-data="res/collectables/rifle.png;./res/collectables" ^
+--add-data="res/collectables/sniper.png;./res/collectables" ^
+--add-data="res/icon/icon.png;./res/icon" ^
+--add-data="res/other/ammoUI.png;./res/other" ^
+--add-data="res/other/bullet.png;./res/other" ^
+--add-data="res/other/pickleBoy.png;./res/other" ^
 --add-data="res/Tilesheet.png;./res" ^
---add-data="res/zombie.png;./res" ^
  ^
 --add-data="sounds/ammoPickup.mp3;./sounds" ^
 --add-data="sounds/emptyGun.mp3;./sounds" ^
@@ -65,7 +67,7 @@
 --add-data="sounds/swing.mp3;./sounds" ^
  ^
 --name "Transgenesis" ^
---icon "res/icon.ico" ^
+--icon "res/icon/icon.ico" ^
 --noconfirm ^
 --windowed ^
 --onefile ^

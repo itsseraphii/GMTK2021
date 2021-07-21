@@ -9,10 +9,11 @@ MEDIUM_BTN_SIZE = [300, 75]
 SMALL_BTN_SIZE = [200, 50]
 
 SMALL_PICKLE_SIZE = 96
-PICKLE_PATHS = [
-    DATA_PATH + "/res/pickles/pickleChest.png", DATA_PATH + "/res/pickles/pickleWire.png",
-    DATA_PATH + "/res/pickles/pickleWall.png", DATA_PATH + "/res/pickles/pickleBlood.png",
-    DATA_PATH + "/res/pickles/pickleScreen.png"
+PICKLE_BOY = DATA_PATH + "/res/other/pickleBoy.png"
+PICKLE_FRIENDS = [
+    DATA_PATH + "/res/collectables/pickleChest.png", DATA_PATH + "/res/collectables/pickleWire.png",
+    DATA_PATH + "/res/collectables/pickleWall.png", DATA_PATH + "/res/collectables/pickleBlood.png",
+    DATA_PATH + "/res/collectables/pickleScreen.png"
 ]
 
 class Menu:
@@ -58,14 +59,14 @@ class Menu:
         self.secretInitialized = True
         self.secretColor = TEXT_COLOR
         self.hoveredSize = min(416, 32 * floor(min(self.screenSize[0] / 2.8, self.screenSize[1] / 2.8) / 32))
-        self.pickleSmall = [None] * len(PICKLE_PATHS)
-        self.pickleBig = [None] * (len(PICKLE_PATHS) + 1)
+        self.pickleSmall = [None] * len(PICKLE_FRIENDS)
+        self.pickleBig = [None] * (len(PICKLE_FRIENDS) + 1)
 
-        for i in range(len(PICKLE_PATHS)):
-            self.pickleSmall[i] = [pygame.transform.scale(pygame.image.load(PICKLE_PATHS[i]), (SMALL_PICKLE_SIZE, SMALL_PICKLE_SIZE)), self.screenSize[0] / 2 - 344 + (i * 148), self.hoveredSize * 2]
+        for i in range(len(PICKLE_FRIENDS)):
+            self.pickleSmall[i] = [pygame.transform.scale(pygame.image.load(PICKLE_FRIENDS[i]), (SMALL_PICKLE_SIZE, SMALL_PICKLE_SIZE)), self.screenSize[0] / 2 - 344 + (i * 148), self.hoveredSize * 2]
             self.pickleBig[i] = [pygame.transform.scale(self.pickleSmall[i][0], (self.hoveredSize, self.hoveredSize)), (self.screenSize[0] / 2) - (self.hoveredSize / 2), int(self.hoveredSize / 1.6)]
 
-        self.pickleBig[-1] = [pygame.transform.scale(pygame.image.load(DATA_PATH + "/res/pickles/pickleBoy.png"), (self.hoveredSize, self.hoveredSize)), (self.screenSize[0] / 2) - (self.hoveredSize / 2), int(self.hoveredSize / 1.6)]
+        self.pickleBig[-1] = [pygame.transform.scale(pygame.image.load(PICKLE_BOY), (self.hoveredSize, self.hoveredSize)), (self.screenSize[0] / 2) - (self.hoveredSize / 2), int(self.hoveredSize / 1.6)]
         StartMusicBoss()
 
     def InitCredits(self):
@@ -287,7 +288,7 @@ class Menu:
             mousePos = pygame.mouse.get_pos()
             bigPickleIndex = len(self.pickleSmall)
 
-            for i in range(len(PICKLE_PATHS)):
+            for i in range(len(PICKLE_FRIENDS)):
                 self.screen.blit(self.pickleSmall[i][0], (self.pickleSmall[i][1], self.pickleSmall[i][2]))
 
                 if (mousePos[0] > self.pickleSmall[i][1] and mousePos[0] < self.pickleSmall[i][1] + SMALL_PICKLE_SIZE and 

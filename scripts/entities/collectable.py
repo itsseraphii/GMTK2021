@@ -67,27 +67,27 @@ class Collectable:
             self.collected = True # Disable on creation
 
         elif (self.type == CollectableTypes.PICKLE_WIRE):
-            imageName = "pickles/pickleWire"
+            imageName = "pickleWire"
             soundName = "secret"
             self.size = [30, 32]
 
         elif (self.type == CollectableTypes.PICKLE_WALL):
-            imageName = "pickles/pickleWall"
+            imageName = "pickleWall"
             soundName = "secret"
             self.size = [24, 32]
 
         elif (self.type == CollectableTypes.PICKLE_CHEST):
-            imageName = "pickles/pickleChest"
+            imageName = "pickleChest"
             soundName = "secret"
             self.size = [30, 30]
 
         elif (self.type == CollectableTypes.PICKLE_SCREEN):
-            imageName = "pickles/pickleScreen"
+            imageName = "pickleScreen"
             soundName = "secret"
             self.size = [30, 30]
 
         elif (self.type == CollectableTypes.PICKLE_BLOOD):
-            imageName = "pickles/pickleBlood"
+            imageName = "pickleBlood"
             soundName = "secret"
             self.size = DEFAULT_SIZE
 

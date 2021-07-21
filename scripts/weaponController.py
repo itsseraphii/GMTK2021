@@ -6,7 +6,7 @@ from utils.constants import TILES_COUNT_X, TILE_SIZE, DATA_PATH, PLAYER_SIZE
 SWING_SOUND_FILE = DATA_PATH + "/sounds/swing.mp3"
 GUNSHOT_SOUND_FILE = DATA_PATH + "/sounds/gunshot.mp3"
 EMPTY_GUN_SOUND_FILE = DATA_PATH + "/sounds/emptyGun.mp3"
-BULLET_IMAGE_PATH = DATA_PATH + "/res/bullet.png"
+BULLET_IMAGE_PATH = DATA_PATH + "/res/other/bullet.png"
 
 BULLET_SPEED = 20
 BULLET_SIZE = 3
