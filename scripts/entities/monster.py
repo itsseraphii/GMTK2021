@@ -151,18 +151,24 @@ class Monster:
         self.hitbox = Rect((spriteRect.width / 2) - (self.hitBoxWidth / 2) + self.posX, (spriteRect.height / 2) - (self.hitBoxHeight / 2) + self.posY, self.hitBoxWidth, self.hitBoxHeight)
 
     def GetObstacleCollision(self, mainRect):
-        monsterTileId = (TILES_COUNT_X * floor(self.posY / TILE_SIZE)) + (floor(self.posX / TILE_SIZE))
+        monsterTileId = (TILES_COUNT_X * floor(mainRect.y / TILE_SIZE)) + (floor(mainRect.x / TILE_SIZE))
         collisionType = 0
 
         for y in range(-1, self.obstacleCheckRange): # Only checks obstacles in a square around the monster
             for x in range(-1, self.obstacleCheckRange):
                 checkedTileId = y * TILES_COUNT_X + x + monsterTileId
-                    
+                
                 if (checkedTileId in self.gameworld.obstacles and mainRect.colliderect(self.gameworld.obstacles[checkedTileId].hitbox)):
                     if (self.gameworld.obstacles[checkedTileId].resistance < 3):
                         collisionType = 1
                     else:
                         return 2 # Resistance can't be higher than 3
+
+        # Check if entity is going out of bounds on X axis
+        if (mainRect.y > self.gameworld.screenSize[1] - 34): # Maximum visible Y position
+            if (mainRect.x > (self.gameworld.screenSize[0] / 2) + (self.gameworld.backgroundSize[0] / 2) - mainRect.width - TILE_SIZE or 
+            mainRect.x < (self.gameworld.screenSize[0] / 2) - (self.gameworld.backgroundSize[0] / 2) + mainRect.width + TILE_SIZE):
+                return 2
 
         return collisionType
 
