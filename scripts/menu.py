@@ -117,6 +117,9 @@ class Menu:
             elif (event.type == VIDEORESIZE):
                 self.game.ResizeWindow(event.w, event.h)
 
+            elif (event.type in self.game.musicEvents):
+                ProcessMusicEvents(event.type)
+
             elif (self.game.menuPage == -1): # Main menu
                 if (not self.menuInitialized):
                     self.InitMainMenu()
@@ -203,9 +206,6 @@ class Menu:
 
                     elif (self.secretHovered and self.secretUnlocked):
                         self.game.menuPage = -6
-
-            elif (event.type in self.game.musicEvents):
-                ProcessMusicEvents(event.type)
 
     def Draw(self):
         self.screen.fill(MENU_BG_COLOR)

@@ -50,7 +50,7 @@ def StartMusicCredits():
     Music.play()
 
 def ProcessMusicEvents(event):
-    Music.set_endevent() # Reset triggered event
+    Music.set_endevent() # Clear triggered event
 
     if (event == MusicEvents.START_JINGLE):
         StartMusicJingle()
