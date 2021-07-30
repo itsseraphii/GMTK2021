@@ -29,12 +29,12 @@ def StartMusicLevel():
 def StartMusicJingle():
     Music.load(JINGLE_PATH)
     Music.set_endevent(MusicEvents.START_TIME_OVER)
-    Music.set_volume(BASE_VOLUME * 0.5)
+    Music.set_volume(BASE_VOLUME * 0.75)
     Music.play()
 
 def StartMusicTimeOver():
     Music.load(TIME_OVER_MUSIC_PATH)
-    Music.set_volume(BASE_VOLUME * 0.5)
+    Music.set_volume(BASE_VOLUME * 0.6)
     Music.play(-1)
 
 def StartMusicBoss():
