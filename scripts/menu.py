@@ -1,7 +1,7 @@
 import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_RETURN, QUIT, VIDEORESIZE
 from math import floor
-from utils.constants import MENU_BG_COLOR, LEVEL_BG_COLOR, TEXT_COLOR, CREDITS_PAGE, DATA_PATH
+from utils.constants import MENU_BG_COLOR, LEVEL_BG_COLOR, TEXT_COLOR, CREDITS_PAGE, DATA_PATH, BLACK, PICKLE_COLOR
 from musicController import StartMusicBoss, StartMusicCredits, ProcessMusicEvents
 from utils.story import STORY
 
@@ -96,7 +96,7 @@ class Menu:
         offsetButtonCount = len(self.selectLevelButtons) % 3
 
         if (offsetButtonCount != 0): # Align last row if it has less than 3 buttons 
-            for i in range (len(self.selectLevelButtons) - offsetButtonCount, len(self.selectLevelButtons)):
+            for i in range(len(self.selectLevelButtons) - offsetButtonCount, len(self.selectLevelButtons)):
                 self.selectLevelButtons[i].x += (3 - offsetButtonCount) * 150
 
     def ShowMenu(self):
@@ -247,9 +247,19 @@ class Menu:
             self.screen.blit(text, textRect)
 
             mousePos = pygame.mouse.get_pos()
+            foundSecrets = self.game.levelController.savedSecrets
 
-            for button in self.selectLevelButtons:
+            for i in range(len(self.selectLevelButtons)): # Draw buttons
+                button = self.selectLevelButtons[i]
                 button.Draw(self.screen, button.IsMouseOver(mousePos))
+                
+                secretKey = str(i)
+                markerPos = [button.x + button.width - 13, button.y + button.height - 13]
+
+                if (secretKey in foundSecrets and foundSecrets[secretKey] == 1): # Add "secret found" marker
+                    pygame.draw.rect(self.screen, PICKLE_COLOR, (markerPos[0], markerPos[1], 8, 8), 0)
+                else:
+                    pygame.draw.rect(self.screen, BLACK, (markerPos[0], markerPos[1], 8, 8), 0)
 
             text = self.game.fontMedium.render("Press any key to go back", True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
@@ -442,7 +452,7 @@ class Button:
         self.text = text
 
     def Draw(self, screen, mouseOver):
-        pygame.draw.rect(screen, self.textColor, (self.x - 2 , self.y - 2 ,self.width + 4 ,self.height + 4), 0)
+        pygame.draw.rect(screen, self.textColor, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
 
         if (mouseOver):
             pygame.draw.rect(screen, self.hoverColor, (self.x, self.y, self.width, self.height), 0)
