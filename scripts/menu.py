@@ -1,5 +1,5 @@
 import pygame
-from pygame.constants import KEYDOWN, K_ESCAPE, K_RETURN, QUIT, VIDEORESIZE
+from pygame.constants import KEYDOWN, K_ESCAPE, K_RETURN, K_SPACE, QUIT, VIDEORESIZE
 from math import floor
 from utils.constants import MENU_BG_COLOR, LEVEL_BG_COLOR, TEXT_COLOR, CREDITS_PAGE, DATA_PATH, BLACK, PICKLE_COLOR
 from musicController import StartMusicBoss, StartMusicCredits, ProcessMusicEvents
@@ -173,7 +173,7 @@ class Menu:
                     self.creditsInitialized = False # Reset credits next time it's displayed
                     self.game.menuPage = -2
 
-                elif (event.key == K_RETURN):
+                elif (event.key == K_RETURN or event.key == K_SPACE):
                     if (self.game.menuPage != self.game.currentLevel or self.game.menuPage == CREDITS_PAGE - 1):
                         self.game.menuPage += 1
                     else: # Start of a level
@@ -413,7 +413,7 @@ class Menu:
             self.menuScrollY -= 1
 
         else: # Levels
-            message = "Press Enter to start level " + str(self.game.currentLevel + 1) if (self.game.menuPage != CREDITS_PAGE - 1) else "Press Enter to continue"
+            message = "Press Enter or Space to start level " + str(self.game.currentLevel + 1) if (self.game.menuPage != CREDITS_PAGE - 1) else "Press Enter or Space to continue"
             text = self.game.fontMedium.render(message, True, TEXT_COLOR)
             textRect = text.get_rect(center = (self.screenSize[0] / 2, self.screenSize[1] - 30))
             self.screen.blit(text, textRect)
