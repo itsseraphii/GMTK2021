@@ -6,7 +6,7 @@ To set up the project, you must have `Python 3` or higher installed, as well as 
 
 1. Install pygame
 ```cmd
-py -m pip install pygame
+py -m pip install -r requirements.txt
 ```
 2. Run the project
 ```cmd
