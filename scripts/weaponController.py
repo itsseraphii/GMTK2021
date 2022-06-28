@@ -47,31 +47,48 @@ class WeaponController:
         self.weapons[WeaponTypes.SNIPER] = ["sniper", True, 8, 2000, 2]
         self.weapons[WeaponTypes.LMG] = ["lmg", True, 3, 90, 2]
 
+    def GetAttackCooldown(self):
+        currentTime = pygame.time.get_ticks()
+        return max(0, self.lastAttackTime + self.getCurrentWeapon()[3] - currentTime)
+
+    def getCurrentWeapon(self):
+        return self.weapons[self.player.equippedWeaponIndex]
+
+    def isCurrentWeaponRanged(self):
+        return self.getCurrentWeapon()[1]
+
+    def getCurrentWeaponDamage(self):
+        return self.getCurrentWeapon()[2]
+
+    def getCurrentWeaponCooldown(self):
+        return self.getCurrentWeapon()[3]
+
+    def getCurrentWeaponCaliber(self):
+        return self.getCurrentWeapon()[4]
+
     def Attack(self, equippedWeapon, ammo):
         currentTime = pygame.time.get_ticks()
 
-        if (currentTime >= self.lastAttackTime + self.weapons[equippedWeapon][3]): # Attack if cooldown has passed
+        if (not self.GetAttackCooldown()): # Attack if cooldown has passed
             self.lastAttackTime = currentTime
 
-            if (self.weapons[equippedWeapon][1]): # Ranged weapon
+            if (self.isCurrentWeaponRanged()): # Ranged weapon
                 if (ammo > 0):
                     playerPos = self.player.GetPos()
                     angleRad = -radians(self.player.angle)
 
                     # [posX, posY, angle, damage, caliber]
-                    self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angleRad, self.weapons[equippedWeapon][2], self.weapons[equippedWeapon][4]])
+                    self.bullets.append([PLAYER_SIZE[0] / 2 + playerPos[0], PLAYER_SIZE[1] / 2 + playerPos[1], angleRad, self.getCurrentWeaponDamage(), self.getCurrentWeaponCaliber()])
 
                     self.gunshotSound.play()
-                    self.emptyGunSoundPlayed = False
                     self.player.game.levelController.savedRoundsFired += 1
 
                     return True # Decrement ammo
                 
-                elif (not self.emptyGunSoundPlayed):
-                    self.emptyGunSoundPlayed = True
+                else:
                     self.emptyGunSound.play()
 
-            elif (not self.weapons[equippedWeapon][1]): # Melee Weapon
+            else: # Melee weapon
                 playerPos = self.player.GetPos()
                 angleRad = -radians(self.player.angle)
 
@@ -86,8 +103,8 @@ class WeaponController:
                     monster = self.gameworld.monsters[key]
 
                     if (meleeRect.colliderect(monster.hitbox)):
-                        monster.Stun(self.weapons[equippedWeapon][2] * MELEE_STUN_MULTIPLIER)
-                        monster.Damage(self.weapons[equippedWeapon][2])
+                        monster.Stun(self.getCurrentWeaponDamage() * MELEE_STUN_MULTIPLIER)
+                        monster.Damage(self.getCurrentWeaponDamage())
 
         return False # Don't decrement ammo
 

@@ -1,7 +1,7 @@
 import pygame
 from pygame.constants import KEYDOWN, K_ESCAPE, K_n, K_r, MOUSEBUTTONDOWN, QUIT, VIDEORESIZE
-from math import floor
-from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE, DEFAULT_WINDOW_SIZE
+from math import floor, pi
+from utils.constants import TILE_SIZE, DATA_PATH, BLACK, LEVEL_BG_COLOR, TEXT_COLOR, WEAPON_IMAGE_SIZE, DEFAULT_WINDOW_SIZE, PICKLE_COLOR
 from musicController import StartMusicMenu, StartMusicLevel, ProcessMusicEvents, MusicEvents
 from entities.player import Player
 from gameworld import GameWorld
@@ -149,6 +149,15 @@ class Game:
             self.drawnAmmo = self.player.ammo
             pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((172, self.screenSize[1] - 44), (76, 30))) # Cover last drawn ammo
             self.screen.blit(self.fontAmmo.render(str(self.drawnAmmo), True, TEXT_COLOR), (174, self.screenSize[1] - 50))
+
+        cooldown = self.player.weaponController.GetAttackCooldown()
+        if (cooldown): # Cooldown circle
+            # Get % filled
+            cooldownPercent = cooldown * 100 / self.player.weaponController.getCurrentWeaponCooldown()
+            pygame.draw.arc(self.screen, PICKLE_COLOR, pygame.Rect((235, self.screenSize[1] - 50), (40, 40)), cooldownPercent * 0.06283 + pi/2, pi/2, 5)
+            if (cooldownPercent	> 95): pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((230, self.screenSize[1] - 55), (50, 45)))
+        else: 
+            pygame.draw.rect(self.screen, LEVEL_BG_COLOR, pygame.Rect((230, self.screenSize[1] - 55), (50, 45)))
 
     def DrawUI(self):
         self.DrawTimeLeft()
