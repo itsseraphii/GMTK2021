@@ -4,7 +4,7 @@ from pygame import Rect
 from math import pi, atan2, floor
 from weaponController import WeaponController, WeaponTypes
 from utils.spriteUtils import GetFramesFromFile
-from utils.constants import PLAYER_SIZE, PLAYER_HITBOX_SIZE, TILES_COUNT_X, TILE_SIZE
+from utils.constants import PLAYER_SIZE, PLAYER_HITBOX_SIZE, TILES_COUNT_X, TILE_SIZE, DATA_PATH
 
 SPEED = 2
 ANIMATION_SPEED = 84 # ms
@@ -72,6 +72,7 @@ class Player:
 
         if (self.game.frameCounter % 2 == 0 and self.CheckCollisionWithMonsters(currentHitbox)): # Check collisions with monsters on even frames
             self.game.levelController.savedDeaths += 1
+            self.gameworld.entitySounds["playerDeath"].play()
             self.game.TriggerGameOver(False)
         elif (self.game.frameCounter % 2 == 1): # Check collisions with collectables on odd frames
             self.CheckCollisionWithCollectables(currentHitbox)

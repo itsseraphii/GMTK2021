@@ -100,7 +100,7 @@ class GameWorld:
             self.collectableImages[image] = pygame.image.load(DATA_PATH + "/res/collectables/" + image + ".png").convert_alpha()
 
     def LoadEntityRessources(self):
-        soundNames = ["meatSlap1", "meatSlap2", "meatSlap3", "meatDeath1", "meatDeath2"]
+        soundNames = ["meatSlap1", "meatSlap2", "meatSlap3", "meatDeath1", "meatDeath2", "playerDeath"]
         imageNames = ["monster", "zombie"]
         imageFrameSizes = [[64, 64], [32, 32]]
 

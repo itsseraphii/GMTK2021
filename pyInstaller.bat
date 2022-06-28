@@ -65,6 +65,7 @@
 --add-data="sounds/meatSlap3.mp3;./sounds" ^
 --add-data="sounds/secret.mp3;./sounds" ^
 --add-data="sounds/swing.mp3;./sounds" ^
+--add-data="sounds/playerDeath.mp3;./sounds" ^
  ^
 --name "Transgenesis" ^
 --icon "res/icon/icon.ico" ^
