@@ -1,4 +1,4 @@
-"%USERPROFILE%\AppData\Local\Programs\Python\Python39\Scripts\pyinstaller.exe" ^
+"%USERPROFILE%\AppData\Local\Programs\Python\Python310\Scripts\pyinstaller.exe" ^
  ^
 --add-data="fonts/FreeSansBold.ttf;./fonts" ^
 --add-data="fonts/melted.ttf;./fonts" ^
