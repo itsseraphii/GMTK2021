@@ -52,7 +52,7 @@ class WeaponController:
         return max(0, self.lastAttackTime + self.getCurrentWeapon()[3] - currentTime)
 
     def getCurrentWeapon(self):
-        return self.weapons[self.player.equippedWeaponIndex]
+        return self.weapons[self.player.weaponInventory[self.player.equippedWeaponIndex]]
 
     def isCurrentWeaponRanged(self):
         return self.getCurrentWeapon()[1]
@@ -66,7 +66,7 @@ class WeaponController:
     def getCurrentWeaponCaliber(self):
         return self.getCurrentWeapon()[4]
 
-    def Attack(self, equippedWeapon, ammo):
+    def Attack(self, ammo):
         currentTime = pygame.time.get_ticks()
 
         if (not self.GetAttackCooldown()): # Attack if cooldown has passed

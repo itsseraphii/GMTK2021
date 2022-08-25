@@ -118,7 +118,7 @@ class Player:
             self.ammo += duplicateAmmo
 
     def Attack(self):
-        if (self.weaponController.Attack(self.weaponInventory[self.equippedWeaponIndex], self.ammo)):
+        if (self.weaponController.Attack(self.ammo)):
             self.ammo -= 1
 
     def GetPos(self):
